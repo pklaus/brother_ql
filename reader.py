@@ -1,7 +1,9 @@
 #!/usr/bin/env python
 
+import struct
 import io
 import logging
+
 from PIL import Image
 import numpy as np
 from matplotlib import pyplot as plt
@@ -39,7 +41,8 @@ class BrotherReader(object):
         if type(brother_file) in (str,):
             brother_file = io.open(brother_file, 'rb')
         self.brother_file = brother_file
-        self.width, self.height = None, None
+        self.mwidth, self.mheight = None, None
+        self.raster_no = None
         self.rows = []
         self.compression = False
         self.page = 1
@@ -55,7 +58,8 @@ class BrotherReader(object):
                     num_bytes = len(command)
                     if cmd[1] > 0: num_bytes += cmd[1]
                     if cmd[0] == 'init':
-                        self.width, self.height = None, None
+                        self.mwidth, self.mheight = None, None
+                        self.raster_no = None
                         self.rows = []
                     if cmd[0] == 'raster':
                         num_bytes += rem_script[2] + 2
@@ -86,12 +90,15 @@ class BrotherReader(object):
                             raise NotImplementedError()
                         self.rows.append(row)
                     if cmd[0] == 'media/quality':
-                        self.height = rem_script[len(command) + 4] + rem_script[len(command) + 5]*256
-                        self.width = rem_script[len(command) + 2] + rem_script[len(command) + 3]*256
-                        logger.info(" width: {}mm  height: {}dots".format(self.width, self.height))
+                        self.raster_no = struct.unpack('<L', payload[4:8])[0]
+                        self.mwidth = rem_script[len(command) + 2]
+                        self.mlength = rem_script[len(command) + 3]*256
+                        fmt = " media width: {}mm, media length: {}mm, raster no: {}dots"
+                        logger.info(fmt.format(self.mwidth, self.mlength, self.raster_no))
                     if cmd[0] == 'print':
                         self.rows = [np.unpackbits(np.array(row, dtype=np.uint8)) for row in self.rows]
                         array = np.array(self.rows, dtype=np.uint8)
+                        array = np.fliplr(array)
                         im = Image.fromarray(array)
                         im = im.point(lambda x: 0 if x == 1 else 255, '1') # -> Monocolor and invert
                         #plt.imshow(im)

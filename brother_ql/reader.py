@@ -114,8 +114,7 @@ class BrotherReader(object):
                 logger.error('cmd not found: {}...'.format(rem_script[0:4]))
                 rem_script = rem_script[1:]
 
-if __name__ == '__main__':
-
+def main():
     from argparse import ArgumentParser
 
     parser = ArgumentParser()
@@ -127,3 +126,6 @@ if __name__ == '__main__':
 
     br = BrotherReader(args.file)
     br.analyze()
+
+if __name__ == '__main__':
+    main()

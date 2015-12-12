@@ -20,9 +20,9 @@ cmds = {
     b'\x1b\x40':      ("init",           0, "initialization"),
     b'\x1b\x69\x61':  ("mode setting",   1, ""),
     b'\x1b\x69\x7A':  ("media/quality", 10, "print-media and print-quality"),
-    b'\x1b\x69\x4D':  ("set mode",       1, ""),
-    b'\x1b\x69\x41':  ("cuts-settings",  1, "cut every n setting"),
-    b'\x1b\x69\x4B':  ("cut type",       1, ""),
+    b'\x1b\x69\x4D':  ("various",        1, "Auto cut flag in bit 7"),
+    b'\x1b\x69\x41':  ("cut-every",      1, "cut every n-th page"),
+    b'\x1b\x69\x4B':  ("expanded",       1, ""),
     b'\x1b\x69\x64':  ("margins",        2, ""),
     b'\x1b\x69\x55\x77\x01': ('amedia',127, "Additional media information command"),
     b'\x1b\x69\x55\x4A': ('jobid',      14, "Job ID setting command"),
@@ -87,7 +87,7 @@ class BrotherReader(object):
                                     index += 1 + num
                                 if index >= len(rpl): break
                         else:
-                            raise NotImplementedError()
+                            row.append(list(rpl))
                         self.rows.append(row)
                     if cmd[0] == 'media/quality':
                         self.raster_no = struct.unpack('<L', payload[4:8])[0]

@@ -75,3 +75,34 @@ right_margin_addition = {
   'QL-1050':  44,
   'QL-1060N': 44,
 }
+
+modesetting = [
+  'QL-580N',
+  'QL-650TD',
+  'QL-1050',
+  'QL-1060N',
+  'QL-710W',
+  'QL-720NW',
+]
+
+cuttingsupport = [
+  'QL-560',
+  'QL-570',
+  'QL-580N',
+  'QL-650TD',
+  'QL-700',
+  'QL-1050',
+  'QL-1060N',
+  'QL-710W',
+  'QL-720NW',
+]
+
+compressionsupport = [
+  'QL-570',
+  'QL-580N',
+  'QL-650TD',
+  'QL-1050',
+  'QL-1060N',
+  'QL-710W',
+  'QL-720NW',
+]

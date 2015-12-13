@@ -3,6 +3,7 @@
 import struct
 import io
 import logging
+import sys
 
 from PIL import Image
 import numpy as np
@@ -103,7 +104,9 @@ class BrotherReader(object):
                         im = im.point(lambda x: 0 if x == 1 else 255, '1') # -> Monocolor and invert
                         #plt.imshow(im)
                         #plt.show()
-                        im.save('image{:04d}.png'.format(self.page))
+                        img_name = 'page{:04d}.png'.format(self.page)
+                        im.save(img_name)
+                        print('Page saved as {}'.format(img_name))
                         self.page += 1
 
                     rem_script = rem_script[num_bytes:]
@@ -111,7 +114,7 @@ class BrotherReader(object):
             if cmd_found:
                 continue
             else:
-                logger.error('cmd not found: {}...'.format(rem_script[0:4]))
+                logger.error('cmd not found: {0}... ({1}...)'.format(hex_format(rem_script[0:4]), rem_script[0:4]))
                 rem_script = rem_script[1:]
 
 def main():
@@ -122,7 +125,7 @@ def main():
     parser.add_argument('--loglevel', type=lambda x: getattr(logging, x), default=logging.WARNING, help='The loglevel to apply')
     args = parser.parse_args()
 
-    logging.basicConfig(format='%(levelname)s: %(message)s', level=args.loglevel)
+    logging.basicConfig(stream=sys.stdout, format='%(levelname)s: %(message)s', level=args.loglevel)
 
     br = BrotherReader(args.file)
     br.analyze()

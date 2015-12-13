@@ -16,7 +16,8 @@ setup(name='brother_ql',
       packages = ['brother_ql'],
       entry_points = {
           'console_scripts': [
-              'brother_ql_reader = brother_ql.reader:main',
+              'brother_ql_read = brother_ql.reader:main',
+              'brother_ql_write = brother_ql.create:main',
           ],
       },
       include_package_data = False,
@@ -24,7 +25,7 @@ setup(name='brother_ql',
       platforms = 'any',
       install_requires = ['numpy', 'packbits', 'pillow'],
       extras_require = {
-          'brother_ql_reader':  ["matplotlib",],
+          'brother_ql_read':  ["matplotlib",],
       },
       keywords = 'Brother QL-500 QL-570 QL-710W QL-720NW',
       classifiers = [

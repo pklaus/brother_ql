@@ -1,5 +1,6 @@
 
 import struct
+import logging
 
 import packbits
 import numpy as np
@@ -9,7 +10,12 @@ from .devicedependent import models, \
                              min_max_length_dots, \
                              paper_dimensions, \
                              number_bytes_per_row, \
-                             right_margin_addition
+                             right_margin_addition, \
+                             compressionsupport, \
+                             cuttingsupport, \
+                             modesetting
+
+logger = logging.getLogger(__name__)
 
 class QLRaster(object):
 
@@ -22,14 +28,28 @@ class QLRaster(object):
         self.page_number = 0
         self.cut_at_end = True
         self.dpi_600 = False
-        self.compression = True
+        self._compression = False
+        self.exception_on_warning = False
 
-    def initialize(self):
+    def warn(self, problem):
+        if self.exception_on_warning:
+            raise QLRasterError(problem)
+        else:
+            logger.warning(problem)
+
+    def set_initialize(self):
         self.page_number = 0
-        self.data += b'\x1B\x69\x61\x01' # mode setting (raster mode)
-        self.data += b'\x00' * 200
         self.data += b'\x1B\x40' # init
-        self.data += b'\x1B\x69\x61\x01' # mode setting (raster mode)
+
+    def set_mode(self):
+        """ switch to raster mode """
+        if self.model not in modesetting:
+            self.warn("Trying to switch the operating mode on a printer that doesn't support the command.")
+            return
+        self.data += b'\x1B\x69\x61\x01'
+
+    def set_clear_command_buffer(self):
+        self.data += b'\x00' * 200
 
     @property
     def mtype(self): return self._mtype
@@ -83,6 +103,9 @@ class QLRaster(object):
         self.data += bytes([n & 0xFF])
 
     def set_expanded_mode(self):
+        if self.model not in cuttingsupport:
+            self.warn("Trying to set expanded mode on a printer that doesn't support it")
+            return
         self.data += b'\x1B\x69\x4B'
         flags = 0x00
         flags |= self.cut_at_end << 3
@@ -94,17 +117,27 @@ class QLRaster(object):
         self.data += struct.pack('<H', dots)
 
     def set_compression(self, compression=True):
-        self.compression = compression
+        if self.model not in compressionsupport:
+            self.warn("Trying to set compression on a printer that doesn't support it")
+            return
+        self._compression = compression
         self.data += b'\x4D'
         self.data += bytes([compression << 1])
 
     def set_raster_data(self, np_array):
         """ np_array: numpy array of 1-bit values """
         np_array = np.fliplr(np_array)
+        try:
+            nbpr = number_bytes_per_row[self.model]
+        except:
+            nbpr = number_bytes_per_row['default']
         for row in np_array:
             self.data += b'\x67\x00'
             row = bytes(np.packbits(row))
-            if self.compression:
+            if len(row) != nbpr:
+                fmt = 'Wrong number of bytes per row: {}, expected {}'
+                raise QLRasterError(fmt.format(len(row), nbpr))
+            if self._compression:
                 row = packbits.encode(row)
             self.data += bytes([len(row)])
             self.data += row

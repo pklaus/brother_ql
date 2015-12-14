@@ -17,11 +17,11 @@ from .devicedependent import models, \
 
 logger = logging.getLogger(__name__)
 
-class QLRaster(object):
+class BrotherQLRaster(object):
 
     def __init__(self, model='QL-500'):
         if model not in models:
-            raise QLRasterUnknownModel()
+            raise BrotherQLRasterUnknownModel()
         self.model = model
         self.data = b''
         self._pquality = 1
@@ -33,7 +33,7 @@ class QLRaster(object):
 
     def warn(self, problem):
         if self.exception_on_warning:
-            raise QLRasterError(problem)
+            raise BrotherQLRasterError(problem)
         else:
             logger.warning(problem)
 
@@ -136,7 +136,7 @@ class QLRaster(object):
             row = bytes(np.packbits(row))
             if len(row) != nbpr:
                 fmt = 'Wrong number of bytes per row: {}, expected {}'
-                raise QLRasterError(fmt.format(len(row), nbpr))
+                raise BrotherQLRasterError(fmt.format(len(row), nbpr))
             if self._compression:
                 row = packbits.encode(row)
             self.data += bytes([len(row)])
@@ -148,6 +148,6 @@ class QLRaster(object):
         else:
             self.data += b'\x0C'
 
-class QLRasterError(Exception): pass
-class QLRasterUnknownModel(QLRasterError): pass
+class BrotherQLRasterError(Exception): pass
+class BrotherQLRasterUnknownModel(BrotherQLRasterError): pass
 

@@ -16,16 +16,17 @@ setup(name='brother_ql',
       packages = ['brother_ql'],
       entry_points = {
           'console_scripts': [
-              'brother_ql_read = brother_ql.reader:main',
-              'brother_ql_write = brother_ql.create:main',
+              'brother_ql_analyse = brother_ql.analyse:main',
+              'brother_ql_create  = brother_ql.create:main',
           ],
       },
       include_package_data = False,
       zip_safe = True,
       platforms = 'any',
-      install_requires = ['numpy', 'packbits', 'pillow'],
+      install_requires = ['numpy', 'packbits', 'pillow', 'matplotlib'],
       extras_require = {
-          'brother_ql_read':  ["matplotlib",],
+          #'brother_ql_analyse':  ["matplotlib",],
+          #'brother_ql_create' :  ["matplotlib",],
       },
       keywords = 'Brother QL-500 QL-570 QL-710W QL-720NW',
       classifiers = [

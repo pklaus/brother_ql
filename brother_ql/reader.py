@@ -36,7 +36,7 @@ dot_widths = {
 def hex_format(data):
     return ' '.join('{:02X}'.format(byte) for byte in data)
 
-class BrotherReader(object):
+class BrotherQLReader(object):
 
     def __init__(self, brother_file):
         if type(brother_file) in (str,):
@@ -48,7 +48,7 @@ class BrotherReader(object):
         self.compression = False
         self.page = 1
 
-    def analyze(self):
+    def analyse(self):
         rem_script = self.brother_file.read()
         while True:
             if len(rem_script) == 0: break
@@ -117,18 +117,3 @@ class BrotherReader(object):
                 logger.error('cmd not found: {0}... ({1}...)'.format(hex_format(rem_script[0:4]), rem_script[0:4]))
                 rem_script = rem_script[1:]
 
-def main():
-    from argparse import ArgumentParser
-
-    parser = ArgumentParser()
-    parser.add_argument('file', help='The file to analyze')
-    parser.add_argument('--loglevel', type=lambda x: getattr(logging, x), default=logging.WARNING, help='The loglevel to apply')
-    args = parser.parse_args()
-
-    logging.basicConfig(stream=sys.stdout, format='%(levelname)s: %(message)s', level=args.loglevel)
-
-    br = BrotherReader(args.file)
-    br.analyze()
-
-if __name__ == '__main__':
-    main()

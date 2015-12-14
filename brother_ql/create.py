@@ -5,7 +5,7 @@ import sys, argparse, logging
 import numpy as np
 from PIL import Image
 
-from brother_ql.writer import QLRaster
+from brother_ql.writer import BrotherQLRaster
 
 def hex_format(data):
     return ' '.join('{:02X}'.format(byte) for byte in data)
@@ -37,7 +37,7 @@ def main():
     arr[white_idx] = 1
     arr[black_idx] = 0
 
-    qlr = QLRaster(args.model)
+    qlr = BrotherQLRaster(args.model)
     qlr.set_mode()
     qlr.set_clear_command_buffer()
     qlr.set_initialize()

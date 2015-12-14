@@ -1,10 +1,16 @@
 ## brother\_ql ##
 
 A Python package to control Brother QL label printers.
+This package basically replaces the driver because it implements
+the raster language of those printers.
+
+Here is a list of printers claimed to be supported:
+
+QL-500, QL-550, QL-560, QL-570, QL-580N, QL-650TD, QL-700, QL-710W, QL-720NW, QL-1050, and QL-1060N.
 
 ### Installation ###
 
-    pip install https://github.com/pklaus/brother_ql/archive/master.zip
+    pip install https://github.com/pklaus/brother_ql/archive/master.zip --upgrade
 
 ### Usage ###
 

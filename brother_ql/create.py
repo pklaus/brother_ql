@@ -5,7 +5,7 @@ import sys, argparse, logging
 import numpy as np
 from PIL import Image
 
-from brother_ql.writer import BrotherQLRaster
+from brother_ql.raster import BrotherQLRaster
 
 def hex_format(data):
     return ' '.join('{:02X}'.format(byte) for byte in data)

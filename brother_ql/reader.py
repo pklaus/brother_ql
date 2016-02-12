@@ -34,7 +34,10 @@ dot_widths = {
 }
 
 def hex_format(data):
-    return ' '.join('{:02X}'.format(byte) for byte in data)
+    try: # Py3
+        return ' '.join('{:02X}'.format(byte) for byte in data)
+    except ValueError: # Py2
+        return ' '.join('{:02X}'.format(ord(byte)) for byte in data)
 
 class BrotherQLReader(object):
 

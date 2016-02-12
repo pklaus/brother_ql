@@ -1,11 +1,18 @@
 #!/usr/bin/env python
 
+from __future__ import division
+
 import sys, argparse, logging
 
 import numpy as np
 from PIL import Image
 
 from brother_ql.raster import BrotherQLRaster
+
+try:
+    stdout = sys.stdout.buffer
+except:
+    stdout = sys.stdout
 
 def hex_format(data):
     return ' '.join('{:02X}'.format(byte) for byte in data)
@@ -20,7 +27,7 @@ def multiline_hex(data, bpl):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('image')
-    parser.add_argument('outfile', nargs='?', type=argparse.FileType('wb'), default=sys.stdout.buffer)
+    parser.add_argument('outfile', nargs='?', type=argparse.FileType('wb'), default=stdout)
     parser.add_argument('--model', default='QL-500')
     parser.add_argument('--threshold', type=int, default=170)
     parser.add_argument('--loglevel', type=lambda x: getattr(logging, x), default=logging.WARNING)
@@ -54,7 +61,7 @@ def main():
     qlr.set_margins()
     qlr.set_compression(True)
     qlr.set_raster_data(arr)
-    qlr.print()
+    qlr.print_cmd()
 
     if args.loglevel == logging.DEBUG:
         sys.stderr.write(multiline_hex(qlr.data, 16))

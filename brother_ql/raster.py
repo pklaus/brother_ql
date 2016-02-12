@@ -142,7 +142,7 @@ class BrotherQLRaster(object):
             self.data += bytes([len(row)])
             self.data += row
 
-    def print(self, last_page=True):
+    def print_cmd(self, last_page=True):
         if last_page:
             self.data += b'\x1A'
         else:

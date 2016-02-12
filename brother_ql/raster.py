@@ -124,19 +124,23 @@ class BrotherQLRaster(object):
         self.data += b'\x4D'
         self.data += bytes([compression << 1])
 
-    def set_raster_data(self, np_array):
-        """ np_array: numpy array of 1-bit values """
-        np_array = np.fliplr(np_array)
+    def get_pixel_width(self):
         try:
             nbpr = number_bytes_per_row[self.model]
         except:
             nbpr = number_bytes_per_row['default']
+        return nbpr*8
+
+    def set_raster_data(self, np_array):
+        """ np_array: numpy array of 1-bit values """
+        np_array = np.fliplr(np_array)
+        logger.info("raster_image_size: {1}x{0}".format(*np_array.shape))
+        if np_array.shape[1] != self.get_pixel_width():
+            fmt = 'Wrong pixel width: {}, expected {}'
+            raise BrotherQLRasterError(fmt.format(np_array.shape[0], self.get_pixel_width()))
         for row in np_array:
             self.data += b'\x67\x00'
             row = bytes(np.packbits(row))
-            if len(row) != nbpr:
-                fmt = 'Wrong number of bytes per row: {}, expected {}'
-                raise BrotherQLRasterError(fmt.format(len(row), nbpr))
             if self._compression:
                 row = packbits.encode(row)
             self.data += bytes([len(row)])

@@ -35,7 +35,12 @@ def main():
 
     logging.basicConfig(level=args.loglevel)
 
+    qlr = BrotherQLRaster(args.model)
+    device_pixel_width = qlr.get_pixel_width()
+
     im = Image.open(args.image)
+    hsize = int(im.size[1] / im.size[0] * device_pixel_width)
+    im = im.resize((device_pixel_width, hsize), Image.ANTIALIAS)
     im = im.convert("L")
     arr = np.asarray(im, dtype=np.uint8)
     arr.flags.writeable = True
@@ -44,7 +49,7 @@ def main():
     arr[white_idx] = 1
     arr[black_idx] = 0
 
-    qlr = BrotherQLRaster(args.model)
+
     qlr.set_mode()
     qlr.set_clear_command_buffer()
     qlr.set_initialize()

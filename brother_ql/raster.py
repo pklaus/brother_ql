@@ -37,18 +37,23 @@ class BrotherQLRaster(object):
         else:
             logger.warning(problem)
 
-    def set_initialize(self):
+    def add_initialize(self):
         self.page_number = 0
         self.data += b'\x1B\x40' # init
 
-    def set_mode(self):
-        """ switch to raster mode """
+    def add_switch_mode(self):
+        """
+        Switch dynamic command mode
+        Switch to the raster mode on the printers that support
+        the mode change (others are in raster mode already).
+        """
         if self.model not in modesetting:
             self.warn("Trying to switch the operating mode on a printer that doesn't support the command.")
             return
         self.data += b'\x1B\x69\x61\x01'
 
-    def set_clear_command_buffer(self):
+    def add_invalidate(self):
+        """ clear command buffer """
         self.data += b'\x00' * 200
 
     @property
@@ -79,7 +84,7 @@ class BrotherQLRaster(object):
     def pquality(self, value):
         self._pquality = bytes([value & 0x01])
 
-    def set_media_and_quality(self, rnumber):
+    def add_media_and_quality(self, rnumber):
         self.data += b'\x1B\x69\x7A'
         valid_flags = 0x80
         valid_flags |= (self._mtype is not None) << 1
@@ -94,15 +99,15 @@ class BrotherQLRaster(object):
         self.data += b'\x00'
         # INFO:  media/quality (1B 69 7A) --> found! (payload: 8E 0A 3E 00 D2 00 00 00 00 00)
 
-    def set_autocut(self, autocut = False):
+    def add_autocut(self, autocut = False):
         self.data += b'\x1B\x69\x4D'
         self.data += bytes([autocut << 6])
 
-    def set_cut_every(self, n=1):
+    def add_cut_every(self, n=1):
         self.data += b'\x1B\x69\x41'
         self.data += bytes([n & 0xFF])
 
-    def set_expanded_mode(self):
+    def add_expanded_mode(self):
         if self.model not in cuttingsupport:
             self.warn("Trying to set expanded mode on a printer that doesn't support it")
             return
@@ -112,11 +117,11 @@ class BrotherQLRaster(object):
         flags |= self.dpi_600 << 6
         self.data += bytes([flags])
 
-    def set_margins(self, dots=0x23):
+    def add_margins(self, dots=0x23):
         self.data += b'\x1B\x69\x64'
         self.data += struct.pack('<H', dots)
 
-    def set_compression(self, compression=True):
+    def add_compression(self, compression=True):
         if self.model not in compressionsupport:
             self.warn("Trying to set compression on a printer that doesn't support it")
             return
@@ -131,7 +136,7 @@ class BrotherQLRaster(object):
             nbpr = number_bytes_per_row['default']
         return nbpr*8
 
-    def set_raster_data(self, np_array):
+    def add_raster_data(self, np_array):
         """ np_array: numpy array of 1-bit values """
         np_array = np.fliplr(np_array)
         logger.info("raster_image_size: {1}x{0}".format(*np_array.shape))
@@ -146,7 +151,7 @@ class BrotherQLRaster(object):
             self.data += bytes([len(row)])
             self.data += row
 
-    def print_cmd(self, last_page=True):
+    def add_print(self, last_page=True):
         if last_page:
             self.data += b'\x1A'
         else:

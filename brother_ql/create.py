@@ -50,23 +50,23 @@ def main():
     arr[black_idx] = 0
 
 
-    qlr.set_mode()
-    qlr.set_clear_command_buffer()
-    qlr.set_initialize()
-    qlr.set_mode()
+    qlr.add_switch_mode()
+    qlr.add_invalidate()
+    qlr.add_initialize()
+    qlr.add_switch_mode()
     qlr.mtype = 0x0A
     qlr.mwidth = 62
     qlr.mlength = 0
-    qlr.set_media_and_quality(im.size[1])
-    qlr.set_autocut(True)
-    qlr.set_cut_every(1)
+    qlr.add_media_and_quality(im.size[1])
+    qlr.add_autocut(True)
+    qlr.add_cut_every(1)
     qlr.dpi_600 = False
     qlr.cut_at_end = True
-    qlr.set_expanded_mode()
-    qlr.set_margins()
-    qlr.set_compression(True)
-    qlr.set_raster_data(arr)
-    qlr.print_cmd()
+    qlr.add_expanded_mode()
+    qlr.add_margins()
+    qlr.add_compression(True)
+    qlr.add_raster_data(arr)
+    qlr.add_print()
 
     if args.loglevel == logging.DEBUG:
         sys.stderr.write(multiline_hex(qlr.data, 16))

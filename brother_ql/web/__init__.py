@@ -128,23 +128,23 @@ def print_text(content=None):
     arr[black_idx] = 0
 
     qlr = BrotherQLRaster(model)
-    qlr.set_mode()
-    qlr.set_clear_command_buffer()
-    qlr.set_initialize()
-    qlr.set_mode()
+    qlr.add_switch_mode()
+    qlr.add_invalidate()
+    qlr.add_initialize()
+    qlr.add_mode()
     qlr.mtype = 0x0A
     qlr.mwidth = 62
     qlr.mlength = 0
-    qlr.set_media_and_quality(im.size[1])
-    qlr.set_autocut(True)
-    qlr.set_cut_every(1)
+    qlr.add_media_and_quality(im.size[1])
+    qlr.add_autocut(True)
+    qlr.add_cut_every(1)
     qlr.dpi_600 = False
     qlr.cut_at_end = True
-    qlr.set_expanded_mode()
-    qlr.set_margins()
-    qlr.set_compression(True)
-    qlr.set_raster_data(arr)
-    qlr.print()
+    qlr.add_expanded_mode()
+    qlr.add_margins()
+    qlr.add_compression(True)
+    qlr.add_raster_data(arr)
+    qlr.add_print()
 
     if not DEBUG:
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)

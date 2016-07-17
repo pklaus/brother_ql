@@ -8,6 +8,7 @@ import numpy as np
 from PIL import Image
 
 from brother_ql.raster import BrotherQLRaster
+from brother_ql import BrotherQLError, BrotherQLUnsupportedCmd
 
 try:
     stdout = sys.stdout.buffer
@@ -36,6 +37,7 @@ def main():
     logging.basicConfig(level=args.loglevel)
 
     qlr = BrotherQLRaster(args.model)
+    qlr.exception_on_warning = True
     device_pixel_width = qlr.get_pixel_width()
 
     im = Image.open(args.image)
@@ -50,21 +52,36 @@ def main():
     arr[black_idx] = 0
 
 
-    qlr.add_switch_mode()
+    try:
+        qlr.add_switch_mode()
+    except BrotherQLUnsupportedCmd:
+        pass
     qlr.add_invalidate()
     qlr.add_initialize()
-    qlr.add_switch_mode()
+    try:
+        qlr.add_switch_mode()
+    except BrotherQLUnsupportedCmd:
+        pass
     qlr.mtype = 0x0A
     qlr.mwidth = 62
     qlr.mlength = 0
     qlr.add_media_and_quality(im.size[1])
-    qlr.add_autocut(True)
-    qlr.add_cut_every(1)
-    qlr.dpi_600 = False
-    qlr.cut_at_end = True
-    qlr.add_expanded_mode()
+    try:
+        qlr.add_autocut(True)
+        qlr.add_cut_every(1)
+    except BrotherQLUnsupportedCmd:
+        pass
+    try:
+        qlr.dpi_600 = False
+        qlr.cut_at_end = True
+        qlr.add_expanded_mode()
+    except BrotherQLUnsupportedCmd:
+        pass
     qlr.add_margins()
-    qlr.add_compression(True)
+    try:
+        qlr.add_compression(True)
+    except BrotherQLUnsupportedCmd:
+        pass
     qlr.add_raster_data(arr)
     qlr.add_print()
 

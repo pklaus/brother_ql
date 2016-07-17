@@ -13,7 +13,10 @@ from .devicedependent import models, \
                              right_margin_addition, \
                              compressionsupport, \
                              cuttingsupport, \
+                             expandedmode, \
                              modesetting
+
+from . import BrotherQLError, BrotherQLUnsupportedCmd, BrotherQLUnknownModel, BrotherQLRasterError
 
 logger = logging.getLogger(__name__)
 
@@ -21,7 +24,7 @@ class BrotherQLRaster(object):
 
     def __init__(self, model='QL-500'):
         if model not in models:
-            raise BrotherQLRasterUnknownModel()
+            raise BrotherQLUnknownModel()
         self.model = model
         self.data = b''
         self._pquality = 1
@@ -31,11 +34,29 @@ class BrotherQLRaster(object):
         self._compression = False
         self.exception_on_warning = False
 
-    def warn(self, problem):
+    def _warn(self, problem, kind=BrotherQLRasterError):
+        """
+        Logs the warning message `problem` or raises a
+        `BrotherQLRasterError` exception (changeable via `kind`)
+        if `self.exception_on_warning` is set to True.
+
+        :raises BrotherQLRasterError: Or other exception \
+            set via the `kind` keyword argument.
+        """
         if self.exception_on_warning:
-            raise BrotherQLRasterError(problem)
+            raise kind(problem)
         else:
             logger.warning(problem)
+
+    def unsupported(self, problem):
+        """
+        Raises BrotherQLUnsupportedCmd if
+        exception_on_warning is set to True.
+        Issues a logger warning otherwise.
+
+        :raises BrotherQLUnsupportedCmd:
+        """
+        self._warn(problem, kind=BrotherQLUnsupportedCmd)
 
     def add_initialize(self):
         self.page_number = 0
@@ -48,7 +69,7 @@ class BrotherQLRaster(object):
         the mode change (others are in raster mode already).
         """
         if self.model not in modesetting:
-            self.warn("Trying to switch the operating mode on a printer that doesn't support the command.")
+            self.unsupported("Trying to switch the operating mode on a printer that doesn't support the command.")
             return
         self.data += b'\x1B\x69\x61\x01'
 
@@ -100,16 +121,22 @@ class BrotherQLRaster(object):
         # INFO:  media/quality (1B 69 7A) --> found! (payload: 8E 0A 3E 00 D2 00 00 00 00 00)
 
     def add_autocut(self, autocut = False):
+        if self.model not in cuttingsupport:
+            self.unsupported("Trying to call add_autocut with a printer that doesn't support it")
+            return
         self.data += b'\x1B\x69\x4D'
         self.data += bytes([autocut << 6])
 
     def add_cut_every(self, n=1):
+        if self.model not in cuttingsupport:
+            self.unsupported("Trying to call add_cut_every with a printer that doesn't support it")
+            return
         self.data += b'\x1B\x69\x41'
         self.data += bytes([n & 0xFF])
 
     def add_expanded_mode(self):
-        if self.model not in cuttingsupport:
-            self.warn("Trying to set expanded mode on a printer that doesn't support it")
+        if self.model not in expandedmode:
+            self.unsupported("Trying to set expanded mode (dpi/cutting at end) on a printer that doesn't support it")
             return
         self.data += b'\x1B\x69\x4B'
         flags = 0x00
@@ -123,7 +150,7 @@ class BrotherQLRaster(object):
 
     def add_compression(self, compression=True):
         if self.model not in compressionsupport:
-            self.warn("Trying to set compression on a printer that doesn't support it")
+            self.unsupported("Trying to set compression on a printer that doesn't support it")
             return
         self._compression = compression
         self.data += b'\x4D'
@@ -156,7 +183,3 @@ class BrotherQLRaster(object):
             self.data += b'\x1A'
         else:
             self.data += b'\x0C'
-
-class BrotherQLRasterError(Exception): pass
-class BrotherQLRasterUnknownModel(BrotherQLRasterError): pass
-

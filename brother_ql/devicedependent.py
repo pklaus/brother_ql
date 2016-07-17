@@ -97,6 +97,8 @@ cuttingsupport = [
   'QL-720NW',
 ]
 
+expandedmode = cuttingsupport
+
 compressionsupport = [
   'QL-570',
   'QL-580N',

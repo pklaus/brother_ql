@@ -62,6 +62,7 @@ def main():
         qlr.add_switch_mode()
     except BrotherQLUnsupportedCmd:
         pass
+    qlr.add_status_information()
     qlr.mtype = 0x0A
     qlr.mwidth = 62
     qlr.mlength = 0

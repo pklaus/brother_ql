@@ -62,6 +62,10 @@ class BrotherQLRaster(object):
         self.page_number = 0
         self.data += b'\x1B\x40' # init
 
+    def add_status_information(self):
+        """ Status Information Request """
+        self.data += b'\x1B\x69\x53'
+
     def add_switch_mode(self):
         """
         Switch dynamic command mode

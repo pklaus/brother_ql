@@ -8,7 +8,8 @@ import numpy as np
 from PIL import Image
 
 from brother_ql.raster import BrotherQLRaster
-from brother_ql import BrotherQLError, BrotherQLUnsupportedCmd
+from brother_ql.devicedependent import models
+from brother_ql import BrotherQLError, BrotherQLUnsupportedCmd, BrotherQLUnknownModel
 
 try:
     stdout = sys.stdout.buffer
@@ -30,13 +31,25 @@ def main():
     parser.add_argument('image')
     parser.add_argument('outfile', nargs='?', type=argparse.FileType('wb'), default=stdout)
     parser.add_argument('--model', default='QL-500')
+    parser.add_argument('--list-models', action='store_true', \
+      help='List available models and quit (the image argument is still required but ignored)')
     parser.add_argument('--threshold', type=int, default=170)
     parser.add_argument('--loglevel', type=lambda x: getattr(logging, x), default=logging.WARNING)
     args = parser.parse_args()
 
     logging.basicConfig(level=args.loglevel)
 
-    qlr = BrotherQLRaster(args.model)
+    args.model = args.model.upper()
+
+    if args.list_models:
+        print('Supported models')
+        print('\n'.join(models))
+        sys.exit(0)
+
+    try:
+        qlr = BrotherQLRaster(args.model)
+    except BrotherQLUnknownModel:
+        sys.exit("Unknown model. Use option --list-models to show available models.")
     qlr.exception_on_warning = True
     device_pixel_width = qlr.get_pixel_width()
 
@@ -85,9 +98,6 @@ def main():
         pass
     qlr.add_raster_data(arr)
     qlr.add_print()
-
-    if args.loglevel == logging.DEBUG:
-        sys.stderr.write(multiline_hex(qlr.data, 16))
 
     args.outfile.write(qlr.data)
 

@@ -17,8 +17,8 @@ setup(name='brother_ql',
                   'brother_ql.web'],
       entry_points = {
           'console_scripts': [
-              'brother_ql_analyse = brother_ql.analyse:main',
-              'brother_ql_create  = brother_ql.create:main',
+              'brother_ql_analyse = brother_ql.brother_ql_analyse:main',
+              'brother_ql_create  = brother_ql.brother_ql_create:main',
               'brother_ql_web     = brother_ql.web.__init__:main',
           ],
       },

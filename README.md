@@ -51,17 +51,19 @@ Once you have a Brother QL instruction file, you can send it to the printer like
 
     cat my_label.bin > /dev/usb/lp1
 
+Be sure to have permission to write to the device (usually adding yourself to the *lp* group is sufficient.
+
 Or via network (if you have a LAN/WLAN enabled Brother QL):
 
     nc 192.168.0.23 9100 < my_label.bin
 
 You can also use the tool `brother_ql_print` to send the instructions to your printer.
 
-    brother_ql_print 720x151_monochrome.bin usb://0x04f9:0x2015
+    brother_ql_print 720x151_monochrome.bin /dev/usb/lp0
     # or
     brother_ql_print --backend network 720x151_monochrome.bin tcp://192.168.0.23:9100
-    # or
-    brother_ql_print 720x151_monochrome.bin /dev/usb/lp0
+    # or (requires PyUSB: `pip install pyusb`)
+    brother_ql_print 720x151_monochrome.bin usb://0x04f9:0x2015
 
 #### Debugging
 
@@ -93,5 +95,6 @@ After every instruction, the printer will be given a chance to send a status res
     INFO: Interpretation of the response: 'Phase change' (phase: Waiting to receive), 'Continuous length tape' 62x0 mm^2, errors: []
 
 Here, a command file was successfully printed. The last response should state the *Waiting to receive* phase.
+If you want to confirm the sending of every single command individually, you can add the `--interactive` argument to the command line call.
 
 If you're seeing any error there, open a new issue on Github containing the debugging output to get your device supported.

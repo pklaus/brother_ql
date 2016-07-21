@@ -29,6 +29,13 @@ If you want to find out about its options, just call the tool with `--help`:
 
     brother_ql_create --help
 
+Currently, the `brother_ql_create` tool is still lacking quite some important features like:
+* setting the media to something different than 62mm endless labels
+* using the 600dpi mode
+
+Please open an issue on Github if you want the tool to support more use cases.
+State what you want to be supported and what the command call could look like.
+
 #### Analyse ####
 
 To analyse a binary file containing Brother QL Raster instructions and
@@ -85,5 +92,6 @@ After every instruction, the printer will be given a chance to send a status res
     TIME 1.60
     INFO: Interpretation of the response: 'Phase change' (phase: Waiting to receive), 'Continuous length tape' 62x0 mm^2, errors: []
 
+Here, a command file was successfully printed. The last response should state the *Waiting to receive* phase.
 
-To get your device supported, open a new issue on Github and paste the content of the debugging output.
+If you're seeing any error there, open a new issue on Github containing the debugging output to get your device supported.

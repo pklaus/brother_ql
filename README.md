@@ -10,7 +10,11 @@ QL-500, QL-550, QL-560, QL-570, QL-580N, QL-650TD, QL-700, QL-710W, QL-720NW, QL
 
 ### Installation ###
 
-    pip install https://github.com/pklaus/brother_ql/archive/master.zip --upgrade
+    pip install https://github.com/pklaus/brother_ql/archive/master.zip
+
+Upgrade to the latest version using:
+
+    pip install --upgrade https://github.com/pklaus/brother_ql/archive/master.zip
 
 ### Usage ###
 

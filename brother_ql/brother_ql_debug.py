@@ -12,7 +12,7 @@ class BrotherQL_USBdebug(object):
 
     def __init__(self, dev, instructions_data, backend='linux_kernel'):
 
-        be_cls = backend_factory(backend)['dev_class']
+        be_cls = backend_factory(backend)['backend_class']
         self.be = be_cls(dev)
 
         self.sleep_time = 0.0

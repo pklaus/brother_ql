@@ -40,7 +40,7 @@ def main():
         selected_backend = 'linux_kernel'
     be = backend_factory(selected_backend)
     list_available_devices = be['list_available_devices']
-    BrotherQLBackend       = be['dev_class']
+    BrotherQLBackend       = be['backend_class']
 
     if args.list_printers:
         for printer in list_available_devices():

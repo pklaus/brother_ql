@@ -25,16 +25,16 @@ def backend_factory(backend_name):
     if backend_name == 'pyusb':
         from . import pyusb        as pyusb_backend
         list_available_devices = pyusb_backend.list_available_devices
-        dev_class              = pyusb_backend.BrotherQLBackendPyUSB
+        backend_class          = pyusb_backend.BrotherQLBackendPyUSB
     elif backend_name == 'linux_kernel':
         from . import linux_kernel as linux_kernel_backend
         list_available_devices = linux_kernel_backend.list_available_devices
-        dev_class              = linux_kernel_backend.BrotherQLBackendLinuxKernel
+        backend_class          = linux_kernel_backend.BrotherQLBackendLinuxKernel
     elif backend_name == 'network':
         from . import network      as network_backend
         list_available_devices = network_backend.list_available_devices
-        dev_class              = network_backend.BrotherQLBackendNetwork
+        backend_class          = network_backend.BrotherQLBackendNetwork
     else:
         raise NotImplementedError('Backend %s not implemented.' % backend_name)
 
-    return {'list_available_devices': list_available_devices, 'dev_class': dev_class}
+    return {'list_available_devices': list_available_devices, 'backend_class': backend_class}

@@ -88,6 +88,9 @@ class BrotherQLBackendPyUSB(BrotherQLBackendGeneric):
 
         if self.dev.is_kernel_driver_active(0):
             self.dev.detach_kernel_driver(0)
+            self.was_kernel_driver_active = True
+        else:
+            self.was_kernel_driver_active = False
 
         # set the active configuration. With no arguments, the first configuration will be the active one
         self.dev.set_configuration()
@@ -135,3 +138,10 @@ class BrotherQLBackendPyUSB(BrotherQLBackendGeneric):
                 return data
         else:
             raise NotImplementedError('Unknown strategy')
+
+    def _dispose(self):
+        usb.util.dispose_resources(self.dev)
+        del self.write_dev, self.read_dev
+        if self.was_kernel_driver_active:
+            self.dev.attach_kernel_driver(0)
+        del self.dev

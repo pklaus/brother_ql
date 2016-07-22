@@ -75,3 +75,6 @@ class BrotherQLBackendLinuxKernel(BrotherQLBackendGeneric):
                 return data
         else:
             raise NotImplementedError('Unknown strategy')
+
+    def _dispose(self):
+        os.close(self.dev)

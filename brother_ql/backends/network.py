@@ -90,3 +90,7 @@ class BrotherQLBackendNetwork(BrotherQLBackendGeneric):
             return data
         else:
             raise NotImplementedError('Unknown strategy')
+
+    def _dispose(self):
+        self.s.shutdown(socket.SHUT_RDWR)
+        self.s.close()

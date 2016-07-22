@@ -149,6 +149,7 @@ def print_text(content=None):
         try:
             be = BACKEND_CLASS(BACKEND_STRING_DESCR)
             be.write(qlr.data)
+            be.dispose()
             del be
         except Exception as e:
             return_dict['message'] = str(e)

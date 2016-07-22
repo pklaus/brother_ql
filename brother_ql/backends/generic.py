@@ -39,3 +39,15 @@ class BrotherQLBackendGeneric(object):
         except Exception as e:
             logger.debug('Error reading... %s', e)
             raise
+
+    def dispose(self):
+        try:
+            self._dispose()
+        except:
+            pass
+
+    def _dispose(self):
+        raise NotImplementedError()
+
+    def __del__(self):
+        self.dispose()

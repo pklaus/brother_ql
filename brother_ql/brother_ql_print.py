@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 def main():
 
     parser = argparse.ArgumentParser()
-    parser.add_argument('--backend', choices=available_backends, default='linux_kernel', help='Forces the use of a specific backend')
+    parser.add_argument('--backend', choices=available_backends, help='Forces the use of a specific backend')
     parser.add_argument('--list-printers', action='store_true', help='List the devices available with the selected --backend')
     parser.add_argument('--debug', action='store_true', help='Enable debugging output')
     parser.add_argument('instruction_file', nargs='?', help='file containing the instructions to be sent to the printer')
@@ -31,13 +31,18 @@ def main():
     level = logging.DEBUG if args.debug else logging.WARNING
     logging.basicConfig(level=level)
     if args.backend == 'network':
-        logger.warning("Warning: The network backend has not 'readback' functionality. Only writing/sending to the printer works here.")
+        logger.warning("The network backend doesn't supply any 'readback' functionality. No status reports will be received.")
 
-    try:
-        selected_backend = guess_backend(args.device)
-    except:
-        logger.warning("Couln't guess the backend. Trying with linux_kernel backend.")
-        selected_backend = 'linux_kernel'
+    selected_backend = None
+    if args.backend:
+        selected_backend = args.backend
+    else:
+        try:
+            selected_backend = guess_backend(args.device)
+        except:
+            logger.info("No backend stated. Selecting the default linux_kernel backend.")
+            selected_backend = 'linux_kernel'
+
     be = backend_factory(selected_backend)
     list_available_devices = be['list_available_devices']
     BrotherQLBackend       = be['backend_class']
@@ -47,30 +52,28 @@ def main():
             print(printer['string_descr'])
             sys.exit(0)
 
+    string_descr = None
     if not args.device:
         "We need to search for available devices and select the first."
         ad = list_available_devices()
-        selected = None
-        pprint(available_devices)
-        for device in ad:
-            string_descr = device['string_descr']
-            instance = device['instance']
-            selected = string_descr
-            break
-        if not selected:
+        if not ad:
             sys.exit("No printer found")
+        string_descr = ad[0]['string_descr']
+        print("Selecting first device %s" % string_descr)
     else:
         "A string descriptor for the device was given, let's use it."
-        selected = args.device
+        string_descr = args.device
 
-    printer = BrotherQLBackend(selected)
+    printer = BrotherQLBackend(string_descr)
 
     start = time.time()
     with open(args.instruction_file, 'rb') as f:
         content = f.read()
         logger.info('Sending instructions to the printer. Total: %d bytes.', len(content))
         printer.write(content)
-    if args.backend in ('network',): return
+    if selected_backend == 'network':
+        """ No need to wait for completion. The network backend doesn't support readback. """
+        return
     printing_completed = False
     waiting_to_receive = False
     while time.time() - start < 10:

@@ -130,6 +130,7 @@ def chunker(data, raise_exception=False):
             else:
                 logger.warning(msg)
                 data = data[1:]
+                continue
         opcode_def = OPCODES[opcode]
         num_bytes = len(opcode)
         if opcode_def[1] > 0: num_bytes += opcode_def[1]
@@ -155,11 +156,11 @@ def interpret_response(data):
     error_info_2 = data[9]
     for error_bit in RESP_ERROR_INFORMATION_1_DEF:
         if error_info_1 & (1 << error_bit):
-            logging.error('Error: ' + RESP_ERROR_INFORMATION_1_DEF[error_bit])
+            logger.error('Error: ' + RESP_ERROR_INFORMATION_1_DEF[error_bit])
             errors.append(RESP_ERROR_INFORMATION_1_DEF[error_bit])
     for error_bit in RESP_ERROR_INFORMATION_2_DEF:
         if error_info_2 & (1 << error_bit):
-            logging.error('Error: ' + RESP_ERROR_INFORMATION_2_DEF[error_bit])
+            logger.error('Error: ' + RESP_ERROR_INFORMATION_2_DEF[error_bit])
             errors.append(RESP_ERROR_INFORMATION_2_DEF[error_bit])
 
     media_width  = data[10]

@@ -42,7 +42,7 @@ def main():
     args.model = args.model.upper()
 
     if args.list_models:
-        print('Supported models')
+        print('Supported models:')
         print('\n'.join(models))
         sys.exit(0)
 

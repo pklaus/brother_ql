@@ -14,17 +14,19 @@ from PIL import Image, ImageDraw, ImageFont
 import numpy as np
 import markdown
 
+from brother_ql.devicedependent import models
 from brother_ql.raster import BrotherQLRaster
+from brother_ql.backends import backend_factory, guess_backend
 
 logger = logging.getLogger(__name__)
 
 # globals:
+MODEL = None
+BACKEND_CLASS = None
+BACKEND_STRING_DESCR = None
 DEBUG = False
-
 FONTS = None
-
 DEFAULT_FONT = None
-
 DEFAULT_FONTS = [
   {'family': 'Minion Pro',      'style': 'Semibold'},
   {'family': 'Linux Libertine', 'style': 'Regular'},
@@ -88,13 +90,10 @@ def print_text(content=None):
         return return_dict
 
     threshold = 170
-    fontsize = 100
+    fontsize = int(request.query.get('font_size', 100))
     width = 720
     margin = 0
     height = 100 + 2*margin
-    model = 'QL-710W'
-    host = '192.168.178.32'
-    port = 9100
 
     try:
         font_family = request.query.get('font_family')
@@ -127,11 +126,11 @@ def print_text(content=None):
     arr[white_idx] = 1
     arr[black_idx] = 0
 
-    qlr = BrotherQLRaster(model)
+    qlr = BrotherQLRaster(MODEL)
     qlr.add_switch_mode()
     qlr.add_invalidate()
     qlr.add_initialize()
-    qlr.add_mode()
+    qlr.add_status_information()
     qlr.mtype = 0x0A
     qlr.mwidth = 62
     qlr.mlength = 0
@@ -147,27 +146,41 @@ def print_text(content=None):
     qlr.add_print()
 
     if not DEBUG:
-        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        s.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
-        s.connect((host, port))
-        s.send(qlr.data)
-        s.close()
+        try:
+            be = BACKEND_CLASS(BACKEND_STRING_DESCR)
+            be.write(qlr.data)
+            del be
+        except Exception as e:
+            return_dict['message'] = str(e)
+            response.status = 500
+            return return_dict
 
     return_dict['success'] = True
     if DEBUG: return_dict['data'] = str(qlr.data)
     return return_dict
 
 def main():
-    global DEBUG, FONTS, DEFAULT_FONT
+    global DEBUG, FONTS, DEFAULT_FONT, MODEL, BACKEND_CLASS, BACKEND_STRING_DESCR
     import argparse
     parser = argparse.ArgumentParser()
     parser.add_argument('--port', default=8013)
     parser.add_argument('--loglevel', type=lambda x: getattr(logging, x.upper()), default='WARNING')
     parser.add_argument('--font-folder', help='folder for additional .ttf/.otf fonts')
+    parser.add_argument('--model', default='QL-500', choices=models, help='The model of your printer (default: QL-500)')
+    parser.add_argument('printer', help='String descriptor for the printer to use (like tcp://192.168.0.23:9100 or file:///dev/usb/lp0)')
     args = parser.parse_args()
 
     DEBUG = args.loglevel == logging.DEBUG
     logging.basicConfig(level=args.loglevel)
+
+    try:
+        selected_backend = guess_backend(args.printer)
+    except:
+        parser.error("Couln't guess the backend to use from the printer string descriptor")
+    BACKEND_CLASS = backend_factory(selected_backend)['backend_class']
+    BACKEND_STRING_DESCR = args.printer
+
+    MODEL = args.model
 
     FONTS = get_fonts()
     if args.font_folder:

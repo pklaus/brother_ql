@@ -153,6 +153,7 @@ def print_text(content=None):
             del be
         except Exception as e:
             return_dict['message'] = str(e)
+            logger.warning('Exception happened: %s', e)
             response.status = 500
             return return_dict
 
@@ -198,7 +199,7 @@ def main():
         sys.stderr.write('Could not find any of the default fonts')
         sys.exit()
 
-    run(host='localhost', port=args.port, debug=args.loglevel==logging.DEBUG)
+    run(host='', port=args.port, debug=args.loglevel==logging.DEBUG)
 
 if __name__ == "__main__":
     main()

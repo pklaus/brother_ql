@@ -86,10 +86,11 @@ class BrotherQLBackendPyUSB(BrotherQLBackendGeneric):
 
         # Now we are sure to have self.dev around, start using it:
 
-        if self.dev.is_kernel_driver_active(0):
+        try:
+            assert self.dev.is_kernel_driver_active(0)
             self.dev.detach_kernel_driver(0)
             self.was_kernel_driver_active = True
-        else:
+        except (NotImplementedError, AssertionError):
             self.was_kernel_driver_active = False
 
         # set the active configuration. With no arguments, the first configuration will be the active one

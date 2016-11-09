@@ -27,7 +27,7 @@ class BrotherQLRaster(object):
             raise BrotherQLUnknownModel()
         self.model = model
         self.data = b''
-        self._pquality = 1
+        self._pquality = True
         self.page_number = 0
         self.cut_at_end = True
         self.dpi_600 = False
@@ -107,7 +107,7 @@ class BrotherQLRaster(object):
 
     @pquality.setter
     def pquality(self, value):
-        self._pquality = bytes([value & 0x01])
+        self._pquality = bool(value)
 
     def add_media_and_quality(self, rnumber):
         self.data += b'\x1B\x69\x7A'

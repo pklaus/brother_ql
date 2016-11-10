@@ -28,7 +28,12 @@ setup(name='brother_ql',
       include_package_data = False,
       zip_safe = True,
       platforms = 'any',
-      install_requires = ['numpy', 'packbits', 'pillow', 'matplotlib'],
+      install_requires = [
+          "numpy",
+          "packbits",
+          "pillow",
+          "matplotlib",
+      ],
       extras_require = {
           #'brother_ql_analyse':  ["matplotlib",],
           #'brother_ql_create' :  ["matplotlib",],

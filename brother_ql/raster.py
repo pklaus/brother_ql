@@ -62,11 +62,11 @@ class BrotherQLRaster(object):
 
     def add_initialize(self):
         self.page_number = 0
-        self.data += b'\x1B\x40' # init
+        self.data += b'\x1B\x40' # ESC @
 
     def add_status_information(self):
         """ Status Information Request """
-        self.data += b'\x1B\x69\x53'
+        self.data += b'\x1B\x69\x53' # ESC i S
 
     def add_switch_mode(self):
         """
@@ -77,7 +77,7 @@ class BrotherQLRaster(object):
         if self.model not in modesetting:
             self.unsupported("Trying to switch the operating mode on a printer that doesn't support the command.")
             return
-        self.data += b'\x1B\x69\x61\x01'
+        self.data += b'\x1B\x69\x61\x01' # ESC i a
 
     def add_invalidate(self):
         """ clear command buffer """
@@ -112,7 +112,7 @@ class BrotherQLRaster(object):
         self._pquality = bool(value)
 
     def add_media_and_quality(self, rnumber):
-        self.data += b'\x1B\x69\x7A'
+        self.data += b'\x1B\x69\x7A' # ESC i z
         valid_flags = 0x80
         valid_flags |= (self._mtype is not None) << 1
         valid_flags |= (self._mwidth is not None) << 2
@@ -130,28 +130,28 @@ class BrotherQLRaster(object):
         if self.model not in cuttingsupport:
             self.unsupported("Trying to call add_autocut with a printer that doesn't support it")
             return
-        self.data += b'\x1B\x69\x4D'
+        self.data += b'\x1B\x69\x4D' # ESC i M
         self.data += bytes([autocut << 6])
 
     def add_cut_every(self, n=1):
         if self.model not in cuttingsupport:
             self.unsupported("Trying to call add_cut_every with a printer that doesn't support it")
             return
-        self.data += b'\x1B\x69\x41'
+        self.data += b'\x1B\x69\x41' # ESC i A
         self.data += bytes([n & 0xFF])
 
     def add_expanded_mode(self):
         if self.model not in expandedmode:
             self.unsupported("Trying to set expanded mode (dpi/cutting at end) on a printer that doesn't support it")
             return
-        self.data += b'\x1B\x69\x4B'
+        self.data += b'\x1B\x69\x4B' # ESC i K
         flags = 0x00
         flags |= self.cut_at_end << 3
         flags |= self.dpi_600 << 6
         self.data += bytes([flags])
 
     def add_margins(self, dots=0x23):
-        self.data += b'\x1B\x69\x64'
+        self.data += b'\x1B\x69\x64' # ESC i d
         self.data += struct.pack('<H', dots)
 
     def add_compression(self, compression=True):
@@ -159,7 +159,7 @@ class BrotherQLRaster(object):
             self.unsupported("Trying to set compression on a printer that doesn't support it")
             return
         self._compression = compression
-        self.data += b'\x4D'
+        self.data += b'\x4D' # M
         self.data += bytes([compression << 1])
 
     def get_pixel_width(self):
@@ -177,7 +177,7 @@ class BrotherQLRaster(object):
             fmt = 'Wrong pixel width: {}, expected {}'
             raise BrotherQLRasterError(fmt.format(np_array.shape[0], self.get_pixel_width()))
         for row in np_array:
-            self.data += b'\x67\x00'
+            self.data += b'\x67\x00' # g 0x00
             row = bytes(np.packbits(row))
             if self._compression:
                 row = packbits.encode(row)
@@ -186,6 +186,6 @@ class BrotherQLRaster(object):
 
     def add_print(self, last_page=True):
         if last_page:
-            self.data += b'\x1A'
+            self.data += b'\x1A' # 0x1A = ^Z = SUB; here: EOF = End of File
         else:
-            self.data += b'\x0C'
+            self.data += b'\x0C' # 0x0C = FF  = Form Feed

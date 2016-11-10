@@ -1,14 +1,23 @@
-## brother\_ql ##
+## brother\_ql
 
 A Python package to control Brother QL label printers.
-This package basically replaces the driver because it implements
-the raster language of those printers.
+It implements the raster language of those printers and allows you to send instruction files to your printer.
+In more details, the following is possible with this package:
 
-Here is a list of printers claimed to be supported:
+* Create raster language files for the Brother label printers.  
+  These binary files contain the instructions for the printer and can be created from image files or programmatically in your own Python script.
+* Analyze files containing raster instructions.  
+  A tool that interprets all the instructions, writes out information about all of them, and creates PNG images of the printouts to be expected.
+* Print raster instruction files with your Brother label printer via different backends:
+  * pyusb (works cross-platform)
+  * network (works cross-platform for WiFi/Ethernet-enabled printers)
+  * linux\_kernel (works on Linux only; uses the /dev/usb/lp0 device handles)
 
-QL-500, QL-550, QL-560, QL-570, QL-580N, QL-650TD, QL-700, QL-710W, QL-720NW, QL-1050, and QL-1060N.
+The following printers are claimed to be supported (✓ means verified by the author or by contributors):
 
-### Installation ###
+* QL-500 (✓), QL-550, QL-560, QL-570, QL-580N, QL-650TD, QL-700 (✓), QL-710W (✓), QL-720NW, QL-1050, and QL-1060N.
+
+### Installation
 
     pip install https://github.com/pklaus/brother_ql/archive/master.zip
 
@@ -16,9 +25,11 @@ Upgrade to the latest version using:
 
     pip install --upgrade https://github.com/pklaus/brother_ql/archive/master.zip
 
-### Usage ###
+This package was mainly created for use with Python 3. The essential functionality will also work with Python 2, though: The creation of label files.
 
-#### Create ####
+### Usage
+
+#### Create
 
 You can create a new instruction file to be sent to the printer with
 the `brother_ql_create` tool:
@@ -30,13 +41,14 @@ If you want to find out about its options, just call the tool with `--help`:
     brother_ql_create --help
 
 Currently, the `brother_ql_create` tool is still lacking quite some important features like:
+
 * setting the media to something different than 62mm endless labels
 * using the 600dpi mode
 
 Please open an issue on Github if you want the tool to support more use cases.
 State what you want to be supported and what the command call could look like.
 
-#### Analyse ####
+#### Analyse
 
 To analyse a binary file containing Brother QL Raster instructions and
 create an image of what would be printed:
@@ -45,7 +57,9 @@ create an image of what would be printed:
 
 This tool also has the `--help` option.
 
-#### Printing ####
+(This specific tool doesn't work on Python 2.)
+
+#### Print
 
 Once you have a Brother QL instruction file, you can send it to the printer like this:
 
@@ -65,7 +79,7 @@ You can also use the tool `brother_ql_print` to send the instructions to your pr
     # or (requires PyUSB: `pip install pyusb`)
     brother_ql_print 720x151_monochrome.bin usb://0x04f9:0x2015
 
-#### Debugging
+#### Debug
 
 If your printer has problems printing the instructions file, it may blink its LED (green or red) depending on the model. This can have many reasons, eg.:
 

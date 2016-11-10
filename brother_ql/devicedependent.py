@@ -99,7 +99,6 @@ cuttingsupport = [
 expandedmode = cuttingsupport
 
 compressionsupport = [
-  'QL-570',
   'QL-580N',
   'QL-650TD',
   'QL-1050',

@@ -1,4 +1,6 @@
 
+from builtins import bytes
+
 import struct
 import logging
 

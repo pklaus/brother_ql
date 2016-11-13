@@ -50,38 +50,44 @@ def main():
 def create_label(qlr, image, label_size, threshold=70, **kwargs):
 
     label_specs = label_type_specs[label_size]
+    dots_printable = label_specs['dots_printable']
+    right_margin_dots = label_specs['right_margin_dots']
+    device_pixel_width = qlr.get_pixel_width()
+
+    if isinstance(image, Image.Image):
+        im = image
+    elif isinstance(image, (unicode, str)):
+        im = Image.open(image)
+    else:
+        raise NotImplementedError("The image argument needs to be an Image() instance or the filename to an image.")
 
     if label_specs['kind'] == ENDLESS_LABEL:
-        device_pixel_width = qlr.get_pixel_width()
-        im = Image.open(image)
-        hsize = int(im.size[1] / im.size[0] * device_pixel_width)
-        im = im.resize((device_pixel_width, hsize), Image.ANTIALIAS)
+        if im.size[0] > dots_printable[0]:
+            hsize = int((dots_printable[0] / im.size[0]) * im.size[1])
+            im = im.resize((dots_printable[0], hsize), Image.ANTIALIAS)
+            logger.warning('Need to resize the image...')
+        if im.size[0] < device_pixel_width:
+            new_im = Image.new(im.mode, (device_pixel_width, im.size[1]), 255)
+            new_im.paste(im, (device_pixel_width-im.size[0]-right_margin_dots, 0))
+            im = new_im
         im = im.convert("L")
-        arr = np.asarray(im, dtype=np.uint8)
-        arr.flags.writeable = True
-        white_idx = arr[:,:] <  threshold
-        black_idx = arr[:,:] >= threshold
-        arr[white_idx] = 1
-        arr[black_idx] = 0
     elif label_specs['kind'] == DIE_CUT_LABEL:
-        dots_printable = label_specs['dots_printable']
-        im = Image.open(image)
         im = im.convert("L")
         if im.size[0] == dots_printable[1] and im.size[1] == dots_printable[0]:
             im = im.rotate(90, expand=True)
         if im.size[0] != dots_printable[0] or im.size[1] != dots_printable[1]:
             sys.exit("Check your image dimensions. Expecting: " + str(dots_printable))
-        new_im = Image.new(im.mode, (720, dots_printable[1]), 255)
-        new_im.paste(im, (720-im.size[0], 0))
+        new_im = Image.new(im.mode, (device_pixel_width, dots_printable[1]), 255)
+        new_im.paste(im, (device_pixel_width-im.size[0]-right_margin_dots, 0))
         im = new_im
-        arr = np.asarray(im, dtype=np.uint8)
-        arr.flags.writeable = True
-        white_idx = arr[:,:] <  threshold
-        black_idx = arr[:,:] >= threshold
-        arr[white_idx] = 1
-        arr[black_idx] = 0
     else:
         raise NotImplementedError("Label kind %s not implemented yet." % label_specs['kind'])
+    arr = np.asarray(im, dtype=np.uint8)
+    arr.flags.writeable = True
+    white_idx = arr[:,:] <  threshold * 255./100.
+    black_idx = arr[:,:] >= threshold * 255./100.
+    arr[white_idx] = 1
+    arr[black_idx] = 0
 
     try:
         qlr.add_switch_mode()

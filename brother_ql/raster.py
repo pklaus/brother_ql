@@ -174,7 +174,7 @@ class BrotherQLRaster(object):
         logger.info("raster_image_size: {1}x{0}".format(*np_array.shape))
         if np_array.shape[1] != self.get_pixel_width():
             fmt = 'Wrong pixel width: {}, expected {}'
-            raise BrotherQLRasterError(fmt.format(np_array.shape[0], self.get_pixel_width()))
+            raise BrotherQLRasterError(fmt.format(np_array.shape[1], self.get_pixel_width()))
         for row in np_array:
             self.data += b'\x67\x00' # g 0x00
             row = bytes(np.packbits(row))

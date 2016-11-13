@@ -16,6 +16,8 @@ try:
 except:
     stdout = sys.stdout
 
+logger = logging.getLogger(__name__)
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('image', help='The image file to create a label from.')

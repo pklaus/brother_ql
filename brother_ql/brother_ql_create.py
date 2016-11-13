@@ -25,6 +25,7 @@ def main():
     parser.add_argument('--model', '-m', default='QL-500', help='The printer model to use. Check available ones with `brother_ql_info --list-models`.')
     parser.add_argument('--label-size', '-s', default='62', help='The label size (and kind) to use. Check available ones with `brother_ql_info --list-label-sizes`.')
     parser.add_argument('--threshold', '-t', type=float, default=70.0, help='The threshold value (in percent) to discriminate between black and white pixels.')
+    parser.add_argument('--no-cut', dest='cut', action='store_false', help="Don't cut the tape after printing the label.")
     parser.add_argument('--loglevel', type=lambda x: getattr(logging, x), default=logging.WARNING, help='Set to DEBUG for verbose debugging output to stderr.')
     args = parser.parse_args()
 
@@ -45,11 +46,11 @@ def main():
 
     qlr.exception_on_warning = True
 
-    create_label(qlr, args.image, args.label_size, threshold=args.threshold)
+    create_label(qlr, args.image, args.label_size, threshold=args.threshold, cut=args.cut)
 
     args.outfile.write(qlr.data)
 
-def create_label(qlr, image, label_size, threshold=70, **kwargs):
+def create_label(qlr, image, label_size, threshold=70, cut=True, **kwargs):
 
     label_specs = label_type_specs[label_size]
     dots_printable = label_specs['dots_printable']
@@ -114,13 +115,14 @@ def create_label(qlr, image, label_size, threshold=70, **kwargs):
     qlr.pquality = 1
     qlr.add_media_and_quality(im.size[1])
     try:
-        qlr.add_autocut(True)
-        qlr.add_cut_every(1)
+        if cut:
+            qlr.add_autocut(True)
+            qlr.add_cut_every(1)
     except BrotherQLUnsupportedCmd:
         pass
     try:
         qlr.dpi_600 = False
-        qlr.cut_at_end = True
+        qlr.cut_at_end = cut
         qlr.add_expanded_mode()
     except BrotherQLUnsupportedCmd:
         pass

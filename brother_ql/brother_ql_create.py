@@ -16,6 +16,11 @@ try:
 except:
     stdout = sys.stdout
 
+try:
+    unicode
+except:
+    unicode = str
+
 logger = logging.getLogger(__name__)
 
 def main():

@@ -19,14 +19,14 @@ The following printers are claimed to be supported (✓ means verified by the au
 
 ### Why
 
-The special feature is that no printer driver is required from Brother for this to work.
+The special feature of this package is that no printer driver is required for it to work.
 This software bypasses the whole printing system including printer drivers and directly
 talks to your label printer instead. This means that even though Brother doesn't offer
 a driver for the Raspberry Pi (running Linux on ARM) you can print nicely using this software.
-Even if there are drivers for your operating system, many programs have difficulties to set
+And even if there are drivers for your operating system, many programs have difficulties to set
 the page sizes and margins for the labels correctly. If you want to print with high precision
 (which is important for barcodes for example), you rather want to have control about every
-single pixel to be printed. That's possible with this software package.
+single pixel to be printed. This is where brother\_ql comes into the game.
 
 ### Installation
 
@@ -79,7 +79,7 @@ giving:
       --loglevel LOGLEVEL   Set to DEBUG for verbose debugging output to stderr.
 
 The image argument should be a PNG/GIF/JPEG image file.
-For the best results, provide it in the right pixel dimensions (suiting the chosen --label-size).
+For the best results, provide it in the right pixel dimensions (suiting the chosen `--label-size`).
 
 Some notes:
 
@@ -93,7 +93,7 @@ To analyse a binary file containing Brother QL Raster instructions:
     brother_ql_analyse 720x300_monochrome.bin --loglevel DEBUG
 
 The tool will dissect your file and print the opcodes to stdout.
-In addition, it creats images of what the printer's output would look like.
+In addition, it creates images of what the printer's output would look like.
 They are saved to page0001.png etc. (yes, one .bin file can contain more than one "page").
 
 This tool also has the `--help` option.

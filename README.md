@@ -6,8 +6,6 @@ In more details, the following is possible with this package:
 
 * Create raster language files for the Brother label printers.  
   These binary files contain the instructions for the printer and can be created from image files or programmatically in your own Python script.
-* Analyze files containing raster instructions.  
-  A tool to dissect the binary files (interprets all the instructions, writes out information about all of them, and creates PNG images of the printouts to be expected).
 * Print raster instruction files with your Brother label printer via different backends:
   * pyusb (works cross-platform)
   * network (works cross-platform for WiFi/Ethernet-enabled printers)
@@ -86,20 +84,6 @@ Some notes:
 Currently, the `brother_ql_create` tool doesn't support the 600x300 dpi mode supported by some printers.
 The output will always use the 300dpix300dpi mode with the *high quality preference* set.
 
-#### Analyse
-
-To analyse a binary file containing Brother QL Raster instructions:
-
-    brother_ql_analyse 720x300_monochrome.bin --loglevel DEBUG
-
-The tool will dissect your file and print the opcodes to stdout.
-In addition, it creates images of what the printer's output would look like.
-They are saved to page0001.png etc. (yes, one .bin file can contain more than one "page").
-
-This tool also has the `--help` option.
-
-(This specific tool doesn't work on Python 2.)
-
 #### Print
 
 Once you have a Brother QL instruction file, you can send it to the printer like this:
@@ -124,6 +108,8 @@ If your printer has problems printing the instructions file, it may blink its LE
 
 * The selected label doesn't match.
 * End of paper.
-* Unsupported opcode (wrong --model when using `brother_ql_create`?)
+* Unsupported opcode (wrong `--model` when using `brother_ql_create`?)
 
-More info on how to debug difficult situations to be found in the [DEBUG doc](DEBUG.md).
+### Debugging
+
+More info on how to debug difficult situations is to be found in the [DEBUG doc](DEBUG.md).

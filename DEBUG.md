@@ -1,4 +1,24 @@
 
+### DEBUG
+
+This document shows some ways to help debugging the package brother\_ql.
+One way is to look into the binary raster instruction file, see the *Analyse* section.
+The other way is to send those instructions to the printer one by one and check how it reacts, see the *Debug* section.
+
+#### Analyse
+
+To analyse a binary file containing Brother QL Raster instructions:
+
+    brother_ql_analyse 720x300_monochrome.bin --loglevel DEBUG
+
+The tool will dissect your file and print the opcodes to stdout.
+In addition, it creates PNG images of what the printer's output would look like.
+They are saved to page0001.png etc. (yes, one .bin file can contain more than one "page").
+
+This tool also has the `--help` option.
+
+(This specific tool doesn't work on Python 2.)
+
 #### Debug
 
 If your printer has problems printing the instructions file, it may blink its LED (green or red) depending on the model. This can have many reasons, eg.:

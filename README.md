@@ -38,10 +38,13 @@ This package was mainly created for use with Python 3. The essential functionali
 
 ### Usage
 
+The main user interface of this package are its command line tools.
+You can also use its functionality from your own Python code (yet, there is no dedicated API documentation).
+The following sections show how to use the most important CLI tools.
+
 #### Create
 
-This is possibly the most important piece of software in this package:
-
+The command line tool `brother_ql_create` is possibly the most important piece of software in this package.
 It allows you to create a new instruction file in the label printers' raster language:
 
     brother_ql_create --model QL-500 ./720x300_monochrome.png > 720x300_monochrome.bin

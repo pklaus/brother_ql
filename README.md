@@ -68,10 +68,10 @@ giving:
       -h, --help            show this help message and exit
       --model MODEL, -m MODEL
                             The printer model to use. Check available ones with
-                            `brother_ql_info --list-models`.
+                            `brother_ql_info list-models`.
       --label-size LABEL_SIZE, -s LABEL_SIZE
                             The label size (and kind) to use. Check available ones
-                            with `brother_ql_info --list-label-sizes`.
+                            with `brother_ql_info list-label-sizes`.
       --threshold THRESHOLD, -t THRESHOLD
                             The threshold value (in percent) to discriminate
                             between black and white pixels.

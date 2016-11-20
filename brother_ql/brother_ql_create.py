@@ -27,8 +27,8 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('image', help='The image file to create a label from.')
     parser.add_argument('outfile', nargs='?', type=argparse.FileType('wb'), default=stdout, help='The file to write the instructions to. Defaults to stdout.')
-    parser.add_argument('--model', '-m', default='QL-500', help='The printer model to use. Check available ones with `brother_ql_info --list-models`.')
-    parser.add_argument('--label-size', '-s', default='62', help='The label size (and kind) to use. Check available ones with `brother_ql_info --list-label-sizes`.')
+    parser.add_argument('--model', '-m', default='QL-500', help='The printer model to use. Check available ones with `brother_ql_info list-models`.')
+    parser.add_argument('--label-size', '-s', default='62', help='The label size (and kind) to use. Check available ones with `brother_ql_info list-label-sizes`.')
     parser.add_argument('--threshold', '-t', type=float, default=70.0, help='The threshold value (in percent) to discriminate between black and white pixels.')
     parser.add_argument('--no-cut', dest='cut', action='store_false', help="Don't cut the tape after printing the label.")
     parser.add_argument('--loglevel', type=lambda x: getattr(logging, x), default=logging.WARNING, help='Set to DEBUG for verbose debugging output to stderr.')
@@ -42,12 +42,12 @@ def main():
     try:
         qlr = BrotherQLRaster(args.model)
     except BrotherQLUnknownModel:
-        sys.exit("Unknown model. Use the command   brother_ql_info --list-models   to show available models.")
+        sys.exit("Unknown model. Use the command   brother_ql_info list-models   to show available models.")
 
     try:
         label_type_specs[args.label_size]
     except ValueError:
-        sys.exit("Unknown label_size. Check available sizes with the command   brother_ql_info --list-label-sizes")
+        sys.exit("Unknown label_size. Check available sizes with the command   brother_ql_info list-label-sizes")
 
     qlr.exception_on_warning = True
 

@@ -70,22 +70,22 @@ def create_label(qlr, image, label_size, threshold=70, cut=True, **kwargs):
         raise NotImplementedError("The image argument needs to be an Image() instance or the filename to an image.")
 
     if label_specs['kind'] == ENDLESS_LABEL:
-        if im.size[0] > dots_printable[0]:
+        if im.size[0] != dots_printable[0]:
             hsize = int((dots_printable[0] / im.size[0]) * im.size[1])
             im = im.resize((dots_printable[0], hsize), Image.ANTIALIAS)
             logger.warning('Need to resize the image...')
+        im = im.convert("L")
         if im.size[0] < device_pixel_width:
-            new_im = Image.new(im.mode, (device_pixel_width, im.size[1]), 255)
+            new_im = Image.new("L", (device_pixel_width, im.size[1]), 255)
             new_im.paste(im, (device_pixel_width-im.size[0]-right_margin_dots, 0))
             im = new_im
-        im = im.convert("L")
     elif label_specs['kind'] == DIE_CUT_LABEL:
         im = im.convert("L")
         if im.size[0] == dots_printable[1] and im.size[1] == dots_printable[0]:
             im = im.rotate(90, expand=True)
         if im.size[0] != dots_printable[0] or im.size[1] != dots_printable[1]:
             sys.exit("Check your image dimensions. Expecting: " + str(dots_printable))
-        new_im = Image.new(im.mode, (device_pixel_width, dots_printable[1]), 255)
+        new_im = Image.new("L", (device_pixel_width, dots_printable[1]), 255)
         new_im.paste(im, (device_pixel_width-im.size[0]-right_margin_dots, 0))
         im = new_im
     else:

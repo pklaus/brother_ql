@@ -80,7 +80,34 @@ giving:
       --loglevel LOGLEVEL   Set to DEBUG for verbose debugging output to stderr.
 
 The image argument should be a PNG/GIF/JPEG image file.
-For the best results, provide it in the right pixel dimensions (suiting the chosen `--label-size`).
+Here is the output of `brother_ql_info list-label-sizes` listing the available options for `--label-size`:
+
+    Supported label sizes:
+     Name      Printable px   Description
+     12         106           (12 mm endless)
+     29         306           (29 mm endless)
+     38         413           (38 mm endless)
+     50         554           (50 mm endless)
+     54         590           (54 mm endless)
+     62         696           (62 mm endless)
+     102       1164           (102 mm endless)
+     17x54      165 x  566    (17 x 54 mm^2)
+     17x87      165 x  956    (17 x 87 mm^2)
+     23x23      202 x  202    (23 x 23 mm^2)
+     29x42      306 x  425    (29 x 42 mm^2)
+     29x90      306 x  991    (29 x 90 mm^2)
+     39x90      413 x  991    (38 x 90 mm^2)
+     39x48      425 x  495    (39 x 48 mm^2)
+     52x29      578 x  271    (52 x 29 mm^2)
+     62x29      696 x  271    (62 x 29 mm^2)
+     62x100     696 x 1109    (62 x 100 mm^2)
+     102x51    1164 x  526    (102 x 51 mm^2)
+     102x152   1164 x 1660    (102 x 152 mm^2)
+     d12         94 x   94    (12 mm diameter, round)
+     d24        236 x  236    (24 mm diameter, round)
+     d58        618 x  618    (58 mm diameter, round)
+
+For the best results, use image files with the matching pixel dimensions. Die-cut labels have to be in the exact pixel dimensions stated above. For endless label rolls, you can provide image files with a pixel width as stated above. If you provide a file with different dimensions when creating an endless label file, it will be scaled to fit the width.
 
 Some notes:
 

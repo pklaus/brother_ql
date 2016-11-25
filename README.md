@@ -34,7 +34,7 @@ Upgrade to the latest version using:
 
     pip install --upgrade https://github.com/pklaus/brother_ql/archive/master.zip
 
-This package was mainly created for use with Python 3. The essential functionality will also work with Python 2, though: The creation of label files.
+This package was mainly created for use with Python 3. The essential functionality, however, will also work with Python 2: the creation of label files.
 
 ### Usage
 

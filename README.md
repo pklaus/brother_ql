@@ -15,7 +15,7 @@ The following printers are claimed to be supported (✓ means verified by the au
 
 * QL-500 (✓), QL-550, QL-560, QL-570 (✓), QL-580N, QL-650TD, QL-700 (✓), QL-710W (✓), QL-720NW (✓), QL-1050, and QL-1060N.
 
-### Why
+## Why
 
 The special feature of this package is that no printer driver is required for it to work.
 This software bypasses the whole printing system including printer drivers and directly
@@ -26,7 +26,7 @@ the page sizes and margins for the labels correctly. If you want to print with h
 (which is important for barcodes for example), you rather want to have control about every
 single pixel to be printed. This is where brother\_ql comes into the game.
 
-### Installation
+## Installation
 
     pip install https://github.com/pklaus/brother_ql/archive/master.zip
 
@@ -36,13 +36,13 @@ Upgrade to the latest version using:
 
 This package was mainly created for use with Python 3. The essential functionality, however, will also work with Python 2: the creation of label files.
 
-### Usage
+## Usage
 
 The main user interface of this package are its command line tools.
 You can also use its functionality from your own Python code (yet, there is no dedicated API documentation).
 The following sections show how to use the most important CLI tools.
 
-#### Create
+### Create
 
 The command line tool `brother_ql_create` is possibly the most important piece of software in this package.
 It allows you to create a new instruction file in the label printers' raster language:
@@ -115,7 +115,7 @@ Some notes:
 Currently, the `brother_ql_create` tool doesn't support the 600x300 dpi mode supported by some printers.
 The output will always use the 300dpix300dpi mode with the *high quality preference* set.
 
-#### Print
+### Print
 
 Once you have a Brother QL instruction file, you can send it to the printer like this:
 
@@ -141,6 +141,6 @@ If your printer has problems printing the instructions file, it may blink its LE
 * End of paper.
 * Unsupported opcode (wrong `--model` when using `brother_ql_create`?)
 
-### Debugging
+## Debugging
 
 More info on how to debug difficult situations is to be found in the [DEBUG doc](DEBUG.md).

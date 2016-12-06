@@ -279,9 +279,6 @@ class BrotherQLReader(object):
                         array = np.fliplr(array)
                         im = Image.fromarray(array)
                         im = im.point(lambda x: 0 if x == 1 else 255, '1') # -> Monocolor and invert
-                        #from matplotlib import pyplot as plt
-                        #plt.imshow(im)
-                        #plt.show()
                         img_name = 'page{:04d}.png'.format(self.page)
                         im.save(img_name)
                         print('Page saved as {}'.format(img_name))

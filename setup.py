@@ -32,7 +32,6 @@ setup(name='brother_ql',
           "numpy",
           "packbits",
           "pillow",
-          "matplotlib",
       ],
       extras_require = {
           #'brother_ql_analyse':  ["matplotlib",],

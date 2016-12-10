@@ -4,8 +4,8 @@ A Python package to control Brother QL label printers.
 It implements the raster language of those printers and allows you to send instruction files to your printer.
 In more details, the following is possible with this package:
 
-* Create raster language files for the Brother label printers.  
-  These binary files contain the instructions for the printer and can be created from image files or programmatically in your own Python script.
+* Create raster language files for the Brother label printers.
+  They can be created from image files or programmatically in your own Python script.
 * Print raster instruction files with your Brother label printer via different backends:
   * pyusb (works cross-platform)
   * network (works cross-platform for WiFi/Ethernet-enabled printers)

@@ -143,4 +143,9 @@ If your printer has problems printing the instructions file, it may blink its LE
 
 ## Debugging
 
-More info on how to debug difficult situations is to be found in the [DEBUG doc](DEBUG.md).
+More info on how to debug difficult situations is to be found in the [DEBUG doc](https://github.com/pklaus/brother_ql/DEBUG.md).
+
+## Links
+
+* The source code and issue tracker of this package is to be found on **Github**: [pklaus/brother_ql](https://github.com/pklaus/brother_ql).
+* The package is also to be found on **PyPI**: [brother_ql](https://pypi.python.org/pypi/brother_ql).

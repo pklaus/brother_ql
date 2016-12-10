@@ -90,12 +90,7 @@ def create_label(qlr, image, label_size, threshold=70, cut=True, **kwargs):
         im = new_im
     else:
         raise NotImplementedError("Label kind %s not implemented yet." % label_specs['kind'])
-    arr = np.asarray(im, dtype=np.uint8)
-    arr.flags.writeable = True
-    white_idx = arr[:,:] <  threshold * 255./100.
-    black_idx = arr[:,:] >= threshold * 255./100.
-    arr[white_idx] = 1
-    arr[black_idx] = 0
+    im = im.point(lambda p: p > threshold and 255, mode="1")
 
     try:
         qlr.add_switch_mode()
@@ -139,7 +134,7 @@ def create_label(qlr, image, label_size, threshold=70, cut=True, **kwargs):
         qlr.add_compression(True)
     except BrotherQLUnsupportedCmd:
         pass
-    qlr.add_raster_data(arr)
+    qlr.add_raster_data(im)
     qlr.add_print()
 
 if __name__ == "__main__":

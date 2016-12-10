@@ -5,7 +5,7 @@ import struct
 import logging
 
 import packbits
-import numpy as np
+from PIL import Image
 
 from .devicedependent import models, \
                              min_max_feed, \
@@ -168,16 +168,25 @@ class BrotherQLRaster(object):
             nbpr = number_bytes_per_row['default']
         return nbpr*8
 
-    def add_raster_data(self, np_array):
-        """ np_array: numpy array of 1-bit values """
-        np_array = np.fliplr(np_array)
-        logger.info("raster_image_size: {1}x{0}".format(*np_array.shape))
-        if np_array.shape[1] != self.get_pixel_width():
+    def add_raster_data(self, image):
+        """ image: Pillow Image() """
+        logger.info("raster_image_size: {0}x{1}".format(*image.size))
+        image = image.transpose(Image.FLIP_LEFT_RIGHT)
+        image = image.convert("1")
+        if image.size[0] != self.get_pixel_width():
             fmt = 'Wrong pixel width: {}, expected {}'
-            raise BrotherQLRasterError(fmt.format(np_array.shape[1], self.get_pixel_width()))
-        for row in np_array:
+            raise BrotherQLRasterError(fmt.format(image.size[0], self.get_pixel_width()))
+        frame = bytes(image.tobytes(encoder_name='raw'))
+        # The above command directly returns the 1-bit image packed
+        # into bits. (The cast to bytes is needed for Py2 compatibility.)
+        frame = bytes([2**8 + ~byte for byte in frame]) # invert b/w
+        frame_len = len(frame)
+        row_len = image.size[0]//8
+        start = 0
+        while start + row_len < frame_len:
+            row = frame[start:start+row_len]
+            start += row_len
             self.data += b'\x67\x00' # g 0x00
-            row = bytes(np.packbits(row))
             if self._compression:
                 row = packbits.encode(row)
             self.data += bytes([len(row)])

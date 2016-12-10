@@ -29,7 +29,6 @@ setup(name='brother_ql',
       platforms = 'any',
       install_requires = [
           "future",
-          "numpy",
           "packbits",
           "pillow",
       ],

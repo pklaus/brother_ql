@@ -5,13 +5,22 @@ try:
 except ImportError:
     from distutils.core import setup
 
+try:
+    import pypandoc
+    LDESC = open('README.md', 'r').read()
+    LDESC = pypandoc.convert(LDESC, 'rst', format='md')
+except (ImportError, IOError, RuntimeError) as e:
+    print("Could not create long description:")
+    print(str(e))
+    LDESC = ''
+
 setup(name='brother_ql',
       version = '0.6-dev',
       description = 'Python package to talk to Brother QL label printers',
-      long_description = '',
+      long_description = LDESC,
       author = 'Philipp Klaus',
       author_email = 'philipp.l.klaus@web.de',
-      url = '',
+      url = 'https://github.com/pklaus/brother_ql',
       license = 'GPL',
       packages = ['brother_ql',
                   'brother_ql.backends'],

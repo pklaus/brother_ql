@@ -7,9 +7,9 @@ In more details, the following is possible with this package:
 * Create raster language files for the Brother label printers.
   They can be created from image files or programmatically in your own Python script.
 * Print raster instruction files with your Brother label printer via different backends:
-  * pyusb (works cross-platform)
-  * network (works cross-platform for WiFi/Ethernet-enabled printers)
-  * linux\_kernel (works on Linux only; uses the /dev/usb/lp0 device handles)
+    * pyusb (works cross-platform)
+    * network (works cross-platform for WiFi/Ethernet-enabled printers)
+    * linux\_kernel (works on Linux only; uses the /dev/usb/lp0 device handles)
 
 The following printers are claimed to be supported (✓ means verified by the author or by contributors):
 
@@ -107,7 +107,7 @@ Here is the output of `brother_ql_info list-label-sizes` listing the available o
      d24        236 x  236    (24 mm diameter, round)
      d58        618 x  618    (58 mm diameter, round)
 
-**Pro Tip™**:  
+**Pro Tip™**:
 For the best results, use image files with the matching pixel dimensions. Die-cut labels have to be in the exact pixel dimensions stated above. For endless label rolls, you can provide image files with a pixel width as stated above. If you provide a file with different dimensions when creating an endless label file, it will be scaled to fit the width.
 
 Some notes:

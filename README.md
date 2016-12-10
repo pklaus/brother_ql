@@ -28,9 +28,13 @@ single pixel to be printed. This is where brother\_ql comes into the game.
 
 ## Installation
 
-    pip install https://github.com/pklaus/brother_ql/archive/master.zip
+brother\_ql is available from PyPI with pip:
 
-Upgrade to the latest version using:
+    pip install brother_ql
+    # or to upgrade to a newer release:
+    pip install --upgrade brother_ql
+
+Alternatively, you can install the latest development version from Github using:
 
     pip install --upgrade https://github.com/pklaus/brother_ql/archive/master.zip
 

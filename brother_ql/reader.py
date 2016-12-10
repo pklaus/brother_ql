@@ -8,6 +8,8 @@ import sys
 from PIL import Image
 import numpy as np
 
+from builtins import bytes
+
 logger = logging.getLogger(__name__)
 
 OPCODES = {
@@ -118,6 +120,7 @@ def chunker(data, raise_exception=False):
     returns: list of bytes objects
     """
     instructions = []
+    data = bytes(data)
     while True:
         if len(data) == 0: break
         try:
@@ -247,25 +250,25 @@ class BrotherQLReader(object):
                     if opcode_def[0] == 'compression':
                         self.compression = payload[0] == 0x02
                     if opcode_def[0] == 'raster':
-                        rpl = payload[2:] # raster payload
-                        index = 0
-                        row = []
+                        rpl = bytes(payload[2:]) # raster payload
                         if self.compression:
+                            row = bytes()
+                            index = 0
                             while True:
                                 num = rpl[index]
                                 if num & 0x80:
                                     num = num - 0x100
                                 if num < 0:
                                     num = -num + 1
-                                    for i in range(num): row.append(rpl[index+1])
+                                    row += bytes([rpl[index+1]] * num)
                                     index += 2
                                 else:
                                     num = num + 1
-                                    for i in range(num): row.append(rpl[index+1+i])
+                                    row += rpl[index+1:index+1+num]
                                     index += 1 + num
                                 if index >= len(rpl): break
                         else:
-                            row.append(list(rpl))
+                            row = rpl
                         self.rows.append(row)
                     if opcode_def[0] == 'media/quality':
                         self.raster_no = struct.unpack('<L', payload[4:8])[0]
@@ -274,11 +277,11 @@ class BrotherQLReader(object):
                         fmt = " media width: {}mm, media length: {}mm, raster no: {}dots"
                         logger.info(fmt.format(self.mwidth, self.mlength, self.raster_no))
                     if opcode_def[0] == 'print':
-                        self.rows = [np.unpackbits(np.array(row, dtype=np.uint8)) for row in self.rows]
-                        array = np.array(self.rows, dtype=np.uint8)
-                        array = np.fliplr(array)
-                        im = Image.fromarray(array)
-                        im = im.point(lambda x: 0 if x == 1 else 255, '1') # -> Monocolor and invert
+                        size = (len(self.rows[0])*8, len(self.rows))
+                        data = bytes(b''.join(self.rows))
+                        data = bytes([2**8 + ~byte for byte in data]) # invert b/w
+                        im = Image.frombytes("1", size, data, decoder_name='raw')
+                        im = im.transpose(Image.FLIP_LEFT_RIGHT)
                         img_name = 'page{:04d}.png'.format(self.page)
                         im.save(img_name)
                         print('Page saved as {}'.format(img_name))

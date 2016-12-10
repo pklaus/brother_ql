@@ -4,7 +4,6 @@ from __future__ import division
 
 import sys, argparse, logging
 
-import numpy as np
 from PIL import Image
 
 from brother_ql.raster import BrotherQLRaster

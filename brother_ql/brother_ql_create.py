@@ -89,7 +89,9 @@ def create_label(qlr, image, label_size, threshold=70, cut=True, **kwargs):
         im = new_im
     else:
         raise NotImplementedError("Label kind %s not implemented yet." % label_specs['kind'])
-    im = im.point(lambda p: p > threshold and 255, mode="1")
+
+    threshold = min(255, max(0, int(threshold/100.0 * 255))) # from percent to pixel val
+    im = im.point(lambda x: 0 if x < threshold else 255, mode="1")
 
     try:
         qlr.add_switch_mode()

@@ -60,8 +60,8 @@ If you want to find out about its options, just call the tool with `--help`:
 giving:
 
     usage: brother_ql_create [-h] [--model MODEL] [--label-size LABEL_SIZE]
-                             [--threshold THRESHOLD] [--no-cut]
-                             [--loglevel LOGLEVEL]
+                             [--rotate {0,90,180,270}] [--threshold THRESHOLD]
+                             [--no-cut] [--loglevel LOGLEVEL]
                              image [outfile]
     
     positional arguments:
@@ -77,6 +77,9 @@ giving:
       --label-size LABEL_SIZE, -s LABEL_SIZE
                             The label size (and kind) to use. Check available ones
                             with `brother_ql_info list-label-sizes`.
+      --rotate {0,90,180,270}, -r {0,90,180,270}
+                            Rotate the image (counterclock-wise) by this amount of
+                            degrees.
       --threshold THRESHOLD, -t THRESHOLD
                             The threshold value (in percent) to discriminate
                             between black and white pixels.

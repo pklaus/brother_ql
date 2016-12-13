@@ -28,6 +28,7 @@ def main():
     parser.add_argument('outfile', nargs='?', type=argparse.FileType('wb'), default=stdout, help='The file to write the instructions to. Defaults to stdout.')
     parser.add_argument('--model', '-m', default='QL-500', help='The printer model to use. Check available ones with `brother_ql_info list-models`.')
     parser.add_argument('--label-size', '-s', default='62', help='The label size (and kind) to use. Check available ones with `brother_ql_info list-label-sizes`.')
+    parser.add_argument('--rotate', '-r', choices=('0', '90', '180', '270'), default='auto', help='Rotate the image (counterclock-wise) by this amount of degrees.')
     parser.add_argument('--threshold', '-t', type=float, default=70.0, help='The threshold value (in percent) to discriminate between black and white pixels.')
     parser.add_argument('--no-cut', dest='cut', action='store_false', help="Don't cut the tape after printing the label.")
     parser.add_argument('--loglevel', type=lambda x: getattr(logging, x), default=logging.WARNING, help='Set to DEBUG for verbose debugging output to stderr.')
@@ -50,7 +51,7 @@ def main():
 
     qlr.exception_on_warning = True
 
-    create_label(qlr, args.image, args.label_size, threshold=args.threshold, cut=args.cut)
+    create_label(qlr, args.image, args.label_size, threshold=args.threshold, cut=args.cut, rotate=args.rotate)
 
     args.outfile.write(qlr.data)
 
@@ -60,6 +61,7 @@ def create_label(qlr, image, label_size, threshold=70, cut=True, **kwargs):
     dots_printable = label_specs['dots_printable']
     right_margin_dots = label_specs['right_margin_dots']
     device_pixel_width = qlr.get_pixel_width()
+    rotate = kwargs.get('rotate', 'auto')
 
     if isinstance(image, Image.Image):
         im = image
@@ -69,6 +71,8 @@ def create_label(qlr, image, label_size, threshold=70, cut=True, **kwargs):
         raise NotImplementedError("The image argument needs to be an Image() instance or the filename to an image.")
 
     if label_specs['kind'] == ENDLESS_LABEL:
+        if rotate != 'auto' and int(rotate) != 0:
+            im = im.rotate(int(rotate), expand=True)
         if im.size[0] != dots_printable[0]:
             hsize = int((dots_printable[0] / im.size[0]) * im.size[1])
             im = im.resize((dots_printable[0], hsize), Image.ANTIALIAS)
@@ -80,8 +84,11 @@ def create_label(qlr, image, label_size, threshold=70, cut=True, **kwargs):
             im = new_im
     elif label_specs['kind'] == DIE_CUT_LABEL:
         im = im.convert("L")
-        if im.size[0] == dots_printable[1] and im.size[1] == dots_printable[0]:
-            im = im.rotate(90, expand=True)
+        if rotate == 'auto':
+            if im.size[0] == dots_printable[1] and im.size[1] == dots_printable[0]:
+                im = im.rotate(90, expand=True)
+        elif int(rotate) != 0:
+            im = im.rotate(rotate, expand=True)
         if im.size[0] != dots_printable[0] or im.size[1] != dots_printable[1]:
             sys.exit("Check your image dimensions. Expecting: " + str(dots_printable))
         new_im = Image.new("L", (device_pixel_width, dots_printable[1]), 255)

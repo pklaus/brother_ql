@@ -189,7 +189,7 @@ class BrotherQLRaster(object):
             self.data += b'\x67\x00' # g 0x00
             if self._compression:
                 row = packbits.encode(row)
-            self.data += bytes([row_len])
+            self.data += bytes([len(row)])
             self.data += row
 
     def add_print(self, last_page=True):

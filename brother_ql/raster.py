@@ -120,7 +120,7 @@ class BrotherQLRaster(object):
         self.data += bytes([valid_flags])
         vals = [self._mtype, self._mwidth, self._mlength]
         self.data += b''.join(b'\x00' if val is None else val for val in vals)
-        self.data += struct.pack('<L', rnumber-1)
+        self.data += struct.pack('<L', rnumber)
         self.data += bytes([0 if self.page_number == 0 else 1])
         self.data += b'\x00'
         # INFO:  media/quality (1B 69 7A) --> found! (payload: 8E 0A 3E 00 D2 00 00 00 00 00)
@@ -183,13 +183,13 @@ class BrotherQLRaster(object):
         frame_len = len(frame)
         row_len = image.size[0]//8
         start = 0
-        while start + row_len < frame_len:
+        while start + row_len <= frame_len:
             row = frame[start:start+row_len]
             start += row_len
             self.data += b'\x67\x00' # g 0x00
             if self._compression:
                 row = packbits.encode(row)
-            self.data += bytes([len(row)])
+            self.data += bytes([row_len])
             self.data += row
 
     def add_print(self, last_page=True):

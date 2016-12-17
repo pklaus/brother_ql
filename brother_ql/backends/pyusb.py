@@ -64,6 +64,7 @@ class BrotherQLBackendPyUSB(BrotherQLBackendGeneric):
 
         self.dev = None
         self.read_timeout = 0.01
+        self.write_timeout = 5000. # ms
         # strategy : try_twice or select
         self.strategy = 'try_twice'
         if isinstance(device_specifier, str):
@@ -139,6 +140,9 @@ class BrotherQLBackendPyUSB(BrotherQLBackendGeneric):
                 return data
         else:
             raise NotImplementedError('Unknown strategy')
+
+    def _write(self, data):
+        self.write_dev.write(data, int(self.write_timeout))
 
     def _dispose(self):
         usb.util.dispose_resources(self.dev)

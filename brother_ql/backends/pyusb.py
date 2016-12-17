@@ -63,7 +63,7 @@ class BrotherQLBackendPyUSB(BrotherQLBackendGeneric):
         """
 
         self.dev = None
-        self.read_timeout = 0.01
+        self.read_timeout =    10. # ms
         self.write_timeout = 5000. # ms
         # strategy : try_twice or select
         self.strategy = 'try_twice'
@@ -122,12 +122,12 @@ class BrotherQLBackendPyUSB(BrotherQLBackendGeneric):
             if data:
                 return bytes(data)
             else:
-                time.sleep(self.read_timeout)
+                time.sleep(self.read_timeout/1000.)
                 return self._raw_read(length)
         elif self.strategy == 'select':
             data = b''
             start = time.time()
-            while (not data) and (time.time() - start < self.read_timeout):
+            while (not data) and (time.time() - start < self.read_timeout/1000.):
                 result, _, _ = select.select([self.read_dev], [], [], 0)
                 if self.read_dev in result:
                     data += self._raw_read(length)

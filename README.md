@@ -150,7 +150,7 @@ If your printer has problems printing the instructions file, it may blink its LE
 
 ## Debugging
 
-More info on how to debug difficult situations is to be found in the [DEBUG doc](https://github.com/pklaus/brother_ql/DEBUG.md).
+More info on how to debug difficult situations is to be found in the [DEBUG doc](https://github.com/pklaus/brother_ql/blob/master/DEBUG.md).
 
 ## Links
 

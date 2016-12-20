@@ -77,6 +77,10 @@ def create_label(qlr, image, label_size, threshold=70, cut=True, **kwargs):
             hsize = int((dots_printable[0] / im.size[0]) * im.size[1])
             im = im.resize((dots_printable[0], hsize), Image.ANTIALIAS)
             logger.warning('Need to resize the image...')
+        if 'A' in im.mode:
+            bg = Image.new("RGB", im.size, (255,255,255))
+            bg.paste(im, im.split()[-1])
+            im = bg
         im = im.convert("L")
         if im.size[0] < device_pixel_width:
             new_im = Image.new("L", (device_pixel_width, im.size[1]), 255)

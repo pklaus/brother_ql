@@ -66,29 +66,52 @@ ROUND_DIE_CUT_LABEL = 3
 
 label_type_specs = {
   #                                            (width, length)
-  "12":     {'kind': ENDLESS_LABEL, 'tape_size': ( 12,   0), 'dots_total': ( 142,    0), 'dots_printable': ( 106,   0),  'right_margin_dots': 29, 'restrict_printers': []},
-  "29":     {'kind': ENDLESS_LABEL, 'tape_size': ( 29,   0), 'dots_total': ( 342,    0), 'dots_printable': ( 306,   0),  'right_margin_dots':  6, 'restrict_printers': []},
-  "38":     {'kind': ENDLESS_LABEL, 'tape_size': ( 38,   0), 'dots_total': ( 449,    0), 'dots_printable': ( 413,   0),  'right_margin_dots': 12, 'restrict_printers': []},
-  "50":     {'kind': ENDLESS_LABEL, 'tape_size': ( 50,   0), 'dots_total': ( 590,    0), 'dots_printable': ( 554,   0),  'right_margin_dots': 12, 'restrict_printers': []},
-  "54":     {'kind': ENDLESS_LABEL, 'tape_size': ( 54,   0), 'dots_total': ( 636,    0), 'dots_printable': ( 590,   0),  'right_margin_dots':  0, 'restrict_printers': []},
-  "62":     {'kind': ENDLESS_LABEL, 'tape_size': ( 62,   0), 'dots_total': ( 732,    0), 'dots_printable': ( 696,   0),  'right_margin_dots': 12, 'restrict_printers': []},
-  "102":    {'kind': ENDLESS_LABEL, 'tape_size': (102,   0), 'dots_total': (1200,    0), 'dots_printable': (1164,   0),  'right_margin_dots': 12, 'restrict_printers': ['QL-1060N', 'QL-1050']},
-  "17x54":  {'kind': DIE_CUT_LABEL, 'tape_size': ( 17,  54), 'dots_total': ( 201,  636), 'dots_printable': ( 165,  566), 'right_margin_dots':  0, 'restrict_printers': []},
-  "17x87":  {'kind': DIE_CUT_LABEL, 'tape_size': ( 17,  87), 'dots_total': ( 201, 1026), 'dots_printable': ( 165,  956), 'right_margin_dots':  0, 'restrict_printers': []},
-  "23x23":  {'kind': DIE_CUT_LABEL, 'tape_size': ( 23,  23), 'dots_total': ( 272,  272), 'dots_printable': ( 202,  202), 'right_margin_dots': 42, 'restrict_printers': []},
-  "29x42":  {'kind': DIE_CUT_LABEL, 'tape_size': ( 29,  42), 'dots_total': ( 342,  495), 'dots_printable': ( 306,  425), 'right_margin_dots':  6, 'restrict_printers': []},
-  "29x90":  {'kind': DIE_CUT_LABEL, 'tape_size': ( 29,  90), 'dots_total': ( 342, 1061), 'dots_printable': ( 306,  991), 'right_margin_dots':  6, 'restrict_printers': []},
-  "39x90":  {'kind': DIE_CUT_LABEL, 'tape_size': ( 38,  90), 'dots_total': ( 449, 1061), 'dots_printable': ( 413,  991), 'right_margin_dots': 12, 'restrict_printers': []},
-  "39x48":  {'kind': DIE_CUT_LABEL, 'tape_size': ( 39,  48), 'dots_total': ( 461,  565), 'dots_printable': ( 425,  495), 'right_margin_dots':  6, 'restrict_printers': []},
-  "52x29":  {'kind': DIE_CUT_LABEL, 'tape_size': ( 52,  29), 'dots_total': ( 614,  341), 'dots_printable': ( 578,  271), 'right_margin_dots':  0, 'restrict_printers': []},
-  "62x29":  {'kind': DIE_CUT_LABEL, 'tape_size': ( 62,  29), 'dots_total': ( 732,  341), 'dots_printable': ( 696,  271), 'right_margin_dots': 12, 'restrict_printers': []},
-  "62x100": {'kind': DIE_CUT_LABEL, 'tape_size': ( 62, 100), 'dots_total': ( 732, 1179), 'dots_printable': ( 696, 1109), 'right_margin_dots': 12, 'restrict_printers': []},
-  "102x51": {'kind': DIE_CUT_LABEL, 'tape_size': (102,  51), 'dots_total': (1200,  596), 'dots_printable': (1164,  526), 'right_margin_dots': 12, 'restrict_printers': ['QL-1060N', 'QL-1050']},
-  "102x152":{'kind': DIE_CUT_LABEL, 'tape_size': (102, 152), 'dots_total': (1200, 1804), 'dots_printable': (1164, 1660), 'right_margin_dots': 12, 'restrict_printers': ['QL-1060N', 'QL-1050']},
-  "d12":    {'kind': ROUND_DIE_CUT_LABEL,'tape_size':(12,-1),'dots_total': ( 142,  142), 'dots_printable': (  94,   94), 'right_margin_dots':113, 'restrict_printers': []},
-  "d24":    {'kind': ROUND_DIE_CUT_LABEL,'tape_size':(24,-1),'dots_total': ( 284,  284), 'dots_printable': ( 236,  236), 'right_margin_dots': 42, 'restrict_printers': []},
-  "d58":    {'kind': ROUND_DIE_CUT_LABEL,'tape_size':(58,-1),'dots_total': ( 688,  688), 'dots_printable': ( 618,  618), 'right_margin_dots': 51, 'restrict_printers': []},
+  "12":     {'tape_size': ( 12,   0), 'dots_total': ( 142,    0), 'dots_printable': ( 106,   0),  'right_margin_dots': 29, 'feed_margin': 35},
+  "29":     {'tape_size': ( 29,   0), 'dots_total': ( 342,    0), 'dots_printable': ( 306,   0),  'right_margin_dots':  6, 'feed_margin': 35},
+  "38":     {'tape_size': ( 38,   0), 'dots_total': ( 449,    0), 'dots_printable': ( 413,   0),  'right_margin_dots': 12, 'feed_margin': 35},
+  "50":     {'tape_size': ( 50,   0), 'dots_total': ( 590,    0), 'dots_printable': ( 554,   0),  'right_margin_dots': 12, 'feed_margin': 35},
+  "54":     {'tape_size': ( 54,   0), 'dots_total': ( 636,    0), 'dots_printable': ( 590,   0),  'right_margin_dots':  0, 'feed_margin': 35},
+  "62":     {'tape_size': ( 62,   0), 'dots_total': ( 732,    0), 'dots_printable': ( 696,   0),  'right_margin_dots': 12, 'feed_margin': 35},
+  "102":    {'tape_size': (102,   0), 'dots_total': (1200,    0), 'dots_printable': (1164,   0),  'right_margin_dots': 12, 'feed_margin': 35},
+  "17x54":  {'tape_size': ( 17,  54), 'dots_total': ( 201,  636), 'dots_printable': ( 165,  566), 'right_margin_dots':  0, 'feed_margin':  0},
+  "17x87":  {'tape_size': ( 17,  87), 'dots_total': ( 201, 1026), 'dots_printable': ( 165,  956), 'right_margin_dots':  0, 'feed_margin':  0},
+  "23x23":  {'tape_size': ( 23,  23), 'dots_total': ( 272,  272), 'dots_printable': ( 202,  202), 'right_margin_dots': 42, 'feed_margin':  0},
+  "29x42":  {'tape_size': ( 29,  42), 'dots_total': ( 342,  495), 'dots_printable': ( 306,  425), 'right_margin_dots':  6, 'feed_margin':  0},
+  "29x90":  {'tape_size': ( 29,  90), 'dots_total': ( 342, 1061), 'dots_printable': ( 306,  991), 'right_margin_dots':  6, 'feed_margin':  0},
+  "39x90":  {'tape_size': ( 38,  90), 'dots_total': ( 449, 1061), 'dots_printable': ( 413,  991), 'right_margin_dots': 12, 'feed_margin':  0},
+  "39x48":  {'tape_size': ( 39,  48), 'dots_total': ( 461,  565), 'dots_printable': ( 425,  495), 'right_margin_dots':  6, 'feed_margin':  0},
+  "52x29":  {'tape_size': ( 52,  29), 'dots_total': ( 614,  341), 'dots_printable': ( 578,  271), 'right_margin_dots':  0, 'feed_margin':  0},
+  "62x29":  {'tape_size': ( 62,  29), 'dots_total': ( 732,  341), 'dots_printable': ( 696,  271), 'right_margin_dots': 12, 'feed_margin':  0},
+  "62x100": {'tape_size': ( 62, 100), 'dots_total': ( 732, 1179), 'dots_printable': ( 696, 1109), 'right_margin_dots': 12, 'feed_margin':  0},
+  "102x51": {'tape_size': (102,  51), 'dots_total': (1200,  596), 'dots_printable': (1164,  526), 'right_margin_dots': 12, 'feed_margin':  0},
+  "102x152":{'tape_size': (102, 152), 'dots_total': (1200, 1804), 'dots_printable': (1164, 1660), 'right_margin_dots': 12, 'feed_margin':  0},
+  "d12":    {'tape_size': ( 12,  12), 'dots_total': ( 142,  142), 'dots_printable': (  94,   94), 'right_margin_dots':113, 'feed_margin': 35},
+  "d24":    {'tape_size': ( 24,  24), 'dots_total': ( 284,  284), 'dots_printable': ( 236,  236), 'right_margin_dots': 42, 'feed_margin':  0},
+  "d58":    {'tape_size': ( 58,  58), 'dots_total': ( 688,  688), 'dots_printable': ( 618,  618), 'right_margin_dots': 51, 'feed_margin':  0},
 }
+
+for key in label_type_specs:
+    # kind
+    if 'x' in key:
+        label_type_specs[key]['kind'] = DIE_CUT_LABEL
+    elif key.startswith('d'):
+        label_type_specs[key]['kind'] = ROUND_DIE_CUT_LABEL
+    else:
+        label_type_specs[key]['kind'] = ENDLESS_LABEL
+
+    # restrict_printers
+    if '102' in key:
+        label_type_specs[key]['restrict_printers'] = ['QL-1060N', 'QL-1050']
+    else:
+        label_type_specs[key]['restrict_printers'] = []
+
+    # name
+    if 'x' in key:
+        label_type_specs[key]['name'] = '{0}mm x {1}mm die-cut'.format(*label_type_specs[key]['tape_size'])
+    elif key.startswith('d'):
+        label_type_specs[key]['name'] = '{0}mm round die-cut'.format(label_type_specs[key]['tape_size'][0])
+    else:
+        label_type_specs[key]['name'] = '{0}mm endless'.format(label_type_specs[key]['tape_size'][0])
 
 number_bytes_per_row = {
   'default':   90,

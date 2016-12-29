@@ -28,6 +28,15 @@ def main():
     if not args.list_printers and not args.instruction_file:
         parser.error("the following arguments are required: instruction_file")
 
+    if args.instruction_file == '-':
+        try:
+            content = sys.stdin.buffer.read()
+        except AttributeError:
+            content = sys.stdin.read()
+    else:
+        with open(args.instruction_file, 'rb') as f:
+            content = f.read()
+
     level = logging.DEBUG if args.debug else logging.WARNING
     logging.basicConfig(level=level)
     if args.backend == 'network':
@@ -67,10 +76,8 @@ def main():
     printer = BrotherQLBackend(string_descr)
 
     start = time.time()
-    with open(args.instruction_file, 'rb') as f:
-        content = f.read()
-        logger.info('Sending instructions to the printer. Total: %d bytes.', len(content))
-        printer.write(content)
+    logger.info('Sending instructions to the printer. Total: %d bytes.', len(content))
+    printer.write(content)
     if selected_backend == 'network':
         """ No need to wait for completion. The network backend doesn't support readback. """
         return

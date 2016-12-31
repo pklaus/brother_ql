@@ -135,6 +135,7 @@ modesetting = [
 ]
 
 cuttingsupport = [
+  'QL-550',
   'QL-560',
   'QL-570',
   'QL-580N',

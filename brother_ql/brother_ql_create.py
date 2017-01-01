@@ -87,7 +87,7 @@ def create_label(qlr, image, label_size, threshold=70, cut=True, **kwargs):
             new_im = Image.new("L", (device_pixel_width, im.size[1]), 255)
             new_im.paste(im, (device_pixel_width-im.size[0]-right_margin_dots, 0))
             im = new_im
-    elif label_specs['kind'] == DIE_CUT_LABEL:
+    elif label_specs['kind'] in (DIE_CUT_LABEL, ROUND_DIE_CUT_LABEL):
         im = im.convert("L")
         if rotate == 'auto':
             if im.size[0] == dots_printable[1] and im.size[1] == dots_printable[0]:
@@ -99,8 +99,6 @@ def create_label(qlr, image, label_size, threshold=70, cut=True, **kwargs):
         new_im = Image.new("L", (device_pixel_width, dots_printable[1]), 255)
         new_im.paste(im, (device_pixel_width-im.size[0]-right_margin_dots, 0))
         im = new_im
-    else:
-        raise NotImplementedError("Label kind %s not implemented yet." % label_specs['kind'])
 
     threshold = min(255, max(0, int(threshold/100.0 * 255))) # from percent to pixel val
     im = im.point(lambda x: 0 if x < threshold else 255, mode="1")
@@ -139,10 +137,7 @@ def create_label(qlr, image, label_size, threshold=70, cut=True, **kwargs):
         qlr.add_expanded_mode()
     except BrotherQLUnsupportedCmd:
         pass
-    if label_specs['kind'] in (DIE_CUT_LABEL, ROUND_DIE_CUT_LABEL):
-        qlr.add_margins(dots=0)
-    else:
-        qlr.add_margins()
+    qlr.add_margins(label_specs['feed_margin'])
     try:
         qlr.add_compression(True)
     except BrotherQLUnsupportedCmd:

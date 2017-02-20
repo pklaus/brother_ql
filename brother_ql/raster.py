@@ -192,47 +192,48 @@ class BrotherQLRaster(object):
         file_str = StringIO()
 
         logger.debug("Frame " + str(frame_len) + " Row " + str(row_len))
-        
-        #If the rowLen to subframeLen prop isn't and int, data would be lost. 
+         
         if cores > 1:
 
-            lCheck = float(float(frame_len) / (float(row_len) * float(cores))).is_integer()
+            len_prop = float(float(frame_len) / (float(row_len) * float(cores)))
+            len_check = len_prop.is_integer()
             logger.debug("Using " + str(cores) + " cores in add_raster_data.")
             processes = {}
             manager = Manager()
-            gData = manager.list(['']*cores)
+            g_data = manager.list(['']*cores)
 
-            if lCheck:
-                subFrameLen = int(frame_len/cores)
+            #Check if we can equally assign subframes to processes, or adjust their length to fit.
+            if len_check:
+                subframe_len = int(frame_len/cores)
                 for i in range(0, cores):
                     
-                    subFrameStart =int(subFrameLen * i)
-                    subframeLimit = int(subFrameLen * (i+1))
-                    subframe = frame[subFrameStart:subframeLimit]
-                    processes[i] = Process(target=self.processFrame, args=(0, row_len, subFrameLen, subframe, i, gData,))
+                    subframe_start =int(subframe_len * i)
+                    subframe_limit = int(subframe_len * (i+1))
+                    subframe = frame[subframe_start:subframe_limit]
+                    processes[i] = Process(target=self.processFrame, args=(0, row_len, subframe_len, subframe, i, g_data,))
                     processes[i].start()
             else:
-                numRows = int(float(frame_len) / (float(row_len) * float(cores)))
-                lastNum = 0
-                subFrameLen = int(row_len * numRows)
+                num_rows = int(float(frame_len) / (float(row_len) * float(cores)))
+                last_limit = 0
+                subframe_len = int(row_len * num_rows)
                 for i in range(0, cores - 1):
                     
-                    subFrameStart =int(subFrameLen * i)
-                    subframeLimit = int(subFrameLen * (i+1))
-                    lastNum = subframeLimit
-                    subframe = frame[subFrameStart:subframeLimit]
-                    processes[i] = Process(target=self.processFrame, args=(0, row_len, subFrameLen, subframe, i, gData,))
+                    subframe_start =int(subframe_len * i)
+                    subframe_limit = int(subframe_len * (i+1))
+                    last_limit = subframe_limit
+                    subframe = frame[subframe_start:subframe_limit]
+                    processes[i] = Process(target=self.processFrame, args=(0, row_len, subframe_len, subframe, i, g_data,))
                     processes[i].start()
 
-                subframe = frame[lastNum:frame_len]
-                processes[cores - 1] = Process(target=self.processFrame, args=(0, row_len, frame_len - lastNum, subframe, cores - 1, gData,))
+                subframe = frame[last_limit:frame_len]
+                processes[cores - 1] = Process(target=self.processFrame, args=(0, row_len, frame_len - last_limit, subframe, cores - 1, g_data,))
                 processes[cores-1].start()
 
             for i in range(0, cores):
                 processes[i].join()
 
             for i in range(0, cores):
-                self.data += gData[i]
+                self.data += g_data[i]
 
         else:
 
@@ -259,7 +260,7 @@ class BrotherQLRaster(object):
             self.data += b'\x0C' # 0x0C = FF  = Form Feed
 
 
-    def processFrame(self, start, row_len, frame_len, frame, index, gData):
+    def processFrame(self, start, row_len, frame_len, frame, index, g_data):
 
         file_str = StringIO()
         while start + row_len <= frame_len:
@@ -274,4 +275,4 @@ class BrotherQLRaster(object):
             file_str.write(bytes([len(row)]))
             file_str.write(row)
 
-        gData[index] = file_str.getvalue()
+        g_data[index] = file_str.getvalue()

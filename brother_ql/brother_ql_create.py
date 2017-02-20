@@ -35,7 +35,7 @@ def main():
     parser.add_argument('--model', '-m', default='QL-500', help='The printer model to use. Check available ones with `brother_ql_info list-models`.')
     parser.add_argument('--label-size', '-s', default='62', help='The label size (and kind) to use. Check available ones with `brother_ql_info list-label-sizes`.')
     parser.add_argument('--rotate', '-r', choices=('0', '90', '180', '270'), default='auto', help='Rotate the image (counterclock-wise) by this amount of degrees.')
-    parser.add_argument('--threshold', '-t', type=float, default=70.0, help='The threshold value (in percent) to discriminate between black and white pixels.')
+    parser.add_argument('--threshold', '-t', type=float, default=30.0, help='The threshold value (in percent) to discriminate between black and white pixels.')
     parser.add_argument('--no-cut', dest='cut', action='store_false', help="Don't cut the tape after printing the label.")
     parser.add_argument('--loglevel', type=lambda x: getattr(logging, x), default=logging.WARNING, help='Set to DEBUG for verbose debugging output to stderr.')
     parser.add_argument('--cores', '-c', type=int, default=defaultCores, help='The number of cores to use on creating the bin file.')
@@ -65,7 +65,7 @@ def main():
 
     args.outfile.write(qlr.data)
 
-def create_label(qlr, image, label_size, cores, threshold=70, cut=True, **kwargs):
+def create_label(qlr, image, label_size, cores, threshold=30, cut=True, **kwargs):
 
     label_specs = label_type_specs[label_size]
     dots_printable = label_specs['dots_printable']

@@ -20,11 +20,11 @@ from .devicedependent import models, \
 
 from . import BrotherQLError, BrotherQLUnsupportedCmd, BrotherQLUnknownModel, BrotherQLRasterError
 
-import multiprocessing, ctypes
+import multiprocessing
 
-from multiprocessing import Process, Manager, Array
+from multiprocessing import Process, Manager
 
-from cStringIO import StringIO
+from io import BytesIO
 
 logger = logging.getLogger(__name__)
 
@@ -175,7 +175,7 @@ class BrotherQLRaster(object):
             nbpr = number_bytes_per_row['default']
         return nbpr*8
 
-    def add_raster_data(self, image, cores):
+    def add_raster_data(self, image, cores=1):
         """ image: Pillow Image() """
         logger.info("raster_image_size: {0}x{1}".format(*image.size))
         image = image.transpose(Image.FLIP_LEFT_RIGHT)
@@ -189,9 +189,7 @@ class BrotherQLRaster(object):
         row_len = image.size[0]//8
         start = 0
 
-        file_str = StringIO()
-
-        logger.debug("Frame " + str(frame_len) + " Row " + str(row_len))
+        file_str = BytesIO()
          
         if cores > 1:
 
@@ -242,12 +240,9 @@ class BrotherQLRaster(object):
             while start + row_len <= frame_len:
                 row = frame[start:start+row_len]
                 start += row_len
-                #self.data += b'\x67\x00' # g 0x00
                 file_str.write(b'\x67\x00')
                 if self._compression:
                     row = packbits.encode(row)
-                #self.data += bytes([len(row)])
-                #self.data += row
                 file_str.write(bytes([len(row)]))
                 file_str.write(row)
 
@@ -262,7 +257,7 @@ class BrotherQLRaster(object):
 
     def processFrame(self, start, row_len, frame_len, frame, index, g_data):
 
-        file_str = StringIO()
+        file_str = BytesIO()
         while start + row_len <= frame_len:
             row = frame[start:start+row_len]
             start += row_len

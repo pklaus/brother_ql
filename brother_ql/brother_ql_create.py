@@ -11,8 +11,6 @@ from brother_ql.raster import BrotherQLRaster
 from brother_ql.devicedependent import models, label_type_specs, ENDLESS_LABEL, DIE_CUT_LABEL, ROUND_DIE_CUT_LABEL
 from brother_ql import BrotherQLError, BrotherQLUnsupportedCmd, BrotherQLUnknownModel
 
-import multiprocessing
-
 try:
     stdout = sys.stdout.buffer
 except:
@@ -26,9 +24,6 @@ except:
 logger = logging.getLogger(__name__)
 
 def main():
-
-    defaultCores = multiprocessing.cpu_count()
-
     parser = argparse.ArgumentParser()
     parser.add_argument('image', help='The image file to create a label from.')
     parser.add_argument('outfile', nargs='?', type=argparse.FileType('wb'), default=stdout, help='The file to write the instructions to. Defaults to stdout.')
@@ -38,7 +33,6 @@ def main():
     parser.add_argument('--threshold', '-t', type=float, default=70.0, help='The threshold value (in percent) to discriminate between black and white pixels.')
     parser.add_argument('--no-cut', dest='cut', action='store_false', help="Don't cut the tape after printing the label.")
     parser.add_argument('--loglevel', type=lambda x: getattr(logging, x), default=logging.WARNING, help='Set to DEBUG for verbose debugging output to stderr.')
-    parser.add_argument('--cores', '-c', type=int, default=defaultCores, help='The number of cores to use on creating the bin file.')
     args = parser.parse_args()
 
     logging.basicConfig(level=args.loglevel)
@@ -58,14 +52,11 @@ def main():
 
     qlr.exception_on_warning = True
 
-    coresMessage = "Attempting to create using " + str(args.cores) + " cores."
-    logger.debug(coresMessage)
-
-    create_label(qlr, args.image, args.label_size, cores=args.cores, threshold=args.threshold, cut=args.cut, rotate=args.rotate)
+    create_label(qlr, args.image, args.label_size, threshold=args.threshold, cut=args.cut, rotate=args.rotate)
 
     args.outfile.write(qlr.data)
 
-def create_label(qlr, image, label_size, cores, threshold=70, cut=True, **kwargs):
+def create_label(qlr, image, label_size, threshold=70, cut=True, **kwargs):
 
     label_specs = label_type_specs[label_size]
     dots_printable = label_specs['dots_printable']
@@ -155,7 +146,7 @@ def create_label(qlr, image, label_size, cores, threshold=70, cut=True, **kwargs
         qlr.add_compression(True)
     except BrotherQLUnsupportedCmd:
         pass
-    qlr.add_raster_data(im, cores)
+    qlr.add_raster_data(im)
     qlr.add_print()
 
 if __name__ == "__main__":

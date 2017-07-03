@@ -20,6 +20,9 @@ from .devicedependent import models, \
 
 from . import BrotherQLError, BrotherQLUnsupportedCmd, BrotherQLUnknownModel, BrotherQLRasterError
 
+import multiprocessing
+from multiprocessing import Process, Manager
+
 try:
     from io import BytesIO
 except: # Py2
@@ -174,7 +177,7 @@ class BrotherQLRaster(object):
             nbpr = number_bytes_per_row['default']
         return nbpr*8
 
-    def add_raster_data(self, image):
+    def add_raster_data(self, image, cores=1):
         """ image: Pillow Image() """
         logger.info("raster_image_size: {0}x{1}".format(*image.size))
         image = image.transpose(Image.FLIP_LEFT_RIGHT)
@@ -183,22 +186,90 @@ class BrotherQLRaster(object):
             fmt = 'Wrong pixel width: {}, expected {}'
             raise BrotherQLRasterError(fmt.format(image.size[0], self.get_pixel_width()))
         frame = bytes(image.tobytes(encoder_name='raw'))
+
         frame_len = len(frame)
         row_len = image.size[0]//8
         start = 0
+
         file_str = BytesIO()
-        while start + row_len <= frame_len:
-            row = frame[start:start+row_len]
-            start += row_len
-            file_str.write(b'\x67\x00')
-            if self._compression:
-                row = packbits.encode(row)
-            file_str.write(bytes([len(row)]))
-            file_str.write(row)
-        self.data += file_str.getvalue()
+         
+        if cores > 1:
+
+            len_prop = float(float(frame_len) / (float(row_len) * float(cores)))
+            len_check = len_prop.is_integer()
+            logger.debug("Using " + str(cores) + " cores in add_raster_data.")
+            processes = {}
+            manager = Manager()
+            g_data = manager.list(['']*cores)
+
+            #Check if we can equally assign subframes to processes, or adjust their length to fit.
+            if len_check:
+                subframe_len = int(frame_len/cores)
+                for i in range(0, cores):
+                    
+                    subframe_start =int(subframe_len * i)
+                    subframe_limit = int(subframe_len * (i+1))
+                    subframe = frame[subframe_start:subframe_limit]
+                    processes[i] = Process(target=self.processFrame, args=(0, row_len, subframe_len, subframe, i, g_data,))
+                    processes[i].start()
+            else:
+                num_rows = int(float(frame_len) / (float(row_len) * float(cores)))
+                last_limit = 0
+                subframe_len = int(row_len * num_rows)
+                for i in range(0, cores - 1):
+                    
+                    subframe_start =int(subframe_len * i)
+                    subframe_limit = int(subframe_len * (i+1))
+                    last_limit = subframe_limit
+                    subframe = frame[subframe_start:subframe_limit]
+                    processes[i] = Process(target=self.processFrame, args=(0, row_len, subframe_len, subframe, i, g_data,))
+                    processes[i].start()
+
+                subframe = frame[last_limit:frame_len]
+                processes[cores - 1] = Process(target=self.processFrame, args=(0, row_len, frame_len - last_limit, subframe, cores - 1, g_data,))
+                processes[cores-1].start()
+
+            for i in range(0, cores):
+                processes[i].join()
+
+            for i in range(0, cores):
+                self.data += g_data[i]
+
+        else:
+
+            logger.debug("Using 1 core in add_raster_data (" + str(cores) + " given).")
+
+            while start + row_len <= frame_len:
+                row = frame[start:start+row_len]
+                start += row_len
+                file_str.write(b'\x67\x00')
+                if self._compression:
+                    row = packbits.encode(row)
+                file_str.write(bytes([len(row)]))
+                file_str.write(row)
+
+            self.data += file_str.getvalue()
 
     def add_print(self, last_page=True):
         if last_page:
             self.data += b'\x1A' # 0x1A = ^Z = SUB; here: EOF = End of File
         else:
             self.data += b'\x0C' # 0x0C = FF  = Form Feed
+
+
+    def processFrame(self, start, row_len, frame_len, frame, index, g_data):
+
+        file_str = BytesIO()
+        while start + row_len <= frame_len:
+            row = frame[start:start+row_len]
+            start += row_len
+            #self.data += b'\x67\x00' # g 0x00
+            file_str.write(b'\x67\x00')
+            if self._compression:
+                row = packbits.encode(row)
+            #self.data += bytes([len(row)])
+            #self.data += row
+            file_str.write(bytes([len(row)]))
+            file_str.write(row)
+
+        g_data[index] = file_str.getvalue()

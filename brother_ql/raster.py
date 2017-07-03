@@ -20,7 +20,10 @@ from .devicedependent import models, \
 
 from . import BrotherQLError, BrotherQLUnsupportedCmd, BrotherQLUnknownModel, BrotherQLRasterError
 
-from io import BytesIO
+try:
+    from io import BytesIO
+except: # Py2
+    from cStringIO import StringIO as BytesIO
 
 logger = logging.getLogger(__name__)
 

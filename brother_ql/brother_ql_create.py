@@ -5,6 +5,7 @@ from __future__ import division
 import sys, argparse, logging
 
 from PIL import Image
+import PIL.ImageOps
 
 from brother_ql.raster import BrotherQLRaster
 from brother_ql.devicedependent import models, label_type_specs, ENDLESS_LABEL, DIE_CUT_LABEL, ROUND_DIE_CUT_LABEL
@@ -100,6 +101,9 @@ def create_label(qlr, image, label_size, threshold=70, cut=True, **kwargs):
         new_im.paste(im, (device_pixel_width-im.size[0]-right_margin_dots, 0))
         im = new_im
 
+    im = PIL.ImageOps.invert(im)
+
+    threshold = 100.0 - threshold
     threshold = min(255, max(0, int(threshold/100.0 * 255))) # from percent to pixel val
     im = im.point(lambda x: 0 if x < threshold else 255, mode="1")
 

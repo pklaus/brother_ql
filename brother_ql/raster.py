@@ -6,6 +6,7 @@ import logging
 
 import packbits
 from PIL import Image
+import io
 
 from .devicedependent import models, \
                              min_max_feed, \
@@ -18,6 +19,11 @@ from .devicedependent import models, \
                              modesetting
 
 from . import BrotherQLError, BrotherQLUnsupportedCmd, BrotherQLUnknownModel, BrotherQLRasterError
+
+try:
+    from io import BytesIO
+except: # Py2
+    from cStringIO import StringIO as BytesIO
 
 logger = logging.getLogger(__name__)
 
@@ -177,20 +183,19 @@ class BrotherQLRaster(object):
             fmt = 'Wrong pixel width: {}, expected {}'
             raise BrotherQLRasterError(fmt.format(image.size[0], self.get_pixel_width()))
         frame = bytes(image.tobytes(encoder_name='raw'))
-        # The above command directly returns the 1-bit image packed
-        # into bits. (The cast to bytes is needed for Py2 compatibility.)
-        frame = bytes([2**8 + ~byte for byte in frame]) # invert b/w
         frame_len = len(frame)
         row_len = image.size[0]//8
         start = 0
+        file_str = BytesIO()
         while start + row_len <= frame_len:
             row = frame[start:start+row_len]
             start += row_len
-            self.data += b'\x67\x00' # g 0x00
+            file_str.write(b'\x67\x00')
             if self._compression:
                 row = packbits.encode(row)
-            self.data += bytes([len(row)])
-            self.data += row
+            file_str.write(bytes([len(row)]))
+            file_str.write(row)
+        self.data += file_str.getvalue()
 
     def add_print(self, last_page=True):
         if last_page:

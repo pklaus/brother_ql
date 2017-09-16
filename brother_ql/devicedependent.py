@@ -9,6 +9,9 @@ models = [
   'QL-700',
   'QL-710W',
   'QL-720NW',
+  'QL-800',
+  'QL-810W',
+  'QL-820NWB',
   'QL-1050',
   'QL-1060N',
 ]
@@ -27,6 +30,9 @@ min_max_length_dots = {
   'QL-700':   (150, 11811),
   'QL-710W':  (150, 11811),
   'QL-720NW': (150, 11811),
+  'QL-800':   (150, 11811),
+  'QL-810W':  (150, 11811),
+  'QL-820NWB':(150, 11811),
 }
 
 min_max_feed = {
@@ -132,6 +138,9 @@ modesetting = [
   'QL-1060N',
   'QL-710W',
   'QL-720NW',
+  'QL-800',
+  'QL-810W',
+  'QL-820NWB',
 ]
 
 cuttingsupport = [
@@ -145,6 +154,9 @@ cuttingsupport = [
   'QL-1060N',
   'QL-710W',
   'QL-720NW',
+  'QL-800',
+  'QL-810W',
+  'QL-820NWB',
 ]
 
 expandedmode = cuttingsupport
@@ -156,4 +168,6 @@ compressionsupport = [
   'QL-1060N',
   'QL-710W',
   'QL-720NW',
+  'QL-810W',
+  'QL-820NWB',
 ]

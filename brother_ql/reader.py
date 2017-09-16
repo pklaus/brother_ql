@@ -6,6 +6,7 @@ import logging
 import sys
 
 from PIL import Image
+from PIL.ImageOps import colorize
 import numpy as np
 
 from builtins import bytes
@@ -17,10 +18,12 @@ OPCODES = {
     b'\x00':                 ("preamble",       -1, "Preamble, 200-300x 0x00 to clear comamnd buffer"),
     b'\x4D':                 ("compression",     1, ""),
     b'\x67':                 ("raster",         -1, ""),
+    b'\x77':                 ("2-color raster", -1, ""),
     b'\x0C':                 ("print",           0, "print intermediate page"),
     b'\x1A':                 ("print",           0, "print final page"),
     b'\x1b\x40':             ("init",            0, "initialization"),
     b'\x1b\x69\x61':         ("mode setting",    1, ""),
+    b'\x1b\x69\x21':         ("automatic status",1, ""),
     b'\x1b\x69\x7A':         ("media/quality",  10, "print-media and print-quality"),
     b'\x1b\x69\x4D':         ("various",         1, "Auto cut flag in bit 7"),
     b'\x1b\x69\x41':         ("cut-every",       1, "cut every n-th page"),
@@ -28,6 +31,7 @@ OPCODES = {
     b'\x1b\x69\x64':         ("margins",         2, ""),
     b'\x1b\x69\x55\x77\x01': ('amedia',        127, "Additional media information command"),
     b'\x1b\x69\x55\x4A':     ('jobid',          14, "Job ID setting command"),
+    b'\x1b\x69\x58\x47':     ("request_config",  0, "Request transmission of .ini config file of printer"),
     b'\x1b\x69\x53':         ('status request',  0, "A status information request sent to the printer"),
     b'\x80\x20\x42':         ('status response',29, "A status response received from the printer"),
 }
@@ -136,7 +140,7 @@ def chunker(data, raise_exception=False):
         opcode_def = OPCODES[opcode]
         num_bytes = len(opcode)
         if opcode_def[1] > 0: num_bytes += opcode_def[1]
-        if opcode_def[0] == 'raster':
+        if 'raster' in opcode_def[0]:
             num_bytes += data[2] + 2
         #payload = data[len(opcode):num_bytes]
         instructions.append(data[:num_bytes])
@@ -212,7 +216,7 @@ def merge_specific_instructions(chunks, join_preamble=True, join_raster=True):
         opcode = match_opcode(instruction)
         if   join_preamble and OPCODES[opcode][0] == 'preamble' and last_opcode == 'preamble':
             instruction_buffer += instruction
-        elif join_raster   and OPCODES[opcode][0] == 'raster'   and last_opcode == 'raster':
+        elif join_raster   and 'raster' in OPCODES[opcode][0] and 'raster' in last_opcode:
             instruction_buffer += instruction
         else:
             if instruction_buffer:
@@ -231,9 +235,13 @@ class BrotherQLReader(object):
         self.brother_file = brother_file
         self.mwidth, self.mheight = None, None
         self.raster_no = None
-        self.rows = []
+        self.black_rows = []
+        self.red_rows = []
         self.compression = False
         self.page = 1
+        self.two_color_printing = False
+        self.cut_at_end = False
+        self.high_resolution_printing = False
 
     def analyse(self):
         instructions = self.brother_file.read()
@@ -244,12 +252,13 @@ class BrotherQLReader(object):
                     if opcode_def[0] == 'init':
                         self.mwidth, self.mheight = None, None
                         self.raster_no = None
-                        self.rows = []
+                        self.black_rows = []
+                        self.red_rows = []
                     payload = instruction[len(opcode):]
                     logger.info(" {} ({}) --> found! (payload: {})".format(opcode_def[0], hex_format(opcode), hex_format(payload)))
                     if opcode_def[0] == 'compression':
                         self.compression = payload[0] == 0x02
-                    if opcode_def[0] == 'raster':
+                    if 'raster' in opcode_def[0]:
                         rpl = bytes(payload[2:]) # raster payload
                         if self.compression:
                             row = bytes()
@@ -269,7 +278,19 @@ class BrotherQLReader(object):
                                 if index >= len(rpl): break
                         else:
                             row = rpl
-                        self.rows.append(row)
+                        if opcode_def[0] == 'raster':
+                            self.black_rows.append(row)
+                        else: # 2-color
+                            if   payload[0] == 0x01:
+                                self.black_rows.append(row)
+                            elif payload[0] == 0x02:
+                                self.red_rows.append(row)
+                            else:
+                                raise NotImplementedError("color: 0x%x" % payload[0])
+                    if opcode_def[0] == 'expanded':
+                        self.two_color_printing = bool(payload[0] & (1 << 0))
+                        self.cut_at_end = bool(payload[0] & (1 << 3))
+                        self.high_resolution_printing = bool(payload[0] & (1 << 6))
                     if opcode_def[0] == 'media/quality':
                         self.raster_no = struct.unpack('<L', payload[4:8])[0]
                         self.mwidth = instruction[len(opcode) + 2]
@@ -277,10 +298,30 @@ class BrotherQLReader(object):
                         fmt = " media width: {}mm, media length: {}mm, raster no: {}dots"
                         logger.info(fmt.format(self.mwidth, self.mlength, self.raster_no))
                     if opcode_def[0] == 'print':
-                        size = (len(self.rows[0])*8, len(self.rows))
-                        data = bytes(b''.join(self.rows))
-                        data = bytes([2**8 + ~byte for byte in data]) # invert b/w
-                        im = Image.frombytes("1", size, data, decoder_name='raw')
+                        print("Len of black rows: ", len(self.black_rows))
+                        print("Len of red   rows: ", len(self.red_rows))
+                        def get_im(rows):
+                            if not len(rows): return None
+                            size = (len(rows[0])*8, len(rows))
+                            data = bytes(b''.join(rows))
+                            data = bytes([2**8 + ~byte for byte in data]) # invert b/w
+                            im = Image.frombytes("1", size, data, decoder_name='raw')
+                            return im
+                        im_black, im_red = (get_im(rows) for rows in (self.black_rows, self.red_rows))
+                        if not self.two_color_printing:
+                            im = im_black
+                        else:
+                            im = im_black.convert("RGBA")
+                            im_red = im_red.convert("L")
+                            im_red = colorize(im_red, (255, 0, 0), (255, 255, 255))
+                            im_red = im_red.convert("RGBA")
+                            pixdata = im_red.load()
+                            width, height = im_red.size
+                            for y in range(height):
+                                for x in range(width):
+                                    if pixdata[x, y] == (255, 255, 255, 255):
+                                        pixdata[x, y] = (255, 255, 255, 0)
+                            im.paste(im_red, (0, 0), im_red)
                         im = im.transpose(Image.FLIP_LEFT_RIGHT)
                         img_name = 'page{:04d}.png'.format(self.page)
                         im.save(img_name)

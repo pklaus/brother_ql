@@ -56,7 +56,7 @@ def main():
 
     args.outfile.write(qlr.data)
 
-def create_label(qlr, image, label_size, threshold=70, cut=True, **kwargs):
+def create_label(qlr, image, label_size, threshold=70, cut=True, dither=False, **kwargs):
 
     label_specs = label_type_specs[label_size]
     dots_printable = label_specs['dots_printable']
@@ -103,9 +103,12 @@ def create_label(qlr, image, label_size, threshold=70, cut=True, **kwargs):
 
     im = PIL.ImageOps.invert(im)
 
-    threshold = 100.0 - threshold
-    threshold = min(255, max(0, int(threshold/100.0 * 255))) # from percent to pixel val
-    im = im.point(lambda x: 0 if x < threshold else 255, mode="1")
+    if dither:
+        im = im.convert("1", dither=Image.FLOYDSTEINBERG)
+    else:
+        threshold = 100.0 - threshold
+        threshold = min(255, max(0, int(threshold/100.0 * 255))) # from percent to pixel val
+        im = im.point(lambda x: 0 if x < threshold else 255, mode="1")
 
     try:
         qlr.add_switch_mode()

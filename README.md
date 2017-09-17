@@ -63,7 +63,7 @@ giving:
 
     usage: brother_ql_create [-h] [--model MODEL] [--label-size LABEL_SIZE]
                              [--rotate {0,90,180,270}] [--threshold THRESHOLD]
-                             [--no-cut] [--loglevel LOGLEVEL]
+                             [--dither] [--no-cut] [--loglevel LOGLEVEL]
                              image [outfile]
     
     positional arguments:
@@ -85,6 +85,8 @@ giving:
       --threshold THRESHOLD, -t THRESHOLD
                             The threshold value (in percent) to discriminate
                             between black and white pixels.
+      --dither, -d          Enable dithering when converting the image to b/w. If
+                            set, --threshold is meaningless.
       --no-cut              Don't cut the tape after printing the label.
       --loglevel LOGLEVEL   Set to DEBUG for verbose debugging output to stderr.
 

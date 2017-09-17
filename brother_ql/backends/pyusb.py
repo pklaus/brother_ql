@@ -59,7 +59,7 @@ class BrotherQLBackendPyUSB(BrotherQLBackendGeneric):
     def __init__(self, device_specifier):
         """
         device_specifier: string or pyusb.core.Device: string descriptor of the \
-            format usb://brother_ql/idVendor/idProduct/iSerialNumber or pyusb.core.Device instance.
+            format usb://idVendor:idProduct/iSerialNumber or pyusb.core.Device instance.
         """
 
         self.dev = None

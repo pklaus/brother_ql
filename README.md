@@ -145,6 +145,9 @@ You can also use the tool `brother_ql_print` (Py3 only) to send the instructions
     brother_ql_print --backend network 720x151_monochrome.bin tcp://192.168.0.23:9100
     # or (requires PyUSB: `pip install pyusb`)
     brother_ql_print 720x151_monochrome.bin usb://0x04f9:0x2015
+    # or if you have multiple ones connected:
+    brother_ql_print 720x151_monochrome.bin usb://0x04f9:0x2015/000M6Z401370
+    # where 000M6Z401370 is the serial number (see lsusb output).
 
 If your printer has problems printing the instructions file, it may blink its LED (green or red) depending on the model. This can have many reasons, eg.:
 

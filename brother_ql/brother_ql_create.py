@@ -84,13 +84,11 @@ def create_label(qlr, image, label_size, threshold=70, cut=True, dither=False, *
             hsize = int((dots_printable[0] / im.size[0]) * im.size[1])
             im = im.resize((dots_printable[0], hsize), Image.ANTIALIAS)
             logger.warning('Need to resize the image...')
-        im = im.convert("L")
         if im.size[0] < device_pixel_width:
-            new_im = Image.new("L", (device_pixel_width, im.size[1]), 255)
+            new_im = Image.new(im.mode, (device_pixel_width, im.size[1]), (255,)*len(im.mode))
             new_im.paste(im, (device_pixel_width-im.size[0]-right_margin_dots, 0))
             im = new_im
     elif label_specs['kind'] in (DIE_CUT_LABEL, ROUND_DIE_CUT_LABEL):
-        im = im.convert("L")
         if rotate == 'auto':
             if im.size[0] == dots_printable[1] and im.size[1] == dots_printable[0]:
                 im = im.rotate(90, expand=True)
@@ -98,10 +96,11 @@ def create_label(qlr, image, label_size, threshold=70, cut=True, dither=False, *
             im = im.rotate(rotate, expand=True)
         if im.size[0] != dots_printable[0] or im.size[1] != dots_printable[1]:
             sys.exit("Check your image dimensions. Expecting: " + str(dots_printable))
-        new_im = Image.new("L", (device_pixel_width, dots_printable[1]), 255)
+        new_im = Image.new(im.mode, (device_pixel_width, dots_printable[1]), (255,)*len(im.mode))
         new_im.paste(im, (device_pixel_width-im.size[0]-right_margin_dots, 0))
         im = new_im
 
+    im = im.convert("L")
     im = PIL.ImageOps.invert(im)
 
     if dither:

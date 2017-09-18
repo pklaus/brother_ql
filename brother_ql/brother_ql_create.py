@@ -5,11 +5,12 @@ from __future__ import division
 import sys, argparse, logging
 
 from PIL import Image
-import PIL.ImageOps
+import PIL.ImageOps, PIL.ImageChops
 
 from brother_ql.raster import BrotherQLRaster
 from brother_ql.devicedependent import models, label_type_specs, ENDLESS_LABEL, DIE_CUT_LABEL, ROUND_DIE_CUT_LABEL
 from brother_ql import BrotherQLError, BrotherQLUnsupportedCmd, BrotherQLUnknownModel
+from brother_ql.image_trafos import filtered_hls
 
 try:
     stdout = sys.stdout.buffer
@@ -33,6 +34,7 @@ def main():
     parser.add_argument('--threshold', '-t', type=float, default=70.0, help='The threshold value (in percent) to discriminate between black and white pixels.')
     parser.add_argument('--dither', '-d', action='store_true', help='Enable dithering when converting the image to b/w. If set, --threshold is meaningless.')
     parser.add_argument('--compress', '-c', action='store_true', help='Enable compression (if available with the model). Takes more time but results in smaller file size.')
+    parser.add_argument('--red', action='store_true', help='Create a label to be printed in black/red/white (only with QL-800, QL-810W, QL-820NWB on DK-22251 labels).')
     parser.add_argument('--no-cut', dest='cut', action='store_false', help="Don't cut the tape after printing the label.")
     parser.add_argument('--loglevel', type=lambda x: getattr(logging, x), default=logging.WARNING, help='Set to DEBUG for verbose debugging output to stderr.')
     args = parser.parse_args()
@@ -54,11 +56,11 @@ def main():
 
     qlr.exception_on_warning = True
 
-    create_label(qlr, args.image, args.label_size, threshold=args.threshold, cut=args.cut, rotate=args.rotate, dither=args.dither, compress=args.compress)
+    create_label(qlr, args.image, args.label_size, threshold=args.threshold, cut=args.cut, rotate=args.rotate, dither=args.dither, compress=args.compress, red=args.red)
 
     args.outfile.write(qlr.data)
 
-def create_label(qlr, image, label_size, threshold=70, cut=True, dither=False, compress=False, **kwargs):
+def create_label(qlr, image, label_size, threshold=70, cut=True, dither=False, compress=False, red=False, **kwargs):
 
     label_specs = label_type_specs[label_size]
     dots_printable = label_specs['dots_printable']
@@ -101,15 +103,33 @@ def create_label(qlr, image, label_size, threshold=70, cut=True, dither=False, c
         new_im.paste(im, (device_pixel_width-im.size[0]-right_margin_dots, 0))
         im = new_im
 
-    im = im.convert("L")
-    im = PIL.ImageOps.invert(im)
+    if red:
+        filter_h = lambda h: 255 if h <  60 or h > 240 else 0
+        filter_l = lambda l: 255 if l < 220 else 0
+        filter_s = lambda s: 255 if s > 100 else 0
+        red_im = filtered_hls(im, filter_h, filter_l, filter_s)
+        red_im = red_im.convert("L")
+        red_im = PIL.ImageOps.invert(red_im)
+        red_im = red_im.convert("1", dither=Image.NONE)
 
-    if dither:
-        im = im.convert("1", dither=Image.FLOYDSTEINBERG)
+        filter_h = lambda h: 255
+        filter_l = lambda l: 255 if l < 120 else 0
+        filter_s = lambda s: 255
+        black_im = filtered_hls(im, filter_h, filter_l, filter_s)
+        black_im = black_im.convert("L")
+        black_im = PIL.ImageOps.invert(black_im)
+        black_im = black_im.convert("1", dither=Image.NONE)
+        black_im = PIL.ImageChops.subtract(black_im, red_im)
     else:
-        threshold = 100.0 - threshold
-        threshold = min(255, max(0, int(threshold/100.0 * 255))) # from percent to pixel val
-        im = im.point(lambda x: 0 if x < threshold else 255, mode="1")
+        im = im.convert("L")
+        im = PIL.ImageOps.invert(im)
+
+        if dither:
+            im = im.convert("1", dither=Image.FLOYDSTEINBERG)
+        else:
+            threshold = 100.0 - threshold
+            threshold = min(255, max(0, int(threshold/100.0 * 255))) # from percent to pixel val
+            im = im.point(lambda x: 0 if x < threshold else 255, mode="1")
 
     try:
         qlr.add_switch_mode()
@@ -142,6 +162,7 @@ def create_label(qlr, image, label_size, threshold=70, cut=True, dither=False, c
     try:
         qlr.dpi_600 = False
         qlr.cut_at_end = cut
+        qlr.two_color_printing = True if red else False
         qlr.add_expanded_mode()
     except BrotherQLUnsupportedCmd:
         pass
@@ -150,7 +171,10 @@ def create_label(qlr, image, label_size, threshold=70, cut=True, dither=False, c
         if compress: qlr.add_compression(True)
     except BrotherQLUnsupportedCmd:
         pass
-    qlr.add_raster_data(im)
+    if red:
+        qlr.add_raster_data(black_im, red_im)
+    else:
+        qlr.add_raster_data(im)
     qlr.add_print()
 
 if __name__ == "__main__":

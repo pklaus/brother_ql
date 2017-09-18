@@ -38,6 +38,7 @@ class BrotherQLRaster(object):
         self.page_number = 0
         self.cut_at_end = True
         self.dpi_600 = False
+        self.two_color_printing = False
         self._compression = False
         self.exception_on_warning = False
 
@@ -153,6 +154,7 @@ class BrotherQLRaster(object):
         flags = 0x00
         flags |= self.cut_at_end << 3
         flags |= self.dpi_600 << 6
+        flags |= self.two_color_printing << 0
         self.data += bytes([flags])
 
     def add_margins(self, dots=0x23):
@@ -174,27 +176,39 @@ class BrotherQLRaster(object):
             nbpr = number_bytes_per_row['default']
         return nbpr*8
 
-    def add_raster_data(self, image):
+    def add_raster_data(self, image, second_image=None):
         """ image: Pillow Image() """
         logger.info("raster_image_size: {0}x{1}".format(*image.size))
-        image = image.transpose(Image.FLIP_LEFT_RIGHT)
-        image = image.convert("1")
         if image.size[0] != self.get_pixel_width():
             fmt = 'Wrong pixel width: {}, expected {}'
             raise BrotherQLRasterError(fmt.format(image.size[0], self.get_pixel_width()))
-        frame = bytes(image.tobytes(encoder_name='raw'))
-        frame_len = len(frame)
-        row_len = image.size[0]//8
+        images = [image]
+        if second_image:
+            if image.size != second_image.size:
+                fmt = "First and second image don't have the same dimesions: {} vs {}."
+                raise BrotherQLRasterError(fmt.format(image.size, second_image.size))
+            images.append(second_image)
+        frames = []
+        for image in images:
+            image = image.transpose(Image.FLIP_LEFT_RIGHT)
+            image = image.convert("1")
+            frames.append(bytes(image.tobytes(encoder_name='raw')))
+        frame_len = len(frames[0])
+        row_len = images[0].size[0]//8
         start = 0
         file_str = BytesIO()
         while start + row_len <= frame_len:
-            row = frame[start:start+row_len]
+            for i, frame in enumerate(frames):
+                row = frame[start:start+row_len]
+                if second_image:
+                    file_str.write(b'\x77\x01' if i == 0 else b'\x77\x02')
+                else:
+                    file_str.write(b'\x67\x00')
+                if self._compression:
+                    row = packbits.encode(row)
+                file_str.write(bytes([len(row)]))
+                file_str.write(row)
             start += row_len
-            file_str.write(b'\x67\x00')
-            if self._compression:
-                row = packbits.encode(row)
-            file_str.write(bytes([len(row)]))
-            file_str.write(row)
         self.data += file_str.getvalue()
 
     def add_print(self, last_page=True):

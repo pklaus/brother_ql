@@ -63,7 +63,8 @@ giving:
 
     usage: brother_ql_create [-h] [--model MODEL] [--label-size LABEL_SIZE]
                              [--rotate {0,90,180,270}] [--threshold THRESHOLD]
-                             [--dither] [--no-cut] [--loglevel LOGLEVEL]
+                             [--dither] [--compress] [--no-cut]
+                             [--loglevel LOGLEVEL]
                              image [outfile]
     
     positional arguments:
@@ -87,6 +88,8 @@ giving:
                             between black and white pixels.
       --dither, -d          Enable dithering when converting the image to b/w. If
                             set, --threshold is meaningless.
+      --compress, -c        Enable compression (if available with the model).
+                            Takes more time but results in smaller file size.
       --no-cut              Don't cut the tape after printing the label.
       --loglevel LOGLEVEL   Set to DEBUG for verbose debugging output to stderr.
 

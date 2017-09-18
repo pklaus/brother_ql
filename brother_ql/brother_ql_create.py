@@ -32,6 +32,7 @@ def main():
     parser.add_argument('--rotate', '-r', choices=('0', '90', '180', '270'), default='auto', help='Rotate the image (counterclock-wise) by this amount of degrees.')
     parser.add_argument('--threshold', '-t', type=float, default=70.0, help='The threshold value (in percent) to discriminate between black and white pixels.')
     parser.add_argument('--dither', '-d', action='store_true', help='Enable dithering when converting the image to b/w. If set, --threshold is meaningless.')
+    parser.add_argument('--compress', '-c', action='store_true', help='Enable compression (if available with the model). Takes more time but results in smaller file size.')
     parser.add_argument('--no-cut', dest='cut', action='store_false', help="Don't cut the tape after printing the label.")
     parser.add_argument('--loglevel', type=lambda x: getattr(logging, x), default=logging.WARNING, help='Set to DEBUG for verbose debugging output to stderr.')
     args = parser.parse_args()
@@ -53,11 +54,11 @@ def main():
 
     qlr.exception_on_warning = True
 
-    create_label(qlr, args.image, args.label_size, threshold=args.threshold, cut=args.cut, rotate=args.rotate, dither=args.dither)
+    create_label(qlr, args.image, args.label_size, threshold=args.threshold, cut=args.cut, rotate=args.rotate, dither=args.dither, compress=args.compress)
 
     args.outfile.write(qlr.data)
 
-def create_label(qlr, image, label_size, threshold=70, cut=True, dither=False, **kwargs):
+def create_label(qlr, image, label_size, threshold=70, cut=True, dither=False, compress=False, **kwargs):
 
     label_specs = label_type_specs[label_size]
     dots_printable = label_specs['dots_printable']
@@ -146,7 +147,7 @@ def create_label(qlr, image, label_size, threshold=70, cut=True, dither=False, *
         pass
     qlr.add_margins(label_specs['feed_margin'])
     try:
-        qlr.add_compression(True)
+        if compress: qlr.add_compression(True)
     except BrotherQLUnsupportedCmd:
         pass
     qlr.add_raster_data(im)

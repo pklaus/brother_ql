@@ -166,5 +166,6 @@ More info on how to debug difficult situations is to be found in the [DEBUG doc]
 
 ## Links
 
-* The source code and issue tracker of this package is to be found on **Github**: [pklaus/brother_ql](https://github.com/pklaus/brother_ql).
-* The package is also to be found on **PyPI**: [brother_ql](https://pypi.python.org/pypi/brother_ql).
+* The source code and issue tracker of this package is to be found on **Github**: [pklaus/brother\_ql](https://github.com/pklaus/brother_ql).
+* The package is also to be found on **PyPI**: [brother\_ql](https://pypi.python.org/pypi/brother_ql).
+* A collection of similar software projects can be found in [SIMILAR\_SOFTWARE.md](https://github.com/pklaus/brother_ql/blob/master/SIMILAR_SOFTWARE.md)

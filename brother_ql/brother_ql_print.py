@@ -37,7 +37,7 @@ def main():
         with open(args.instruction_file, 'rb') as f:
             content = f.read()
 
-    level = logging.DEBUG if args.debug else logging.WARNING
+    level = logging.DEBUG if args.debug else logging.INFO
     logging.basicConfig(level=level)
     if args.backend == 'network':
         logger.warning("The network backend doesn't supply any 'readback' functionality. No status reports will be received.")
@@ -56,18 +56,24 @@ def main():
     list_available_devices = be['list_available_devices']
     BrotherQLBackend       = be['backend_class']
 
+    if args.list_printers or not args.device:
+        available_devices = list_available_devices()
+        for ad in available_devices:
+            result = {'model': 'unknown'}
+            result.update(ad)
+            logger.info("  Found a label printer: {string_descr}  (model: {model})".format(**result))
+
     if args.list_printers:
-        for printer in list_available_devices():
+        for printer in available_devices:
             print(printer['string_descr'])
         sys.exit(0)
 
     string_descr = None
     if not args.device:
         "We need to search for available devices and select the first."
-        ad = list_available_devices()
-        if not ad:
+        if not available_devices:
             sys.exit("No printer found")
-        string_descr = ad[0]['string_descr']
+        string_descr = available_devices[0]['string_descr']
         print("Selecting first device %s" % string_descr)
     else:
         "A string descriptor for the device was given, let's use it."

@@ -86,9 +86,9 @@ def create_label(qlr, image, label_size, threshold=70, cut=True, dither=False, c
         bg = Image.new("RGB", im.size, (255,255,255))
         bg.paste(im, im.split()[-1])
         im = bg
-    elif red and im.mode != "RGB":
-        # Convert GIF ("P") etc. to RGB
-        im = im.convert("RGB")
+    elif im.mode == "P":
+        # Convert GIF ("P") to RGB
+        im = im.convert("RGB" if red else "L")
 
     if label_specs['kind'] == ENDLESS_LABEL:
         if rotate != 'auto' and int(rotate) != 0:

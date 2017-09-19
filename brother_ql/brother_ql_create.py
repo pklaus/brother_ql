@@ -108,7 +108,7 @@ def create_label(qlr, image, label_size, threshold=70, cut=True, dither=False, c
         elif int(rotate) != 0:
             im = im.rotate(rotate, expand=True)
         if im.size[0] != dots_printable[0] or im.size[1] != dots_printable[1]:
-            sys.exit("Check your image dimensions: %s. Expecting: %s" % (im.size, dots_printable))
+            raise ValueError("Bad image dimensions: %s. Expecting: %s." % (im.size, dots_printable))
         new_im = Image.new(im.mode, (device_pixel_width, dots_printable[1]), (255,)*len(im.mode))
         new_im.paste(im, (device_pixel_width-im.size[0]-right_margin_dots, 0))
         im = new_im

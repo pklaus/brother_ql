@@ -295,11 +295,11 @@ class BrotherQLReader(object):
                         self.raster_no = struct.unpack('<L', payload[4:8])[0]
                         self.mwidth = instruction[len(opcode) + 2]
                         self.mlength = instruction[len(opcode) + 3]*256
-                        fmt = " media width: {}mm, media length: {}mm, raster no: {}dots"
+                        fmt = " media width: {} mm, media length: {} mm, raster no: {} rows"
                         logger.info(fmt.format(self.mwidth, self.mlength, self.raster_no))
                     if opcode_def[0] == 'print':
-                        print("Len of black rows: ", len(self.black_rows))
-                        print("Len of red   rows: ", len(self.red_rows))
+                        logger.info("Len of black rows: ", len(self.black_rows))
+                        logger.info("Len of red   rows: ", len(self.red_rows))
                         def get_im(rows):
                             if not len(rows): return None
                             size = (len(rows[0])*8, len(rows))

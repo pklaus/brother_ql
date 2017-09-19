@@ -59,7 +59,7 @@ def main():
     if args.list_printers:
         for printer in list_available_devices():
             print(printer['string_descr'])
-            sys.exit(0)
+        sys.exit(0)
 
     string_descr = None
     if not args.device:

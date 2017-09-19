@@ -10,7 +10,7 @@ import PIL.ImageOps, PIL.ImageChops
 from brother_ql.raster import BrotherQLRaster
 from brother_ql.devicedependent import models, label_type_specs, ENDLESS_LABEL, DIE_CUT_LABEL, ROUND_DIE_CUT_LABEL
 from brother_ql import BrotherQLError, BrotherQLUnsupportedCmd, BrotherQLUnknownModel
-from brother_ql.image_trafos import filtered_hls
+from brother_ql.image_trafos import filtered_hsv
 
 try:
     stdout = sys.stdout.buffer
@@ -104,18 +104,18 @@ def create_label(qlr, image, label_size, threshold=70, cut=True, dither=False, c
         im = new_im
 
     if red:
-        filter_h = lambda h: 255 if h <  60 or h > 240 else 0
-        filter_l = lambda l: 255 if l < 220 else 0
+        filter_h = lambda h: 255 if (h <  40 or h > 210) else 0
         filter_s = lambda s: 255 if s > 100 else 0
-        red_im = filtered_hls(im, filter_h, filter_l, filter_s)
+        filter_v = lambda v: 255 if v >  80 else 0
+        red_im = filtered_hsv(im, filter_h, filter_s, filter_v)
         red_im = red_im.convert("L")
         red_im = PIL.ImageOps.invert(red_im)
         red_im = red_im.convert("1", dither=Image.NONE)
 
         filter_h = lambda h: 255
-        filter_l = lambda l: 255 if l < 120 else 0
         filter_s = lambda s: 255
-        black_im = filtered_hls(im, filter_h, filter_l, filter_s)
+        filter_v = lambda v: 255 if v <  80 else 0
+        black_im = filtered_hsv(im, filter_h, filter_s, filter_v)
         black_im = black_im.convert("L")
         black_im = PIL.ImageOps.invert(black_im)
         black_im = black_im.convert("1", dither=Image.NONE)

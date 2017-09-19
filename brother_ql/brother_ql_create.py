@@ -68,6 +68,9 @@ def create_label(qlr, image, label_size, threshold=70, cut=True, dither=False, c
     device_pixel_width = qlr.get_pixel_width()
     rotate = kwargs.get('rotate', 'auto')
 
+    threshold = 100.0 - threshold
+    threshold = min(255, max(0, int(threshold/100.0 * 255))) # from percent to pixel val
+
     if isinstance(image, Image.Image):
         im = image
     elif isinstance(image, (unicode, str)):
@@ -114,7 +117,7 @@ def create_label(qlr, image, label_size, threshold=70, cut=True, dither=False, c
         red_im = filtered_hsv(im, filter_h, filter_s, filter_v)
         red_im = red_im.convert("L")
         red_im = PIL.ImageOps.invert(red_im)
-        red_im = red_im.convert("1", dither=Image.NONE)
+        red_im = red_im.point(lambda x: 0 if x < threshold else 255, mode="1")
 
         filter_h = lambda h: 255
         filter_s = lambda s: 255
@@ -122,7 +125,7 @@ def create_label(qlr, image, label_size, threshold=70, cut=True, dither=False, c
         black_im = filtered_hsv(im, filter_h, filter_s, filter_v)
         black_im = black_im.convert("L")
         black_im = PIL.ImageOps.invert(black_im)
-        black_im = black_im.convert("1", dither=Image.NONE)
+        black_im = black_im.point(lambda x: 0 if x < threshold else 255, mode="1")
         black_im = PIL.ImageChops.subtract(black_im, red_im)
     else:
         im = im.convert("L")
@@ -131,8 +134,6 @@ def create_label(qlr, image, label_size, threshold=70, cut=True, dither=False, c
         if dither:
             im = im.convert("1", dither=Image.FLOYDSTEINBERG)
         else:
-            threshold = 100.0 - threshold
-            threshold = min(255, max(0, int(threshold/100.0 * 255))) # from percent to pixel val
             im = im.point(lambda x: 0 if x < threshold else 255, mode="1")
 
     try:

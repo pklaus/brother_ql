@@ -71,6 +71,9 @@ def create_label(qlr, image, label_size, threshold=70, cut=True, dither=False, c
     threshold = 100.0 - threshold
     threshold = min(255, max(0, int(threshold/100.0 * 255))) # from percent to pixel val
 
+    if red and not qlr.two_color_support:
+        raise BrotherQLUnsupportedCmd('Printing in red is not supported with the selected model.')
+
     if isinstance(image, Image.Image):
         im = image
     elif isinstance(image, (unicode, str)):

@@ -171,3 +171,9 @@ compressionsupport = [
   'QL-810W',
   'QL-820NWB',
 ]
+
+two_color_support = [
+  'QL-800',
+  'QL-810W',
+  'QL-820NWB',
+]

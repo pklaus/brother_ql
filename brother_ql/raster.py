@@ -16,6 +16,7 @@ from .devicedependent import models, \
                              compressionsupport, \
                              cuttingsupport, \
                              expandedmode, \
+                             two_color_support, \
                              modesetting
 
 from . import BrotherQLError, BrotherQLUnsupportedCmd, BrotherQLUnknownModel, BrotherQLRasterError
@@ -65,6 +66,10 @@ class BrotherQLRaster(object):
         :raises BrotherQLUnsupportedCmd:
         """
         self._warn(problem, kind=BrotherQLUnsupportedCmd)
+
+    @property
+    def two_color_support(self):
+        return self.model in two_color_support
 
     def add_initialize(self):
         self.page_number = 0
@@ -149,6 +154,9 @@ class BrotherQLRaster(object):
     def add_expanded_mode(self):
         if self.model not in expandedmode:
             self.unsupported("Trying to set expanded mode (dpi/cutting at end) on a printer that doesn't support it")
+            return
+        if self.two_color_printing and not self.two_color_support:
+            self.unsupported("Trying to set two_color_printing in expanded mode on a printer that doesn't support it.")
             return
         self.data += b'\x1B\x69\x4B' # ESC i K
         flags = 0x00

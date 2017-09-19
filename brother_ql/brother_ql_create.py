@@ -75,10 +75,14 @@ def create_label(qlr, image, label_size, threshold=70, cut=True, dither=False, c
     else:
         raise NotImplementedError("The image argument needs to be an Image() instance or the filename to an image.")
 
-    if 'A' in im.mode:
+    if im.mode.endswith('A'):
+        # place in front of white background and get red of transparency
         bg = Image.new("RGB", im.size, (255,255,255))
         bg.paste(im, im.split()[-1])
         im = bg
+    elif red and im.mode != "RGB":
+        # Convert GIF ("P") etc. to RGB
+        im = im.convert("RGB")
 
     if label_specs['kind'] == ENDLESS_LABEL:
         if rotate != 'auto' and int(rotate) != 0:

@@ -311,17 +311,19 @@ class BrotherQLReader(object):
                         if not self.two_color_printing:
                             im = im_black
                         else:
-                            im = im_black.convert("RGBA")
+                            im_black = im_black.convert("RGBA")
                             im_red = im_red.convert("L")
                             im_red = colorize(im_red, (255, 0, 0), (255, 255, 255))
                             im_red = im_red.convert("RGBA")
-                            pixdata = im_red.load()
-                            width, height = im_red.size
+                            pixdata_black = im_black.load()
+                            width, height = im_black.size
                             for y in range(height):
                                 for x in range(width):
-                                    if pixdata[x, y] == (255, 255, 255, 255):
-                                        pixdata[x, y] = (255, 255, 255, 0)
-                            im.paste(im_red, (0, 0), im_red)
+                                    # replace "white" with "transparent"
+                                    if pixdata_black[x, y] == (255, 255, 255, 255):
+                                        pixdata_black[x, y] = (255, 255, 255, 0)
+                            im_red.paste(im_black, (0, 0), im_black)
+                            im = im_red
                         im = im.transpose(Image.FLIP_LEFT_RIGHT)
                         img_name = 'page{:04d}.png'.format(self.page)
                         im.save(img_name)

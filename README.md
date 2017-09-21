@@ -13,7 +13,7 @@ In more details, the following is possible with this package:
 
 The following printers are claimed to be supported (✓ means verified by the author or by contributors):
 
-* QL-500 (✓), QL-550 (✓), QL-560, QL-570 (✓), QL-580N, QL-650TD, QL-700 (✓), QL-710W (✓), QL-720NW (✓), QL-800, QL-810W, QL-820NWB (✓), QL-1050, and QL-1060N.
+* QL-500 (✓), QL-550 (✓), QL-560, QL-570 (✓), QL-580N, QL-650TD, QL-700 (✓), QL-710W (✓), QL-720NW (✓), QL-800 (✓), QL-810W, QL-820NWB (✓), QL-1050, and QL-1060N.
 
 The new QL-800 series can print labels with two colors (black and red) on DK-22251 labels.
 
@@ -90,8 +90,10 @@ giving:
                             set, --threshold is meaningless.
       --compress, -c        Enable compression (if available with the model).
                             Takes more time but results in smaller file size.
-      --red                 Create a label to be printed in black/red/white (only
-                            with QL-800, QL-810W, QL-820NWB on DK-22251 labels).
+      --red                 Create a label to be printed on black/red/white tape
+                            (only with QL-8xx series on DK-22251 labels). You must
+                            use this option when printing on black/red tape, even
+                            when not printing red.
       --no-cut              Don't cut the tape after printing the label.
       --loglevel LOGLEVEL   Set to DEBUG for verbose debugging output to stderr.
 
@@ -156,7 +158,7 @@ You can also use the tool `brother_ql_print` (Py3 only) to send the instructions
 
 If your printer has problems printing the instructions file, it may blink its LED (green or red) depending on the model. This can have many reasons, eg.:
 
-* The selected label doesn't match.
+* The selected label doesn't match (make sure `--red` has been passed to `brother_ql_create` if you're using black/red labels).
 * End of paper.
 * Unsupported opcode (wrong `--model` when using `brother_ql_create`?)
 

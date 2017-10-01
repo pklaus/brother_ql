@@ -63,7 +63,7 @@ giving:
 
     usage: brother_ql_create [-h] [--model MODEL] [--label-size LABEL_SIZE]
                              [--rotate {0,90,180,270}] [--threshold THRESHOLD]
-                             [--dither] [--compress] [--red] [--no-cut]
+                             [--dither] [--compress] [--red] [--600dpi] [--no-cut]
                              [--loglevel LOGLEVEL]
                              image [outfile]
     
@@ -94,6 +94,9 @@ giving:
                             (only with QL-8xx series on DK-22251 labels). You must
                             use this option when printing on black/red tape, even
                             when not printing red.
+      --600dpi              Print with 600x300 dpi available on some models.
+                            Provide your image as 600x600 dpi; perpendicular to
+                            the feeding the image will be resized to 300dpi.
       --no-cut              Don't cut the tape after printing the label.
       --loglevel LOGLEVEL   Set to DEBUG for verbose debugging output to stderr.
 

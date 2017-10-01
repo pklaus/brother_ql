@@ -35,6 +35,7 @@ def main():
     parser.add_argument('--dither', '-d', action='store_true', help='Enable dithering when converting the image to b/w. If set, --threshold is meaningless.')
     parser.add_argument('--compress', '-c', action='store_true', help='Enable compression (if available with the model). Takes more time but results in smaller file size.')
     parser.add_argument('--red', action='store_true', help='Create a label to be printed on black/red/white tape (only with QL-8xx series on DK-22251 labels). You must use this option when printing on black/red tape, even when not printing red.')
+    parser.add_argument('--600dpi', action='store_true', dest='dpi_600', help='Print with 600x300 dpi available on some models. Provide your image as 600x600 dpi; perpendicular to the feeding the image will be resized to 300dpi.')
     parser.add_argument('--no-cut', dest='cut', action='store_false', help="Don't cut the tape after printing the label.")
     parser.add_argument('--loglevel', type=lambda x: getattr(logging, x), default=logging.WARNING, help='Set to DEBUG for verbose debugging output to stderr.')
     args = parser.parse_args()
@@ -56,7 +57,7 @@ def main():
 
     qlr.exception_on_warning = True
 
-    create_label(qlr, args.image, args.label_size, threshold=args.threshold, cut=args.cut, rotate=args.rotate, dither=args.dither, compress=args.compress, red=args.red)
+    create_label(qlr, args.image, args.label_size, threshold=args.threshold, cut=args.cut, rotate=args.rotate, dither=args.dither, compress=args.compress, red=args.red, dpi_600=args.dpi_600)
 
     args.outfile.write(qlr.data)
 
@@ -68,6 +69,7 @@ def create_label(qlr, image, label_size, threshold=70, cut=True, dither=False, c
     device_pixel_width = qlr.get_pixel_width()
     rotate = kwargs.get('rotate', 'auto')
     if rotate != 'auto': rotate = int(rotate)
+    dpi_600 = kwargs.get('dpi_600', False)
 
     threshold = 100.0 - threshold
     threshold = min(255, max(0, int(threshold/100.0 * 255))) # from percent to pixel val
@@ -91,9 +93,16 @@ def create_label(qlr, image, label_size, threshold=70, cut=True, dither=False, c
         # Convert GIF ("P") to RGB
         im = im.convert("RGB" if red else "L")
 
+    if dpi_600:
+        dots_expected = [el*2 for el in dots_printable]
+    else:
+        dots_expected = dots_printable
+
     if label_specs['kind'] == ENDLESS_LABEL:
         if rotate not in ('auto', 0):
             im = im.rotate(rotate, expand=True)
+        if dpi_600:
+            im = im.resize((im.size[0]//2, im.size[1]))
         if im.size[0] != dots_printable[0]:
             hsize = int((dots_printable[0] / im.size[0]) * im.size[1])
             im = im.resize((dots_printable[0], hsize), Image.ANTIALIAS)
@@ -104,13 +113,15 @@ def create_label(qlr, image, label_size, threshold=70, cut=True, dither=False, c
             im = new_im
     elif label_specs['kind'] in (DIE_CUT_LABEL, ROUND_DIE_CUT_LABEL):
         if rotate == 'auto':
-            if im.size[0] == dots_printable[1] and im.size[1] == dots_printable[0]:
+            if im.size[0] == dots_expected[1] and im.size[1] == dots_expected[0]:
                 im = im.rotate(90, expand=True)
         elif rotate != 0:
             im = im.rotate(rotate, expand=True)
-        if im.size[0] != dots_printable[0] or im.size[1] != dots_printable[1]:
-            raise ValueError("Bad image dimensions: %s. Expecting: %s." % (im.size, dots_printable))
-        new_im = Image.new(im.mode, (device_pixel_width, dots_printable[1]), (255,)*len(im.mode))
+        if im.size[0] != dots_expected[0] or im.size[1] != dots_expected[1]:
+            raise ValueError("Bad image dimensions: %s. Expecting: %s." % (im.size, dots_expected))
+        if dpi_600:
+            im = im.resize((im.size[0]//2, im.size[1]))
+        new_im = Image.new(im.mode, (device_pixel_width, dots_expected[1]), (255,)*len(im.mode))
         new_im.paste(im, (device_pixel_width-im.size[0]-right_margin_dots, 0))
         im = new_im
 
@@ -169,7 +180,7 @@ def create_label(qlr, image, label_size, threshold=70, cut=True, dither=False, c
     except BrotherQLUnsupportedCmd:
         pass
     try:
-        qlr.dpi_600 = False
+        qlr.dpi_600 = dpi_600
         qlr.cut_at_end = cut
         qlr.two_color_printing = True if red else False
         qlr.add_expanded_mode()

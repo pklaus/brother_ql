@@ -67,6 +67,7 @@ def create_label(qlr, image, label_size, threshold=70, cut=True, dither=False, c
     right_margin_dots = label_specs['right_margin_dots']
     device_pixel_width = qlr.get_pixel_width()
     rotate = kwargs.get('rotate', 'auto')
+    if rotate != 'auto': rotate = int(rotate)
 
     threshold = 100.0 - threshold
     threshold = min(255, max(0, int(threshold/100.0 * 255))) # from percent to pixel val
@@ -91,8 +92,8 @@ def create_label(qlr, image, label_size, threshold=70, cut=True, dither=False, c
         im = im.convert("RGB" if red else "L")
 
     if label_specs['kind'] == ENDLESS_LABEL:
-        if rotate != 'auto' and int(rotate) != 0:
-            im = im.rotate(int(rotate), expand=True)
+        if rotate not in ('auto', 0):
+            im = im.rotate(rotate, expand=True)
         if im.size[0] != dots_printable[0]:
             hsize = int((dots_printable[0] / im.size[0]) * im.size[1])
             im = im.resize((dots_printable[0], hsize), Image.ANTIALIAS)
@@ -105,7 +106,7 @@ def create_label(qlr, image, label_size, threshold=70, cut=True, dither=False, c
         if rotate == 'auto':
             if im.size[0] == dots_printable[1] and im.size[1] == dots_printable[0]:
                 im = im.rotate(90, expand=True)
-        elif int(rotate) != 0:
+        elif rotate != 0:
             im = im.rotate(rotate, expand=True)
         if im.size[0] != dots_printable[0] or im.size[1] != dots_printable[1]:
             raise ValueError("Bad image dimensions: %s. Expecting: %s." % (im.size, dots_printable))

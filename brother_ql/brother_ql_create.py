@@ -36,6 +36,7 @@ def main():
     parser.add_argument('--compress', '-c', action='store_true', help='Enable compression (if available with the model). Takes more time but results in smaller file size.')
     parser.add_argument('--red', action='store_true', help='Create a label to be printed on black/red/white tape (only with QL-8xx series on DK-22251 labels). You must use this option when printing on black/red tape, even when not printing red.')
     parser.add_argument('--600dpi', action='store_true', dest='dpi_600', help='Print with 600x300 dpi available on some models. Provide your image as 600x600 dpi; perpendicular to the feeding the image will be resized to 300dpi.')
+    parser.add_argument('--lq', action='store_false', dest='hq', help='Print with low quality (faster). Default is high quality.')
     parser.add_argument('--no-cut', dest='cut', action='store_false', help="Don't cut the tape after printing the label.")
     parser.add_argument('--loglevel', type=lambda x: getattr(logging, x), default=logging.WARNING, help='Set to DEBUG for verbose debugging output to stderr.')
     args = parser.parse_args()
@@ -57,7 +58,7 @@ def main():
 
     qlr.exception_on_warning = True
 
-    create_label(qlr, args.image, args.label_size, threshold=args.threshold, cut=args.cut, rotate=args.rotate, dither=args.dither, compress=args.compress, red=args.red, dpi_600=args.dpi_600)
+    create_label(qlr, args.image, args.label_size, threshold=args.threshold, cut=args.cut, rotate=args.rotate, dither=args.dither, compress=args.compress, red=args.red, dpi_600=args.dpi_600, hq=args.hq)
 
     args.outfile.write(qlr.data)
 
@@ -70,6 +71,7 @@ def create_label(qlr, image, label_size, threshold=70, cut=True, dither=False, c
     rotate = kwargs.get('rotate', 'auto')
     if rotate != 'auto': rotate = int(rotate)
     dpi_600 = kwargs.get('dpi_600', False)
+    hq = kwargs.get('hq', True)
 
     threshold = 100.0 - threshold
     threshold = min(255, max(0, int(threshold/100.0 * 255))) # from percent to pixel val
@@ -171,7 +173,7 @@ def create_label(qlr, image, label_size, threshold=70, cut=True, dither=False, c
         qlr.mtype = 0x0A
         qlr.mwidth = tape_size[0]
         qlr.mlength = 0
-    qlr.pquality = 1
+    qlr.pquality = int(hq)
     qlr.add_media_and_quality(im.size[1])
     try:
         if cut:

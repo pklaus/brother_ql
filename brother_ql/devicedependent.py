@@ -90,7 +90,7 @@ label_type_specs = {
   "62x29":  {'tape_size': ( 62,  29), 'dots_total': ( 732,  341), 'dots_printable': ( 696,  271), 'right_margin_dots': 12, 'feed_margin':  0},
   "62x100": {'tape_size': ( 62, 100), 'dots_total': ( 732, 1179), 'dots_printable': ( 696, 1109), 'right_margin_dots': 12, 'feed_margin':  0},
   "102x51": {'tape_size': (102,  51), 'dots_total': (1200,  596), 'dots_printable': (1164,  526), 'right_margin_dots': 12, 'feed_margin':  0},
-  "102x152":{'tape_size': (102, 152), 'dots_total': (1200, 1804), 'dots_printable': (1164, 1660), 'right_margin_dots': 12, 'feed_margin':  0},
+  "102x152":{'tape_size': (102, 153), 'dots_total': (1200, 1804), 'dots_printable': (1164, 1660), 'right_margin_dots': 12, 'feed_margin':  0},
   "d12":    {'tape_size': ( 12,  12), 'dots_total': ( 142,  142), 'dots_printable': (  94,   94), 'right_margin_dots':113, 'feed_margin': 35},
   "d24":    {'tape_size': ( 24,  24), 'dots_total': ( 284,  284), 'dots_printable': ( 236,  236), 'right_margin_dots': 42, 'feed_margin':  0},
   "d58":    {'tape_size': ( 58,  58), 'dots_total': ( 688,  688), 'dots_printable': ( 618,  618), 'right_margin_dots': 51, 'feed_margin':  0},

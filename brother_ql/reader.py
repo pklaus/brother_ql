@@ -7,7 +7,6 @@ import sys
 
 from PIL import Image
 from PIL.ImageOps import colorize
-import numpy as np
 
 from builtins import bytes
 

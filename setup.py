@@ -39,7 +39,7 @@ setup(name='brother_ql',
       install_requires = [
           "future",
           "packbits",
-          "pillow",
+          "pillow>=3.3.0",
       ],
       extras_require = {
           #'brother_ql_analyse':  ["matplotlib",],

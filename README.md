@@ -20,6 +20,10 @@ The new QL-800 series can print labels with two colors (black and red) on DK-222
 Note: If your printer has an 'Editor Lite' mode, you need to disable it if you want to print via USB.
 Make sure that the corresponding LED is not lit by holding the button down until it turns off.
 
+If you're interested in printing labels using a web interface, have a look at my project
+[brother\_ql\_web](https://github.com/pklaus/brother_ql_web). It makes use of the brother\_ql
+package and is also written in Python.
+
 ## Why
 
 The special feature of this package is that no printer driver is required for it to work.

@@ -14,6 +14,8 @@ In more details, the following is possible with this package:
 The following printers are claimed to be supported (✓ means verified by the author or by contributors):
 
 * QL-500 (✓), QL-550 (✓), QL-560, QL-570 (✓), QL-580N, QL-650TD, QL-700 (✓), QL-710W (✓), QL-720NW (✓), QL-800 (✓), QL-810W, QL-820NWB (✓), QL-1050, and QL-1060N.
+* Note: If your printer has an 'Editor Lite' light, you will most likely need to make sure it is not lit by holding the button down until it turns off.
+  If the light is on, your device may show up as a usb-storage device rather than a usblp device.
 
 The new QL-800 series can print labels with two colors (black and red) on DK-22251 labels.
 

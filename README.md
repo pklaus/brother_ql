@@ -138,11 +138,6 @@ Here is the output of `brother_ql_info list-label-sizes` listing the available o
 **Pro Tip™**:
 For the best results, use image files with the matching pixel dimensions. Die-cut labels have to be in the exact pixel dimensions stated above. For endless label rolls, you can provide image files with a pixel width as stated above. If you provide a file with different dimensions when creating an endless label file, it will be scaled to fit the width.
 
-Some notes:
-
-Currently, the `brother_ql_create` tool doesn't support the 600x300 dpi mode supported by some printers.
-The output will always use the 300dpix300dpi mode with the *high quality preference* set.
-
 ### Print
 
 Once you have a Brother QL instruction file, you can send it to the printer like this:

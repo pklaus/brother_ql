@@ -8,7 +8,8 @@ from PIL import Image
 import PIL.ImageOps, PIL.ImageChops
 
 from brother_ql.raster import BrotherQLRaster
-from brother_ql.devicedependent import models, label_type_specs, ENDLESS_LABEL, DIE_CUT_LABEL, ROUND_DIE_CUT_LABEL
+from brother_ql.devicedependent import models, label_type_specs, ENDLESS_LABEL,
+DIE_CUT_LABEL, ROUND_DIE_CUT_LABEL, right_margin_addition
 from brother_ql import BrotherQLError, BrotherQLUnsupportedCmd, BrotherQLUnknownModel
 from brother_ql.image_trafos import filtered_hsv
 
@@ -67,6 +68,7 @@ def create_label(qlr, image, label_size, threshold=70, cut=True, dither=False, c
     label_specs = label_type_specs[label_size]
     dots_printable = label_specs['dots_printable']
     right_margin_dots = label_specs['right_margin_dots']
+    right_margin_dots += right_margin_addition.get(qlr.model, 0)
     device_pixel_width = qlr.get_pixel_width()
     rotate = kwargs.get('rotate', 'auto')
     if rotate != 'auto': rotate = int(rotate)

@@ -95,6 +95,9 @@ def create_label(qlr, image, label_size, threshold=70, cut=True, dither=False, c
     elif im.mode == "P":
         # Convert GIF ("P") to RGB
         im = im.convert("RGB" if red else "L")
+    elif im.mode == "L" and red:
+        # Convert greyscale to RGB if printing on black/red tape
+        im = im.convert("RGB")
 
     if dpi_600:
         dots_expected = [el*2 for el in dots_printable]

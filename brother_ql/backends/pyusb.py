@@ -19,9 +19,9 @@ def list_available_devices():
     """
     List all available devices for the respective backend
 
-    returns: devices: a list of dictionaries with the keys 'string_descr' and 'instance': \
-        [ {'string_descr': 'usb://0x04f9:0x2015/C5Z315686', 'instance': pyusb.core.Device()}, ]
-        The 'string_descr' is of the format idVendor:idProduct_iSerialNumber.
+    returns: devices: a list of dictionaries with the keys 'identifier' and 'instance': \
+        [ {'identifier': 'usb://0x04f9:0x2015/C5Z315686', 'instance': pyusb.core.Device()}, ]
+        The 'identifier' is of the format idVendor:idProduct_iSerialNumber.
     """
 
     class find_class(object):
@@ -42,14 +42,14 @@ def list_available_devices():
     # only Brother printers
     printers = usb.core.find(find_all=1, custom_match=find_class(7), idVendor=0x04f9)
 
-    def string_descr(dev):
+    def identifier(dev):
         try:
             serial = usb.util.get_string(dev, 256, dev.iSerialNumber)
             return 'usb://0x{:04x}:0x{:04x}_{}'.format(dev.idVendor, dev.idProduct, serial)
         except:
             return 'usb://0x{:04x}:0x{:04x}'.format(dev.idVendor, dev.idProduct)
 
-    return [{'string_descr': string_descr(printer), 'instance': printer} for printer in printers]
+    return [{'identifier': identifier(printer), 'instance': printer} for printer in printers]
 
 class BrotherQLBackendPyUSB(BrotherQLBackendGeneric):
     """
@@ -58,7 +58,7 @@ class BrotherQLBackendPyUSB(BrotherQLBackendGeneric):
 
     def __init__(self, device_specifier):
         """
-        device_specifier: string or pyusb.core.Device: string descriptor of the \
+        device_specifier: string or pyusb.core.Device: identifier of the \
             format usb://idVendor:idProduct/iSerialNumber or pyusb.core.Device instance.
         """
 

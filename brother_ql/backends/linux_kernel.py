@@ -13,14 +13,14 @@ def list_available_devices():
     """
     List all available devices for the linux kernel backend
 
-    returns: devices: a list of dictionaries with the keys 'string_descr' and 'instance': \
-        [ {'string_descr': 'file:///dev/usb/lp0', 'instance': None}, ] \
+    returns: devices: a list of dictionaries with the keys 'identifier' and 'instance': \
+        [ {'identifier': 'file:///dev/usb/lp0', 'instance': None}, ] \
         Instance is set to None because we don't want to open (and thus potentially block) the device here.
     """
 
     paths = glob.glob('/dev/usb/lp*')
 
-    return [{'string_descr': 'file://' + path, 'instance': None} for path in paths]
+    return [{'identifier': 'file://' + path, 'instance': None} for path in paths]
 
 class BrotherQLBackendLinuxKernel(BrotherQLBackendGeneric):
     """
@@ -29,7 +29,7 @@ class BrotherQLBackendLinuxKernel(BrotherQLBackendGeneric):
 
     def __init__(self, device_specifier):
         """
-        device_specifier: string or os.open(): string descriptor in the \
+        device_specifier: string or os.open(): identifier in the \
             format file:///dev/usb/lp0 or os.open() raw device handle.
         """
 

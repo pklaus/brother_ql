@@ -8,16 +8,16 @@ available_backends = [
   'linux_kernel',
 ]
 
-def guess_backend(descr):
-    """ guess the backend from a given string descriptor for the device """
-    if descr.startswith('usb://') or descr.startswith('0x'):
+def guess_backend(identifier):
+    """ guess the backend from a given identifier string for the device """
+    if identifier.startswith('usb://') or identifier.startswith('0x'):
         return 'pyusb'
-    elif descr.startswith('file://') or descr.startswith('/dev/usb/') or descr.startswith('lp'):
+    elif identifier.startswith('file://') or identifier.startswith('/dev/usb/') or identifier.startswith('lp'):
         return 'linux_kernel'
-    elif descr.startswith('tcp://'):
+    elif identifier.startswith('tcp://'):
         return 'network'
     else:
-        raise ValueError('Cannot guess backend for given string descriptor: %s' % descr)
+        raise ValueError('Cannot guess backend for given identifier: %s' % identifier)
     
 
 def backend_factory(backend_name):

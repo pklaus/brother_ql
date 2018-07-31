@@ -19,7 +19,7 @@ def main():
     parser.add_argument('--list-printers', action='store_true', help='List the devices available with the selected --backend')
     parser.add_argument('--debug', action='store_true', help='Enable debugging output')
     parser.add_argument('instruction_file', nargs='?', help='file containing the instructions to be sent to the printer')
-    parser.add_argument('device', metavar='DEVICE_STRING_DESCRIPTOR', nargs='?', help='String descriptor for specific device. If not specified, select first detected device')
+    parser.add_argument('device', metavar='DEVICE_IDENTIFIER', nargs='?', help='Identifier string specifying the device. If not specified, select first detected device')
     args = parser.parse_args()
 
     if args.list_printers and not args.backend:
@@ -61,25 +61,25 @@ def main():
         for ad in available_devices:
             result = {'model': 'unknown'}
             result.update(ad)
-            logger.info("  Found a label printer: {string_descr}  (model: {model})".format(**result))
+            logger.info("  Found a label printer: {identifier}  (model: {model})".format(**result))
 
     if args.list_printers:
         for printer in available_devices:
-            print(printer['string_descr'])
+            print(printer['identifier'])
         sys.exit(0)
 
-    string_descr = None
+    identifier = None
     if not args.device:
         "We need to search for available devices and select the first."
         if not available_devices:
             sys.exit("No printer found")
-        string_descr = available_devices[0]['string_descr']
-        print("Selecting first device %s" % string_descr)
+        identifier = available_devices[0]['identifier']
+        print("Selecting first device %s" % identifier)
     else:
-        "A string descriptor for the device was given, let's use it."
-        string_descr = args.device
+        "An identifier for the device was given, let's use it."
+        identifier = args.device
 
-    printer = BrotherQLBackend(string_descr)
+    printer = BrotherQLBackend(identifier)
 
     start = time.time()
     logger.info('Sending instructions to the printer. Total: %d bytes.', len(content))

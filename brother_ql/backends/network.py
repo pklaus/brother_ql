@@ -13,14 +13,14 @@ def list_available_devices():
     """
     List all available devices for the network backend
 
-    returns: devices: a list of dictionaries with the keys 'string_descr' and 'instance': \
-        [ {'string_descr': 'tcp://hostname[:port]', 'instance': None}, ] \
+    returns: devices: a list of dictionaries with the keys 'identifier' and 'instance': \
+        [ {'identifier': 'tcp://hostname[:port]', 'instance': None}, ] \
         Instance is set to None because we don't want to connect to the device here yet.
     """
 
     # We need some snmp request sent to 255.255.255.255 here
     raise NotImplementedError()
-    return [{'string_descr': 'tcp://' + path, 'instance': None} for path in paths]
+    return [{'identifier': 'tcp://' + path, 'instance': None} for path in paths]
 
 class BrotherQLBackendNetwork(BrotherQLBackendGeneric):
     """
@@ -29,7 +29,7 @@ class BrotherQLBackendNetwork(BrotherQLBackendGeneric):
 
     def __init__(self, device_specifier):
         """
-        device_specifier: string or os.open(): string descriptor in the \
+        device_specifier: string or os.open(): identifier in the \
             format file:///dev/usb/lp0 or os.open() raw device handle.
         """
 

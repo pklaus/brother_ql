@@ -47,7 +47,7 @@ RESP_ERROR_INFORMATION_1_DEF = {
   4: 'Main unit in use (QL-560/650TD/1050)',
   5: 'Printer turned off',
   6: 'High-voltage adapter (not used)',
-  7: 'Fan doesn’t work (QL-1050/1060N)',
+  7: 'Fan doesn\'t work (QL-1050/1060N)',
 }
 
 RESP_ERROR_INFORMATION_2_DEF = {
@@ -152,6 +152,7 @@ def match_opcode(data):
     return matching_opcodes[0]
 
 def interpret_response(data):
+    data = bytes(data)
     assert len(data) >= 32
     assert data.startswith(b'\x80\x20\x42')
     for i, byte_name in enumerate(RESP_BYTE_NAMES):

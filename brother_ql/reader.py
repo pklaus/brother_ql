@@ -227,6 +227,7 @@ def merge_specific_instructions(chunks, join_preamble=True, join_raster=True):
     return new_instructions
 
 class BrotherQLReader(object):
+    DEFAULT_FILENAME_FMT = 'label{counter:04d}.png'
 
     def __init__(self, brother_file):
         if type(brother_file) in (str,):
@@ -237,10 +238,11 @@ class BrotherQLReader(object):
         self.black_rows = []
         self.red_rows = []
         self.compression = False
-        self.page = 1
+        self.page_counter = 1
         self.two_color_printing = False
         self.cut_at_end = False
         self.high_resolution_printing = False
+        self.filename_fmt = self.DEFAULT_FILENAME_FMT
 
     def analyse(self):
         instructions = self.brother_file.read()
@@ -324,7 +326,7 @@ class BrotherQLReader(object):
                             im_red.paste(im_black, (0, 0), im_black)
                             im = im_red
                         im = im.transpose(Image.FLIP_LEFT_RIGHT)
-                        img_name = 'page{:04d}.png'.format(self.page)
+                        img_name = self.filename_fmt.format(counter=self.page_counter)
                         im.save(img_name)
                         print('Page saved as {}'.format(img_name))
-                        self.page += 1
+                        self.page_counter += 1

@@ -13,6 +13,11 @@
       <https://github.com/fritznoff/labelprinter>
     * B-Label - A GUI labeling program for Brother P-touch series:  
       <http://apz.fi/blabel/>
+    * qlprint - Command-line utility for printing to Brother QL label printers:  
+      <https://github.com/DiUS/qlprint>
+    * CUPS printer driver printer-driver-ptouch:  
+      Repository: <https://bitbucket.org/philpem/printer-driver-ptouch> and
+      Debian package: <https://packages.debian.org/sid/text/printer-driver-ptouch>
 
 * Brother ESC/P:
     * go-esc-p-ql720nw - ESC/P in Go for QL-720NW:  
@@ -40,7 +45,7 @@
 * Other label related software:
     * gLabels:
       <http://glabels.org/>
-    * Badge creating label software using [printer-driver-ptouch](https://packages.debian.org/sid/text/printer-driver-ptouch):
+    * A software to create badges using printer-driver-ptouch:
       <https://github.com/markuslindenberg/badge-o-matic>
 
 * Browser Plugins (not Brother):

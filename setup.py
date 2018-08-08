@@ -26,6 +26,7 @@ setup(name='brother_ql',
                   'brother_ql.backends'],
       entry_points = {
           'console_scripts': [
+              'brother_ql = brother_ql.cli:cli',
               'brother_ql_analyse = brother_ql.brother_ql_analyse:main',
               'brother_ql_create  = brother_ql.brother_ql_create:main',
               'brother_ql_print   = brother_ql.brother_ql_print:main',
@@ -37,6 +38,7 @@ setup(name='brother_ql',
       zip_safe = True,
       platforms = 'any',
       install_requires = [
+          "click",
           "future",
           "packbits",
           "pillow>=3.3.0",

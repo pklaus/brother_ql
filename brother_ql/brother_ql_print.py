@@ -7,8 +7,8 @@ Testing the packaged version of the Linux Kernel backend
 import argparse, logging, sys
 
 from brother_ql.backends import backend_factory, guess_backend, available_backends
-from brother_ql.printing import send
-from brother_ql.discovering import discover, pretty_print_discovered_devices
+from brother_ql.backends.helpers import discover, send
+from brother_ql.output_helpers import log_discovered_devices, textual_description_discovered_devices
 
 logger = logging.getLogger(__name__)
 
@@ -60,12 +60,11 @@ def main():
 
     # List any printers found, if explicitly asked to do so or if no identifier has been provided.
     if args.list_printers or not args.printer:
-        available_devices = discover(backend=selected_backend)
-        pretty_print_discovered_devices(available_devices)
+        available_devices = discover(backend_identifier=selected_backend)
+        log_discovered_devices(available_devices)
 
     if args.list_printers:
-        for printer in available_devices:
-            print(printer['identifier'])
+        print(textual_description_discovered_devices(available_devices))
         sys.exit(0)
 
     # Determine the identifier. Either selecting the explicitly stated one or using the first found device.
@@ -81,6 +80,6 @@ def main():
         identifier = args.printer
 
     # Finally, do the actual printing.
-    send(instructions=content, printer_identifier=identifier, backend_name=selected_backend, block=True)
+    send(instructions=content, printer_identifier=identifier, backend_identifier=selected_backend, blocking=True)
 
 if __name__ == "__main__": main()

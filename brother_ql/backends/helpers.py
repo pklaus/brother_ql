@@ -1,7 +1,10 @@
 #!/usr/bin/env python
 
 """
-The implementation of printing with the brother_ql package.
+Helpers for the subpackage brother_ql.backends
+
+* device discovery
+* printing
 """
 
 import logging, time
@@ -11,17 +14,28 @@ from brother_ql.reader import interpret_response
 
 logger = logging.getLogger(__name__)
 
-def send(instructions, printer_identifier=None, backend_name=None, blocking=True):
+def discover(backend_identifier='linux_kernel'):
+
+    be = backend_factory(backend_identifier)
+    list_available_devices = be['list_available_devices']
+    BrotherQLBackend       = be['backend_class']
+
+    available_devices = list_available_devices()
+    return available_devices
+
+def send(instructions, printer_identifier=None, backend_identifier=None, blocking=True):
     """
-    instructions: Bytes containing the instructions to be sent to the printer.
-    printer_identifier: String descriptor for the printer.
-    backend_name: Can enforce the use of a specific backend.
-    blocking: Boolean indicating whether the print() call should wait for completion.
+    Send instruction bytes to a printer.
+
+    :param bytes instructions: The instructions to be sent to the printer.
+    :param str printer_identifier: Identifier for the printer.
+    :param str backend_identifier: Can enforce the use of a specific backend.
+    :param bool blocking: Indicates whether the function call should block while waiting for the completion of the printing.
     """
 
     selected_backend = None
-    if backend_name:
-        selected_backend = backend_name
+    if backend_identifier:
+        selected_backend = backend_identifier
     else:
         try:
             selected_backend = guess_backend(printer_identifier)

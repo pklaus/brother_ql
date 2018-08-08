@@ -297,8 +297,8 @@ class BrotherQLReader(object):
                         fmt = " media width: {} mm, media length: {} mm, raster no: {} rows"
                         logger.info(fmt.format(self.mwidth, self.mlength, self.raster_no))
                     if opcode_def[0] == 'print':
-                        logger.info("Len of black rows: ", len(self.black_rows))
-                        logger.info("Len of red   rows: ", len(self.red_rows))
+                        logger.info("Len of black rows: %d", len(self.black_rows))
+                        logger.info("Len of red   rows: %d", len(self.red_rows))
                         def get_im(rows):
                             if not len(rows): return None
                             size = (len(rows[0])*8, len(rows))

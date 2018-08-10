@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 # Python standard library
+from __future__ import print_function
 import logging
 
 # external dependencies
@@ -53,7 +54,7 @@ def discover_and_list_available_devices(backend):
     print(textual_description_discovered_devices(available_devices))
 
 @cli.command()
-@click.argument('info', click.Choice(('labels', 'models')))
+@click.argument('info', click.Choice(('labels', 'models', 'env')))
 @click.pass_context
 def info(ctx, *args, **kwargs):
     """ list available choices (for labels or models) """
@@ -74,6 +75,47 @@ def info(ctx, *args, **kwargs):
         that can be used with this software. """
         from brother_ql.output_helpers import textual_label_description
         print(textual_label_description(label_sizes))
+
+    elif kwargs['info'] == 'env':
+        """
+        Print information about the running environment of brother_ql.
+        """
+        import sys, platform, os, shutil
+        from pkg_resources import get_distribution, working_set
+        print("\n##################\n")
+        print("Information about the running environment of brother_ql.")
+        print("(Please provide this information when reporting any issue.)\n")
+        # computer
+        print("About the computer:")
+        for attr in ('platform', 'processor', 'release', 'system', 'machine', 'architecture'):
+            print('  * '+attr.title()+':', getattr(platform, attr)())
+        # Python
+        print("About the installed Python version:")
+        py_version = str(sys.version).replace('\n', ' ')
+        print("  *", py_version)
+        # brother_ql
+        print("About the brother_ql package:")
+        pkg = get_distribution('brother_ql')
+        print("  * package location:", pkg.location)
+        print("  * package version: ", pkg.version)
+        try:
+            cli_loc = shutil.which('brother_ql')
+        except:
+            cli_loc = 'unknown'
+        print("  * brother_ql CLI path:", cli_loc)
+        # brother_ql's requirements
+        print("About the requirements of brother_ql:")
+        fmt = "  {req:14s} | {spec:10s} | {ins_vers:17s}"
+        print(fmt.format(req='requirement', spec='requested', ins_vers='installed version'))
+        print(fmt.format(req='-' * 14, spec='-'*10, ins_vers='-'*17))
+        requirements = list(pkg.requires())
+        requirements.sort(key=lambda x: x.project_name)
+        for req in requirements:
+            proj = req.project_name
+            req_pkg = get_distribution(proj)
+            spec = ' '.join(req.specs[0]) if req.specs else 'any'
+            print(fmt.format(req=proj, spec=spec, ins_vers=req_pkg.version))
+        print("\n##################\n")
 
 @cli.command('print', short_help='Print a label')
 @click.argument('images', nargs=-1, metavar='IMAGE [IMAGE] ...')

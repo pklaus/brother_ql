@@ -21,9 +21,8 @@ The new QL-800 series can print labels with two colors (black and red) on DK-222
 Note: If your printer has an 'Editor Lite' mode, you need to disable it if you want to print via USB.
 Make sure that the corresponding LED is not lit by holding the button down until it turns off.
 
-If you're interested in printing labels using a web interface, have a look at my project
-[brother\_ql\_web][].
-It makes use of the brother\_ql package and is also written in Python.
+If you're interested in printing labels using a web interface, check out [brother\_ql\_web][],
+which builds upon this package.
 
 ## Why
 
@@ -40,18 +39,25 @@ This is where brother\_ql comes into the game.
 
 ## Installation
 
-brother\_ql is available from PyPI with pip:
+brother\_ql is [available on the Python Package Index][PyPI] to be installed with pip:
 
-    pip install brother_ql
-    # or to upgrade to a newer release:
     pip install --upgrade brother_ql
 
-Alternatively, you can install the latest development version from Github using:
+The upgrade flag makes sure, you get the latest version of brother\_ql but also
+of its dependencies.
+
+Alternatively, you can install the latest version from Github using:
 
     pip install --upgrade https://github.com/pklaus/brother_ql/archive/master.zip
 
 This package was mainly created for use with Python 3.
 The essential functionality, however, will also work with Python 2: the creation of label files.
+
+In order to run the `brother_ql` command line utility, the directory it resides in
+needs to be in the PATH envirnoment variable.
+On some systems, the `pip install` command defaults to the `--user` flag resulting in the utility
+being put in the `~/.local/bin` directory.
+On those systems, extending the path variable via `export PATH="${PATH}:~/.local/bin"` is needed.
 
 ## Usage
 
@@ -163,8 +169,9 @@ it will be scaled to fit the width.
 
 For a long time, this project provided multiple command line tools, such as
 `brother_ql_create`, `brother_ql_print`, `brother_ql_analyze`, and more.
-A documentation of their usage can be found in the
-[LEGACY][].
+The overview of those tools can still be found in the [LEGACY][] documentation.
+The use of these tools is now considered deprecated and they will be
+removed in a future release.
 
 ## Author
 

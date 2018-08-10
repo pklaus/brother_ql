@@ -13,7 +13,8 @@ In more details, the following is possible with this package:
 
 The following printers are claimed to be supported (✓ means verified by the author or by contributors):
 
-* QL-500 (✓), QL-550 (✓), QL-560, QL-570 (✓), QL-580N, QL-650TD, QL-700 (✓), QL-710W (✓), QL-720NW (✓), QL-800 (✓), QL-810W, QL-820NWB (✓), QL-1050 (✓), and QL-1060N.
+* QL-500 (✓), QL-550 (✓), QL-560, QL-570 (✓), QL-580N, QL-650TD, QL-700 (✓), QL-710W (✓),
+  QL-720NW (✓), QL-800 (✓), QL-810W, QL-820NWB (✓), QL-1050 (✓), and QL-1060N.
 
 The new QL-800 series can print labels with two colors (black and red) on DK-22251 labels.
 
@@ -21,19 +22,21 @@ Note: If your printer has an 'Editor Lite' mode, you need to disable it if you w
 Make sure that the corresponding LED is not lit by holding the button down until it turns off.
 
 If you're interested in printing labels using a web interface, have a look at my project
-[brother\_ql\_web](https://github.com/pklaus/brother_ql_web). It makes use of the brother\_ql
-package and is also written in Python.
+[brother\_ql\_web](https://github.com/pklaus/brother_ql_web).
+It makes use of the brother\_ql package and is also written in Python.
 
 ## Why
 
 The special feature of this package is that no printer driver is required for it to work.
 This software bypasses the whole printing system including printer drivers and directly
-talks to your label printer instead. This means that even though Brother doesn't offer
-a driver for the Raspberry Pi (running Linux on ARM) you can print nicely using this software.
+talks to your label printer instead.
+This means that even though Brother doesn't offer a driver for the Raspberry Pi (running
+Linux on ARM) you can print nicely using this software.
 And even if there are drivers for your operating system, many programs have difficulties to set
-the page sizes and margins for the labels correctly. If you want to print with high precision
-(which is important for barcodes for example), you rather want to have control about every
-single pixel to be printed. This is where brother\_ql comes into the game.
+the page sizes and margins for the labels correctly.
+If you want to print with high precision (which is important for barcodes for example),
+you rather want to have control about every single pixel to be printed.
+This is where brother\_ql comes into the game.
 
 ## Installation
 
@@ -47,7 +50,8 @@ Alternatively, you can install the latest development version from Github using:
 
     pip install --upgrade https://github.com/pklaus/brother_ql/archive/master.zip
 
-This package was mainly created for use with Python 3. The essential functionality, however, will also work with Python 2: the creation of label files.
+This package was mainly created for use with Python 3.
+The essential functionality, however, will also work with Python 2: the creation of label files.
 
 ## Usage
 
@@ -149,12 +153,18 @@ The available label names can be listed with `brother_ql info labels`:
      d58        618 x  618    58mm round die-cut
 
 **Pro Tip™**:
-For the best results, use image files with the matching pixel dimensions. Die-cut labels have to be in the exact pixel dimensions stated above. For endless label rolls, you can provide image files with a pixel width as stated above. If you provide a file with different dimensions when creating an endless label file, it will be scaled to fit the width.
+For the best results, use image files with the matching pixel dimensions.
+Die-cut labels have to be in the exact pixel dimensions stated above.
+For endless label rolls, you can provide image files with a pixel width as stated above.
+If you provide a file with different dimensions when creating an endless label file,
+it will be scaled to fit the width.
 
 ### Legacy command line tools
 
-For a long time, this project provided multiple command line tools, such as `brother_ql_create`, `brother_ql_print`, `brother_ql_analyze`, and more.
-A documentation of their usage can be found in the [LEGACY](https://github.com/pklaus/brother_ql/blob/master/LEGACY.md).
+For a long time, this project provided multiple command line tools, such as
+`brother_ql_create`, `brother_ql_print`, `brother_ql_analyze`, and more.
+A documentation of their usage can be found in the
+[LEGACY](https://github.com/pklaus/brother_ql/blob/master/LEGACY.md).
 
 ## Author
 
@@ -164,7 +174,8 @@ of its raster language and based on additinal reverse engineering efforts.
 * Philipp Klaus  
   <philipp.l.klaus@web.de>
 
-Many more have contributed by raising issues, helping to solve them, improving the code and helping out financially.
+Many more have contributed by raising issues, helping to solve them,
+improving the code and helping out financially.
 
 ## Contributing
 

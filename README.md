@@ -156,8 +156,33 @@ For the best results, use image files with the matching pixel dimensions. Die-cu
 For a long time, this project provided multiple command line tools, such as `brother_ql_create`, `brother_ql_print`, `brother_ql_analyze`, and more.
 A documentation of their usage can be found in the [LEGACY](https://github.com/pklaus/brother_ql/blob/master/LEGACY.md).
 
+## Author
+
+This software package was written by Philipp Klaus based on Brother's documentation
+of its raster language and based on additinal reverse engineering efforts.
+
+* Philipp Klaus  
+  <philipp.l.klaus@web.de>
+
+Many more have contributed by raising issues, helping to solve them, improving the code and helping out financially.
+
+## Contributing
+
+There are many ways to support the development of brother\_ql:
+
+* **File an issue** on Github, if you encounter problems, have a proposal, etc.
+* **Send an email with ideas** to the author.
+* **Submit a pull request** on Github if you improved the code and know how to use git.
+* **Finance a label printer** from the [author's wishlist][] to allow him to extend the device coverage and testing.
+* **Donate** an arbitrary amount of money for the development of brother\_ql [via Paypal][donation].
+
+Thanks to everyone helping to improve brother\_ql.
+
 ## Links
 
 * The source code and issue tracker of this package is to be found on **Github**: [pklaus/brother\_ql](https://github.com/pklaus/brother_ql).
 * The package is also to be found on **PyPI**: [brother\_ql](https://pypi.python.org/pypi/brother_ql).
 * A collection of similar software projects can be found in [SIMILAR\_SOFTWARE.md](https://github.com/pklaus/brother_ql/blob/master/SIMILAR_SOFTWARE.md)
+
+[author's wishlist]: https://www.amazon.de/registry/wishlist/3GSVLPF08AFIR
+[donation]: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=philipp.klaus@gmail.com&lc=US&item_name=Donation+to+brother_ql+Development&no_note=0&cn=&currency_code=USD&bn=PP-DonationsBF:btn_donateCC_LG.gif:NonHosted

@@ -22,7 +22,7 @@ Note: If your printer has an 'Editor Lite' mode, you need to disable it if you w
 Make sure that the corresponding LED is not lit by holding the button down until it turns off.
 
 If you're interested in printing labels using a web interface, have a look at my project
-[brother\_ql\_web](https://github.com/pklaus/brother_ql_web).
+[brother\_ql\_web][].
 It makes use of the brother\_ql package and is also written in Python.
 
 ## Why
@@ -164,7 +164,7 @@ it will be scaled to fit the width.
 For a long time, this project provided multiple command line tools, such as
 `brother_ql_create`, `brother_ql_print`, `brother_ql_analyze`, and more.
 A documentation of their usage can be found in the
-[LEGACY](https://github.com/pklaus/brother_ql/blob/master/LEGACY.md).
+[LEGACY][].
 
 ## Author
 
@@ -191,9 +191,14 @@ Thanks to everyone helping to improve brother\_ql.
 
 ## Links
 
-* The source code and issue tracker of this package is to be found on **Github**: [pklaus/brother\_ql](https://github.com/pklaus/brother_ql).
-* The package is also to be found on **PyPI**: [brother\_ql](https://pypi.python.org/pypi/brother_ql).
-* A collection of similar software projects can be found in [SIMILAR\_SOFTWARE.md](https://github.com/pklaus/brother_ql/blob/master/SIMILAR_SOFTWARE.md)
+* The source code and issue tracker of this package is to be found on **Github**: [pklaus/brother\_ql][].
+* The package is also to be found on the Python Package Index **PyPI**: [brother\_ql][PyPI].
+* A collection of similar software projects can be found in [SIMILAR\_SOFTWARE.md][].
 
 [author's wishlist]: https://www.amazon.de/registry/wishlist/3GSVLPF08AFIR
 [donation]: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=philipp.klaus@gmail.com&lc=US&item_name=Donation+to+brother_ql+Development&no_note=0&cn=&currency_code=USD&bn=PP-DonationsBF:btn_donateCC_LG.gif:NonHosted
+[brother\_ql\_web]: https://github.com/pklaus/brother_ql_web
+[LEGACY]: https://github.com/pklaus/brother_ql/blob/master/LEGACY.md
+[pklaus/brother\_ql]: https://github.com/pklaus/brother_ql
+[PyPI]: https://pypi.python.org/pypi/brother_ql
+[SIMILAR\_SOFTWARE.md]: https://github.com/pklaus/brother_ql/blob/master/SIMILAR_SOFTWARE.md

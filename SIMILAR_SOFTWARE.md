@@ -47,6 +47,8 @@
       <http://glabels.org/>
     * A software to create badges using printer-driver-ptouch:
       <https://github.com/markuslindenberg/badge-o-matic>
+    * rasterprynt - A python package to print on Brother PT-P950NW and PT-9800PCN label printers:  
+      <https://github.com/boxine/rasterprynt>
 
 * Browser Plugins (not Brother):
     * qz tray (not for Brother!) - Browser plugin (for ZPL, EPL, ESC/POS):

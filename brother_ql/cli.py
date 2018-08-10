@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 # Python standard library
-import logging, sys
+import logging
 
 # external dependencies
 import click
@@ -52,7 +52,7 @@ def discover_and_list_available_devices(backend):
     print(textual_description_discovered_devices(available_devices))
 
 @cli.command()
-@click.argument('info', click.Choice(('labels', 'models', 'version')))
+@click.argument('info', click.Choice(('labels', 'models')))
 @click.pass_context
 def info(ctx, *args, **kwargs):
     """ list available choices (for labels or models) """
@@ -73,19 +73,6 @@ def info(ctx, *args, **kwargs):
         that can be used with this software. """
         from brother_ql.output_helpers import textual_label_description
         print(textual_label_description(label_sizes))
-
-    elif kwargs['info'] == 'version':
-        """
-        Show the version of the package in the form:
-        ``brother_ql VERSION_STRING``
-        """
-        try:
-            import pkg_resources
-            version = pkg_resources.get_distribution("brother_ql").version
-            print("brother_ql %s" % version)
-        except:
-            logger.error("Couln't determine the version of the brother_ql package.")
-            sys.exit(1)
 
 @cli.command('print', short_help='Print a label')
 @click.argument('images', nargs=-1, metavar='IMAGE [IMAGE] ...')

@@ -98,7 +98,8 @@ class BrotherQLBackendPyUSB(BrotherQLBackendGeneric):
         self.dev.set_configuration()
 
         cfg = self.dev.get_active_configuration()
-        intf = cfg[(0,0)]
+        intf = cfg[(0,0)] # (bInterfaceNumber, bAlternateSetting)
+        assert intf.bInterfaceClass == 7 # 'Printer' not 'Vendor Specific' or the likes...
 
         ep_match_in  = lambda e: usb.util.endpoint_direction(e.bEndpointAddress) == usb.util.ENDPOINT_IN
         ep_match_out = lambda e: usb.util.endpoint_direction(e.bEndpointAddress) == usb.util.ENDPOINT_OUT

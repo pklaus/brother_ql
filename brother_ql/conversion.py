@@ -81,7 +81,7 @@ def convert(qlr, images, label,  **kwargs):
         pass
 
     for image in images:
-        if isinstance(images, Image.Image):
+        if isinstance(image, Image.Image):
             im = image
         elif isinstance(image, (unicode, str)):
             im = Image.open(image)

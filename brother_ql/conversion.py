@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
-from __future__ import division
+from __future__ import division, unicode_literals
+from builtins import str
 
 import logging
 
@@ -11,11 +12,6 @@ from brother_ql.raster import BrotherQLRaster
 from brother_ql.devicedependent import label_type_specs, ENDLESS_LABEL, DIE_CUT_LABEL, ROUND_DIE_CUT_LABEL, right_margin_addition
 from brother_ql import BrotherQLUnsupportedCmd
 from brother_ql.image_trafos import filtered_hsv
-
-try:
-    unicode
-except:
-    unicode = str
 
 logger = logging.getLogger(__name__)
 
@@ -83,7 +79,7 @@ def convert(qlr, images, label,  **kwargs):
     for image in images:
         if isinstance(image, Image.Image):
             im = image
-        elif isinstance(image, (unicode, str)):
+        elif isinstance(image, str):
             im = Image.open(image)
         else:
             raise NotImplementedError("The image argument needs to be an Image() instance or the filename to an image.")

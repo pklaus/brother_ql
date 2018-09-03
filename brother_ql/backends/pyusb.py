@@ -8,6 +8,9 @@ Requires PyUSB: https://github.com/walac/pyusb/
 Install via `pip install pyusb`
 """
 
+from __future__ import unicode_literals
+from builtins import str
+
 import time
 
 import usb.core

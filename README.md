@@ -77,6 +77,7 @@ The main user interface of this package is the command line tool `brother_ql`.
                                       usb://0x04f9:0x2015/000M6Z401370 for a
                                       printer connected via USB.
       --debug
+      --version                       Show the version and exit.
       --help                          Show this message and exit.
     
     Commands:

@@ -82,7 +82,7 @@ The main user interface of this package is the command line tool `brother_ql`.
     Commands:
       analyze   interpret a binary file containing raster...
       discover  find connected label printers
-      info      list available choices (for labels or models)
+      info      list available labels, models etc.
       print     Print a label
       send      send an instruction file to the printer
 

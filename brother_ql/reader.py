@@ -153,8 +153,10 @@ def match_opcode(data):
 
 def interpret_response(data):
     data = bytes(data)
-    assert len(data) >= 32
-    assert data.startswith(b'\x80\x20\x42')
+    if len(data) < 32:
+        raise NameError('Insufficient amount of data received', hex_format(data))
+    if not data.startswith(b'\x80\x20\x42'):
+        raise NameError("Printer response doesn't start with the usual header (80:20:42)", hex_format(data))
     for i, byte_name in enumerate(RESP_BYTE_NAMES):
         logger.debug('Byte %2d %24s %02X', i, byte_name+':', data[i])
     errors = []

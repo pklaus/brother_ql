@@ -79,10 +79,11 @@ def convert(qlr, images, label,  **kwargs):
     for image in images:
         if isinstance(image, Image.Image):
             im = image
-        elif isinstance(image, str):
-            im = Image.open(image)
         else:
-            raise NotImplementedError("The image argument needs to be an Image() instance or the filename to an image.")
+            try:
+                im = Image.open(image)
+            except:
+                raise NotImplementedError("The image argument needs to be an Image() instance, the filename to an image, or a file handle.")
 
         if im.mode.endswith('A'):
             # place in front of white background and get red of transparency

@@ -124,7 +124,7 @@ The most important command is the `print` command and here is its CLI signature:
                                       be resized to 300dpi.
       --lq                            Print with low quality (faster). Default is
                                       high quality.
-      --no-cut / --cut                Don't cut the tape after printing the label.
+      --no-cut                        Don't cut the tape after printing the label.
       --help                          Show this message and exit.
 
 So, printing an image file onto 62mm endless tape on a QL-710W label printer can be as easy as:

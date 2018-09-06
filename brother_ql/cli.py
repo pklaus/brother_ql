@@ -129,7 +129,7 @@ def env(ctx, *args, **kwargs):
 @click.option('--red', is_flag=True, help='Create a label to be printed on black/red/white tape (only with QL-8xx series on DK-22251 labels). You must use this option when printing on black/red tape, even when not printing red.')
 @click.option('--600dpi', 'dpi_600', is_flag=True, help='Print with 600x300 dpi available on some models. Provide your image as 600x600 dpi; perpendicular to the feeding the image will be resized to 300dpi.')
 @click.option('--lq', is_flag=True, help='Print with low quality (faster). Default is high quality.')
-@click.option('--no-cut/--cut', is_flag=True, help="Don't cut the tape after printing the label.")
+@click.option('--no-cut', is_flag=True, help="Don't cut the tape after printing the label.")
 @click.pass_context
 def print_cmd(ctx, *args, **kwargs):
     """ Print a label of the provided IMAGE. """
@@ -141,6 +141,8 @@ def print_cmd(ctx, *args, **kwargs):
     from brother_ql.raster import BrotherQLRaster
     qlr = BrotherQLRaster(model)
     qlr.exception_on_warning = True
+    kwargs['cut'] = not kwargs['no_cut']
+    del kwargs['no_cut']
     instructions = convert(qlr=qlr, **kwargs)
     send(instructions=instructions, printer_identifier=printer, backend_identifier=backend, blocking=True)
 

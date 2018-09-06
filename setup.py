@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 try:
-    from setuptools import setup
+    from setuptools import find_packages, setup
 except ImportError:
     from distutils.core import setup
 
@@ -22,8 +22,7 @@ setup(name='brother_ql',
       author_email = 'philipp.l.klaus@web.de',
       url = 'https://github.com/pklaus/brother_ql',
       license = 'GPL',
-      packages = ['brother_ql',
-                  'brother_ql.backends'],
+      packages = find_packages(),
       entry_points = {
           'console_scripts': [
               'brother_ql = brother_ql.cli:cli',

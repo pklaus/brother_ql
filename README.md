@@ -168,7 +168,7 @@ it will be scaled to fit the width.
 
 ### Backends
 
-There are multiple backends for connecting to the printer available:
+There are multiple backends for connecting to the printer available (✔: supported, ✘: not supported):
 
 Backend | Kind | Linux | Mac OS | Windows
 -------|-------|---------|---------|--------
@@ -176,8 +176,7 @@ network | TCP | ✔ | ✔ | ✔
 linux\_kernel | USB | ✔ (1) | ✘ | ✘
 pyusb (2) | USB | ✔ (2a) | ✔ (2b) | ✔ (2c)
 
-✔: works  
-✘: doesn't work
+Notes:
 
 1. The label printer should show up automatically as `/dev/usb/lp0` when connected.
    Please check the ownership (user, group) of this file to be able to print as a regular user.

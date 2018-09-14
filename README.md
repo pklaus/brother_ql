@@ -174,7 +174,7 @@ Backend | Kind | Linux | Mac OS | Windows
 -------|-------|---------|---------|--------
 network (1) | TCP | ✔ | ✔ | ✔
 linux\_kernel | USB | ✔ (2) | ✘ | ✘
-pyusb (3) | USB | ✔ (3a) | ✔ (3b) | ✔ (3c)
+pyusb (3) | USB | ✔ (3.1) | ✔ (3.2) | ✔ (3.3)
 
 Notes:
 
@@ -184,9 +184,9 @@ Notes:
    Please check the ownership (user, group) of this file to be able to print as a regular user.
    Consider setting up a udev .rules file.
 3. PyUSB is a Python wrapper allowing to implement USB communication in userspace.
-   a. On Linux: install libusb1 as offered by your distribution: `sudo apt-get install libusb-1.0-0` (Ubuntu, Debian), `sudo zyppe in libusb-1_0-0` (OpenSUSE), `sudo pacman -S libusb` (Arch).
-   b. On Mac OS: Install [Homebrew](https://brew.sh/) and then install libusb1 using: `brew install libusb`.
-   c. On Windows: download [libusb-win32-devel-filter-1.2.6.0.exe](https://sourceforge.net/projects/libusb-win32/files/libusb-win32-releases/1.2.6.0/)
+   1. On Linux: install libusb1 as offered by your distribution: `sudo apt-get install libusb-1.0-0` (Ubuntu, Debian), `sudo zyppe in libusb-1_0-0` (OpenSUSE), `sudo pacman -S libusb` (Arch).
+   2. On Mac OS: Install [Homebrew](https://brew.sh/) and then install libusb1 using: `brew install libusb`.
+   3. On Windows: download [libusb-win32-devel-filter-1.2.6.0.exe](https://sourceforge.net/projects/libusb-win32/files/libusb-win32-releases/1.2.6.0/)
       from sourceforge and install it.
       After installing, you have to use the "Filter Wizard" to setup a "device filter" for the label printer.
 

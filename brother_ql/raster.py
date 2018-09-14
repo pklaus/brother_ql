@@ -186,7 +186,7 @@ class BrotherQLRaster(object):
 
     def add_raster_data(self, image, second_image=None):
         """ image: Pillow Image() """
-        logger.info("raster_image_size: {0}x{1}".format(*image.size))
+        logger.debug("raster_image_size: {0}x{1}".format(*image.size))
         if image.size[0] != self.get_pixel_width():
             fmt = 'Wrong pixel width: {}, expected {}'
             raise BrotherQLRasterError(fmt.format(image.size[0], self.get_pixel_width()))

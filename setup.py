@@ -48,7 +48,7 @@ setup(name='brother_ql',
           #'brother_ql_analyse':  ["matplotlib",],
           #'brother_ql_create' :  ["matplotlib",],
       },
-      keywords = 'Brother QL-500 QL-550 QL-570 QL-700 QL-710W QL-720NW QL-800 QL-820NWB QL-1050',
+      keywords = 'Brother QL-500 QL-550 QL-570 QL-700 QL-710W QL-720NW QL-800 QL-810W QL-820NWB QL-1050',
       classifiers = [
           'Development Status :: 4 - Beta',
           'Operating System :: OS Independent',

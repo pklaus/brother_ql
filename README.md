@@ -166,6 +166,29 @@ For endless label rolls, you can provide image files with a pixel width as state
 If you provide a file with different dimensions when creating an endless label file,
 it will be scaled to fit the width.
 
+### Backends
+
+There are multiple backends for connecting to the printer available:
+
+Backend | Kind | Linux | Mac OS | Windows
+-------|-------|---------|---------|--------
+network | TCP | ✔ | ✔ | ✔
+linux\_kernel | USB | ✔ (1) | ✘ | ✘
+pyusb (2) | USB | ✔ (2a) | ✔ (2b) | ✔ (2c)
+
+✔: works  
+✘: doesn't work
+
+1. The label printer should show up automatically as `/dev/usb/lp0` when connected.
+   Please check the ownership (user, group) of this file to be able to print as a regular user.
+   Consider setting up a udev .rules file.
+2. PyUSB is a Python wrapper allowing to implement USB communication in userspace.
+   a. On Linux: install libusb1 as offered by your distribution: `sudo apt-get install libusb-1.0-0` (Ubuntu, Debian), `sudo zyppe in libusb-1_0-0` (OpenSUSE), `sudo pacman -S libusb` (Arch).
+   b. On Mac OS: Install [Homebrew](https://brew.sh/) and then install libusb1 using: `brew install libusb`.
+   c. On Windows: download [libusb-win32-devel-filter-1.2.6.0.exe](https://sourceforge.net/projects/libusb-win32/files/libusb-win32-releases/1.2.6.0/)
+      from sourceforge and install it.
+      After installing, you have to use the "Filter Wizard" to setup a "device filter" for the label printer.
+
 ### Legacy command line tools
 
 For a long time, this project provided multiple command line tools, such as

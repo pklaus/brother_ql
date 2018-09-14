@@ -42,6 +42,7 @@ setup(name='brother_ql',
           "future",
           "packbits",
           "pillow>=3.3.0",
+          "pyusb",
       ],
       extras_require = {
           #'brother_ql_analyse':  ["matplotlib",],

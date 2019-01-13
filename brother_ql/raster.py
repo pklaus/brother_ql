@@ -1,3 +1,11 @@
+"""
+This module contains the implementation of the raster language
+of the Brother QL-series label printers according to their
+documentation and to reverse engineering efforts.
+
+The central piece of code in this module is the class
+:py:class:`BrotherQLRaster`.
+"""
 
 from builtins import bytes
 
@@ -28,6 +36,21 @@ except: # Py2
 logger = logging.getLogger(__name__)
 
 class BrotherQLRaster(object):
+
+    """
+    This class facilitates the creation of a complete set
+    of raster instructions by adding them one after the other
+    using the methods of the class. Each method call is adding
+    instructions to the member variable :py:attr:`data`.
+
+    Instatiate the class by providing the printer
+    model as argument.
+
+    :param str model: Choose from the list of available models.
+
+    :ivar bytes data: The resulting bytecode with all instructions.
+    :ivar bool exception_on_warning: If set to True, an exception is raised if trying to add instruction which are not supported on the selected model. If set to False, the instruction is simply ignored and a warning sent to logging/stderr.
+    """
 
     def __init__(self, model='QL-500'):
         if model not in models:
@@ -169,6 +192,14 @@ class BrotherQLRaster(object):
         self.data += struct.pack('<H', dots)
 
     def add_compression(self, compression=True):
+        """
+        Add an instruction enabling or disabling compression for the transmitted raster image lines.
+        Not all models support compression. If the specific model doesn't support it but this method
+        is called trying to enable it, either a warning is set or an exception is raised depending on
+        the value of :py:attr:`exception_on_warning`
+
+        :param bool compression: Whether compression should be on or off
+        """
         if self.model not in compressionsupport:
             self._unsupported("Trying to set compression on a printer that doesn't support it")
             return
@@ -184,7 +215,14 @@ class BrotherQLRaster(object):
         return nbpr*8
 
     def add_raster_data(self, image, second_image=None):
-        """ image: Pillow Image() """
+        """
+        Add the image data to the instructions.
+        The provided image has to be binary (every pixel
+        is either black or white).
+
+        :param PIL.Image.Image image: The image to be converted and added to the raster instructions
+        :param PIL.Image.Image second_image: A second image with a separate color layer (red layer for the QL-800 series)
+        """
         logger.debug("raster_image_size: {0}x{1}".format(*image.size))
         if image.size[0] != self.get_pixel_width():
             fmt = 'Wrong pixel width: {}, expected {}'

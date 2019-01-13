@@ -56,7 +56,7 @@ class BrotherQLRaster(object):
         else:
             logger.warning(problem)
 
-    def unsupported(self, problem):
+    def _unsupported(self, problem):
         """
         Raises BrotherQLUnsupportedCmd if
         exception_on_warning is set to True.
@@ -85,7 +85,7 @@ class BrotherQLRaster(object):
         the mode change (others are in raster mode already).
         """
         if self.model not in modesetting:
-            self.unsupported("Trying to switch the operating mode on a printer that doesn't support the command.")
+            self._unsupported("Trying to switch the operating mode on a printer that doesn't support the command.")
             return
         self.data += b'\x1B\x69\x61\x01' # ESC i a
 
@@ -138,24 +138,24 @@ class BrotherQLRaster(object):
 
     def add_autocut(self, autocut = False):
         if self.model not in cuttingsupport:
-            self.unsupported("Trying to call add_autocut with a printer that doesn't support it")
+            self._unsupported("Trying to call add_autocut with a printer that doesn't support it")
             return
         self.data += b'\x1B\x69\x4D' # ESC i M
         self.data += bytes([autocut << 6])
 
     def add_cut_every(self, n=1):
         if self.model not in cuttingsupport:
-            self.unsupported("Trying to call add_cut_every with a printer that doesn't support it")
+            self._unsupported("Trying to call add_cut_every with a printer that doesn't support it")
             return
         self.data += b'\x1B\x69\x41' # ESC i A
         self.data += bytes([n & 0xFF])
 
     def add_expanded_mode(self):
         if self.model not in expandedmode:
-            self.unsupported("Trying to set expanded mode (dpi/cutting at end) on a printer that doesn't support it")
+            self._unsupported("Trying to set expanded mode (dpi/cutting at end) on a printer that doesn't support it")
             return
         if self.two_color_printing and not self.two_color_support:
-            self.unsupported("Trying to set two_color_printing in expanded mode on a printer that doesn't support it.")
+            self._unsupported("Trying to set two_color_printing in expanded mode on a printer that doesn't support it.")
             return
         self.data += b'\x1B\x69\x4B' # ESC i K
         flags = 0x00
@@ -170,7 +170,7 @@ class BrotherQLRaster(object):
 
     def add_compression(self, compression=True):
         if self.model not in compressionsupport:
-            self.unsupported("Trying to set compression on a printer that doesn't support it")
+            self._unsupported("Trying to set compression on a printer that doesn't support it")
             return
         self._compression = compression
         self.data += b'\x4D' # M

@@ -12,7 +12,6 @@ from .devicedependent import models, \
                              min_max_feed, \
                              min_max_length_dots, \
                              number_bytes_per_row, \
-                             right_margin_addition, \
                              compressionsupport, \
                              cuttingsupport, \
                              expandedmode, \

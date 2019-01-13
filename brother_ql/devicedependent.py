@@ -1,179 +1,94 @@
+"""
+Deprecated Module brother_ql.devicedependent
 
-models = [
-  'QL-500',
-  'QL-550',
-  'QL-560',
-  'QL-570',
-  'QL-580N',
-  'QL-650TD',
-  'QL-700',
-  'QL-710W',
-  'QL-720NW',
-  'QL-800',
-  'QL-810W',
-  'QL-820NWB',
-  'QL-1050',
-  'QL-1060N',
-]
+This module held constants and settings that were specific to
+different QL-series printer models and to different label types.
 
-min_max_length_dots = {
-  'default':  (295, 11811),
+The content is now split into two modules:
 
-  # Those are using the default:
-  # QL-500 QL-550 QL-560 QL-650TD
+* brother_ql.models
+* brother_ql.labels
 
-  'QL-1050':  (295, 35433),
-  'QL-1060N': (295, 35433),
+Please import directly from them as this module will be removed in a future version.
+"""
 
-  'QL-570':   (150, 11811),
-  'QL-580N':  (150, 11811),
-  'QL-700':   (150, 11811),
-  'QL-710W':  (150, 11811),
-  'QL-720NW': (150, 11811),
-  'QL-800':   (150, 11811),
-  'QL-810W':  (150, 11811),
-  'QL-820NWB':(150, 11811),
-}
+import logging
 
-min_max_feed = {
-  'default':  (35, 1500),
-}
+logger = logging.getLogger(__name__)
 
+logger.warn("deprecation warning: brother_ql.devicedependent is deprecated and will be removed in a future release")
 
-label_sizes = [
-  "12",
-  "29",
-  "38",
-  "50",
-  "54",
-  "62",
-  "102",
-  "17x54",
-  "17x87",
-  "23x23",
-  "29x42",
-  "29x90",
-  "39x90",
-  "39x48",
-  "52x29",
-  "62x29",
-  "62x100",
-  "102x51",
-  "102x152",
-  "d12",
-  "d24",
-  "d58",
-]
+## These module level variables were available here before.
+# Concerning labels
+DIE_CUT_LABEL = None
+ENDLESS_LABEL = None
+ROUND_DIE_CUT_LABEL = None
+label_type_specs = {}
+label_sizes = []
+# And concerning printer models
+models = []
+min_max_length_dots = {}
+min_max_feed = {}
+number_bytes_per_row = {}
+right_margin_addition = {}
+modesetting = []
+cuttingsupport = []
+expandedmode = []
+compressionsupport = []
+two_color_support = []
 
-# label_types
-DIE_CUT_LABEL       = 1
-ENDLESS_LABEL       = 2
-ROUND_DIE_CUT_LABEL = 3
+## Let's recreate them using the improved data structures
+## in brother_ql.models and brother_ql.labels
 
-label_type_specs = {
-  #                                            (width, length)
-  "12":     {'tape_size': ( 12,   0), 'dots_total': ( 142,    0), 'dots_printable': ( 106,   0),  'right_margin_dots': 29, 'feed_margin': 35},
-  "29":     {'tape_size': ( 29,   0), 'dots_total': ( 342,    0), 'dots_printable': ( 306,   0),  'right_margin_dots':  6, 'feed_margin': 35},
-  "38":     {'tape_size': ( 38,   0), 'dots_total': ( 449,    0), 'dots_printable': ( 413,   0),  'right_margin_dots': 12, 'feed_margin': 35},
-  "50":     {'tape_size': ( 50,   0), 'dots_total': ( 590,    0), 'dots_printable': ( 554,   0),  'right_margin_dots': 12, 'feed_margin': 35},
-  "54":     {'tape_size': ( 54,   0), 'dots_total': ( 636,    0), 'dots_printable': ( 590,   0),  'right_margin_dots':  0, 'feed_margin': 35},
-  "62":     {'tape_size': ( 62,   0), 'dots_total': ( 732,    0), 'dots_printable': ( 696,   0),  'right_margin_dots': 12, 'feed_margin': 35},
-  "102":    {'tape_size': (102,   0), 'dots_total': (1200,    0), 'dots_printable': (1164,   0),  'right_margin_dots': 12, 'feed_margin': 35},
-  "17x54":  {'tape_size': ( 17,  54), 'dots_total': ( 201,  636), 'dots_printable': ( 165,  566), 'right_margin_dots':  0, 'feed_margin':  0},
-  "17x87":  {'tape_size': ( 17,  87), 'dots_total': ( 201, 1026), 'dots_printable': ( 165,  956), 'right_margin_dots':  0, 'feed_margin':  0},
-  "23x23":  {'tape_size': ( 23,  23), 'dots_total': ( 272,  272), 'dots_printable': ( 202,  202), 'right_margin_dots': 42, 'feed_margin':  0},
-  "29x42":  {'tape_size': ( 29,  42), 'dots_total': ( 342,  495), 'dots_printable': ( 306,  425), 'right_margin_dots':  6, 'feed_margin':  0},
-  "29x90":  {'tape_size': ( 29,  90), 'dots_total': ( 342, 1061), 'dots_printable': ( 306,  991), 'right_margin_dots':  6, 'feed_margin':  0},
-  "39x90":  {'tape_size': ( 38,  90), 'dots_total': ( 449, 1061), 'dots_printable': ( 413,  991), 'right_margin_dots': 12, 'feed_margin':  0},
-  "39x48":  {'tape_size': ( 39,  48), 'dots_total': ( 461,  565), 'dots_printable': ( 425,  495), 'right_margin_dots':  6, 'feed_margin':  0},
-  "52x29":  {'tape_size': ( 52,  29), 'dots_total': ( 614,  341), 'dots_printable': ( 578,  271), 'right_margin_dots':  0, 'feed_margin':  0},
-  "62x29":  {'tape_size': ( 62,  29), 'dots_total': ( 732,  341), 'dots_printable': ( 696,  271), 'right_margin_dots': 12, 'feed_margin':  0},
-  "62x100": {'tape_size': ( 62, 100), 'dots_total': ( 732, 1179), 'dots_printable': ( 696, 1109), 'right_margin_dots': 12, 'feed_margin':  0},
-  "102x51": {'tape_size': (102,  51), 'dots_total': (1200,  596), 'dots_printable': (1164,  526), 'right_margin_dots': 12, 'feed_margin':  0},
-  "102x152":{'tape_size': (102, 153), 'dots_total': (1200, 1804), 'dots_printable': (1164, 1660), 'right_margin_dots': 12, 'feed_margin':  0},
-  "d12":    {'tape_size': ( 12,  12), 'dots_total': ( 142,  142), 'dots_printable': (  94,   94), 'right_margin_dots':113, 'feed_margin': 35},
-  "d24":    {'tape_size': ( 24,  24), 'dots_total': ( 284,  284), 'dots_printable': ( 236,  236), 'right_margin_dots': 42, 'feed_margin':  0},
-  "d58":    {'tape_size': ( 58,  58), 'dots_total': ( 688,  688), 'dots_printable': ( 618,  618), 'right_margin_dots': 51, 'feed_margin':  0},
-}
+def _populate_model_legacy_structures():
+    from brother_ql.models import ModelsManager
+    global models
+    global min_max_length_dots, min_max_feed, number_bytes_per_row, right_margin_addition
+    global modesetting, cuttingsupport, expandedmode, compressionsupport, two_color_support
 
-for key in label_type_specs:
-    # kind
-    if 'x' in key:
-        label_type_specs[key]['kind'] = DIE_CUT_LABEL
-    elif key.startswith('d'):
-        label_type_specs[key]['kind'] = ROUND_DIE_CUT_LABEL
-    else:
-        label_type_specs[key]['kind'] = ENDLESS_LABEL
+    for model in ModelsManager().iter_elements():
+        models.append(model.identifier)
+        min_max_length_dots[model.identifier] = model.min_max_length_dots
+        min_max_feed[model.identifier] = model.min_max_feed
+        number_bytes_per_row[model.identifier] = model.number_bytes_per_row
+        right_margin_addition[model.identifier] = model.additional_offset_r
+        if model.mode_setting: modesetting.append(model.identifier)
+        if model.cutting: cuttingsupport.append(model.identifier)
+        if model.expanded_mode: expandedmode.append(model.identifier)
+        if model.compression: compressionsupport.append(model.identifier)
+        if model.two_color: two_color_support.append(model.identifier)
 
-    # restrict_printers
-    if '102' in key:
-        label_type_specs[key]['restrict_printers'] = ['QL-1060N', 'QL-1050']
-    else:
-        label_type_specs[key]['restrict_printers'] = []
+def _populate_label_legacy_structures():
+    """
+    We contain this code inside a function so that the imports
+    we do in here are not visible at the module level.
+    """
+    global DIE_CUT_LABEL, ENDLESS_LABEL, ROUND_DIE_CUT_LABEL
+    global label_sizes, label_type_specs
 
-    # name
-    if 'x' in key:
-        label_type_specs[key]['name'] = '{0}mm x {1}mm die-cut'.format(*label_type_specs[key]['tape_size'])
-    elif key.startswith('d'):
-        label_type_specs[key]['name'] = '{0}mm round die-cut'.format(label_type_specs[key]['tape_size'][0])
-    else:
-        label_type_specs[key]['name'] = '{0}mm endless'.format(label_type_specs[key]['tape_size'][0])
+    from brother_ql.labels import FormFactor
+    DIE_CUT_LABEL =       FormFactor.DIE_CUT
+    ENDLESS_LABEL =       FormFactor.ENDLESS
+    ROUND_DIE_CUT_LABEL = FormFactor.ROUND_DIE_CUT
 
-number_bytes_per_row = {
-  'default':   90,
-  'QL-1050':  162,
-  'QL-1060N': 162,
-}
+    from brother_ql.labels import LabelsManager
+    lm = LabelsManager()
+    label_sizes = list(lm.iter_identifiers())
+    for label in lm.iter_elements():
+        l = {}
+        l['name'] = label.name
+        l['kind'] = label.form_factor
+        l['color'] = label.color
+        l['tape_size'] = label.tape_size
+        l['dots_total'] = label.dots_total
+        l['dots_printable'] = label.dots_printable
+        l['right_margin_dots'] = label.offset_r
+        l['feed_margin'] = label.feed_margin
+        l['restrict_printers'] = label.restricted_to_models
+        label_type_specs[label.identifier] = l
 
-right_margin_addition = {
-  'default':   0,
-  'QL-1050':  44,
-  'QL-1060N': 44,
-}
+def _populate_all_legacy_structures():
+    _populate_label_legacy_structures()
+    _populate_model_legacy_structures()
 
-modesetting = [
-  'QL-580N',
-  'QL-650TD',
-  'QL-1050',
-  'QL-1060N',
-  'QL-710W',
-  'QL-720NW',
-  'QL-800',
-  'QL-810W',
-  'QL-820NWB',
-]
-
-cuttingsupport = [
-  'QL-550',
-  'QL-560',
-  'QL-570',
-  'QL-580N',
-  'QL-650TD',
-  'QL-700',
-  'QL-1050',
-  'QL-1060N',
-  'QL-710W',
-  'QL-720NW',
-  'QL-800',
-  'QL-810W',
-  'QL-820NWB',
-]
-
-expandedmode = cuttingsupport
-
-compressionsupport = [
-  'QL-580N',
-  'QL-650TD',
-  'QL-1050',
-  'QL-1060N',
-  'QL-710W',
-  'QL-720NW',
-  'QL-810W',
-  'QL-820NWB',
-]
-
-two_color_support = [
-  'QL-800',
-  'QL-810W',
-  'QL-820NWB',
-]
+_populate_all_legacy_structures()

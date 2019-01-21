@@ -16,8 +16,6 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-logger.warn("deprecation warning: brother_ql.devicedependent is deprecated and will be removed in a future release")
-
 ## These module level variables were available here before.
 # Concerning labels
 DIE_CUT_LABEL = None

@@ -1,13 +1,13 @@
 
 from attr import attrs, attrib
 from typing import List, Tuple
-from enum import Enum
+from enum import IntEnum
 
 import copy
 
 from brother_ql.helpers import ElementsManager
 
-class FormFactor(Enum):
+class FormFactor(IntEnum):
     """
     Enumeration representing the form factor of a label.
     The labels for the Brother QL series are supplied either as die-cut (pre-sized), or for more flexibility the
@@ -20,7 +20,7 @@ class FormFactor(Enum):
     #: round die-cut labels
     ROUND_DIE_CUT = 3
 
-class Color(Enum):
+class Color(IntEnum):
     """
     Enumeration representing the colors to be printed on a label. Most labels only support printing black on white.
     Some newer ones can also print in black and red on white.

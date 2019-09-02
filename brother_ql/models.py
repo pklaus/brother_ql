@@ -55,6 +55,8 @@ ALL_MODELS = [
   Model('QL-820NWB',(150, 11811), two_color=True),
   Model('QL-1050',  (295, 35433), number_bytes_per_row=162, additional_offset_r=44),
   Model('QL-1060N', (295, 35433), number_bytes_per_row=162, additional_offset_r=44),
+  Model('PT-P750W',  (31, 14172), number_bytes_per_row=16),
+  Model('PT-P900W',  (57, 28346), number_bytes_per_row=70),
 ]
 
 class ModelsManager(ElementsManager):

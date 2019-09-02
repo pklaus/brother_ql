@@ -9,7 +9,8 @@ from PIL import Image
 import PIL.ImageOps, PIL.ImageChops
 
 from brother_ql.raster import BrotherQLRaster
-from brother_ql.devicedependent import label_type_specs, ENDLESS_LABEL, DIE_CUT_LABEL, ROUND_DIE_CUT_LABEL, right_margin_addition
+from brother_ql.devicedependent import ENDLESS_LABEL, DIE_CUT_LABEL, ROUND_DIE_CUT_LABEL, PTOUCH_ENDLESS_LABEL
+from brother_ql.devicedependent import label_type_specs, right_margin_addition
 from brother_ql import BrotherQLUnsupportedCmd
 from brother_ql.image_trafos import filtered_hsv
 
@@ -102,7 +103,7 @@ def convert(qlr, images, label,  **kwargs):
         else:
             dots_expected = dots_printable
 
-        if label_specs['kind'] == ENDLESS_LABEL:
+        if label_specs['kind'] in (ENDLESS_LABEL, PTOUCH_ENDLESS_LABEL):
             if rotate not in ('auto', 0):
                 im = im.rotate(rotate, expand=True)
             if dpi_600:
@@ -161,8 +162,12 @@ def convert(qlr, images, label,  **kwargs):
             qlr.mtype = 0x0B
             qlr.mwidth = tape_size[0]
             qlr.mlength = tape_size[1]
-        else:
+        elif label_specs['kind'] in (ENDLESS_LABEL, ):
             qlr.mtype = 0x0A
+            qlr.mwidth = tape_size[0]
+            qlr.mlength = 0
+        elif label_specs['kind'] in (PTOUCH_ENDLESS_LABEL, ):
+            qlr.mtype = 0x00
             qlr.mwidth = tape_size[0]
             qlr.mlength = 0
         qlr.pquality = int(hq)

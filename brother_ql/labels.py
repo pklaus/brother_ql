@@ -19,6 +19,8 @@ class FormFactor(IntEnum):
     ENDLESS = 2
     #: round die-cut labels
     ROUND_DIE_CUT = 3
+    #: endless P-touch labels
+    PTOUCH_ENDLESS = 4
 
 class Color(IntEnum):
     """
@@ -102,6 +104,7 @@ ALL_LABELS = (
   Label("d12",    ( 12,  12), FormFactor.ROUND_DIE_CUT, ( 142,  142), (  94,   94), 113 , feed_margin=35),
   Label("d24",    ( 24,  24), FormFactor.ROUND_DIE_CUT, ( 284,  284), ( 236,  236),  42 ),
   Label("d58",    ( 58,  58), FormFactor.ROUND_DIE_CUT, ( 688,  688), ( 618,  618),  51 ),
+  Label("pt24",   ( 24,   0), FormFactor.PTOUCH_ENDLESS,( 128,    0), ( 128,    0),   0, feed_margin=14),
 )
 
 class LabelsManager(ElementsManager):

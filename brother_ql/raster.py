@@ -245,13 +245,18 @@ class BrotherQLRaster(object):
         while start + row_len <= frame_len:
             for i, frame in enumerate(frames):
                 row = frame[start:start+row_len]
-                if second_image:
-                    file_str.write(b'\x77\x01' if i == 0 else b'\x77\x02')
-                else:
-                    file_str.write(b'\x67\x00')
                 if self._compression:
                     row = packbits.encode(row)
-                file_str.write(bytes([len(row)]))
+                translen = len(row) # number of bytes to be transmitted
+                if self.model.startswith('PT'):
+                    file_str.write(b'\x47')
+                    file_str.write(bytes([translen%256, translen//256]))
+                else:
+                    if second_image:
+                        file_str.write(b'\x77\x01' if i == 0 else b'\x77\x02')
+                    else:
+                        file_str.write(b'\x67\x00')
+                    file_str.write(bytes([translen]))
                 file_str.write(row)
             start += row_len
         self.data += file_str.getvalue()

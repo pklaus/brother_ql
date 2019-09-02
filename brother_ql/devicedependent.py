@@ -21,6 +21,7 @@ logger = logging.getLogger(__name__)
 DIE_CUT_LABEL = None
 ENDLESS_LABEL = None
 ROUND_DIE_CUT_LABEL = None
+PTOUCH_ENDLESS_LABEL = None
 label_type_specs = {}
 label_sizes = []
 # And concerning printer models
@@ -61,13 +62,14 @@ def _populate_label_legacy_structures():
     We contain this code inside a function so that the imports
     we do in here are not visible at the module level.
     """
-    global DIE_CUT_LABEL, ENDLESS_LABEL, ROUND_DIE_CUT_LABEL
+    global DIE_CUT_LABEL, ENDLESS_LABEL, ROUND_DIE_CUT_LABEL, PTOUCH_ENDLESS_LABEL
     global label_sizes, label_type_specs
 
     from brother_ql.labels import FormFactor
     DIE_CUT_LABEL =       FormFactor.DIE_CUT
     ENDLESS_LABEL =       FormFactor.ENDLESS
     ROUND_DIE_CUT_LABEL = FormFactor.ROUND_DIE_CUT
+    PTOUCH_ENDLESS_LABEL =FormFactor.PTOUCH_ENDLESS
 
     from brother_ql.labels import LabelsManager
     lm = LabelsManager()

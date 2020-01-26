@@ -65,8 +65,12 @@ RESP_ERROR_INFORMATION_2_DEF = {
 
 RESP_MEDIA_TYPES = {
   0x00: 'No media',
+  0x01: 'Laminated tape',
+  0x03: 'Non-laminated tape',
   0x0A: 'Continuous length tape',
   0x0B: 'Die-cut labels',
+  0x11: 'Heat-shrink tube',
+  0xff: 'Incompatible tape',
 }
 
 RESP_STATUS_TYPES = {

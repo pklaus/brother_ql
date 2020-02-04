@@ -1,4 +1,6 @@
 
+from builtins import bytes
+
 import logging
 
 logger = logging.getLogger(__name__)

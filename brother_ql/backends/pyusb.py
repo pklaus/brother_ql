@@ -9,7 +9,7 @@ Install via `pip install pyusb`
 """
 
 from __future__ import unicode_literals
-from builtins import str
+from builtins import str, bytes
 
 import time
 

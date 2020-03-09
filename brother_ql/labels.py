@@ -91,7 +91,7 @@ ALL_LABELS = (
   Label("102",    (102,   0), FormFactor.ENDLESS,       (1200,    0), (1164,    0),  12 , feed_margin=35, restricted_to_models=['QL-1050', 'QL-1060N']),
   Label("17x54",  ( 17,  54), FormFactor.DIE_CUT,       ( 201,  636), ( 165,  566),   0 ),
   Label("17x87",  ( 17,  87), FormFactor.DIE_CUT,       ( 201, 1026), ( 165,  956),   0 ),
-  Label("23x23",  ( 23,  23), FormFactor.DIE_CUT,       ( 272,  272), ( 202,  202),  42 ),
+  Label("23x23",  ( 23,  23), FormFactor.DIE_CUT,       ( 272,  272), ( 250,  225),  55 ),
   Label("29x42",  ( 29,  42), FormFactor.DIE_CUT,       ( 342,  495), ( 306,  425),   6 ),
   Label("29x90",  ( 29,  90), FormFactor.DIE_CUT,       ( 342, 1061), ( 306,  991),   6 ),
   Label("39x90",  ( 38,  90), FormFactor.DIE_CUT,       ( 449, 1061), ( 413,  991),  12 ),

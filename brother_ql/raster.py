@@ -64,6 +64,9 @@ class BrotherQLRaster(object):
         self.two_color_printing = False
         self._compression = False
         self.exception_on_warning = False
+        self.half_cut = True
+        self.chain_printing = False
+
 
     def _warn(self, problem, kind=BrotherQLRasterError):
         """
@@ -182,9 +185,15 @@ class BrotherQLRaster(object):
             return
         self.data += b'\x1B\x69\x4B' # ESC i K
         flags = 0x00
-        flags |= self.cut_at_end << 3
-        flags |= self.dpi_600 << 6
-        flags |= self.two_color_printing << 0
+        if self.model.startswith('PT'):
+            flags |= self.half_cut << 2
+            flags |= self.chain_printing << 3
+            flags |= self.dpi_600 << 5
+        else:
+            flags |= self.cut_at_end << 3
+            flags |= self.dpi_600 << 6
+            flags |= self.two_color_printing << 0
+
         self.data += bytes([flags])
 
     def add_margins(self, dots=0x23):

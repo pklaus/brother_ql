@@ -45,7 +45,7 @@ RESP_ERROR_INFORMATION_1_DEF = {
   0: 'No media when printing',
   1: 'End of media (die-cut size only)',
   2: 'Tape cutter jam',
-  3: 'Not used',
+  3: 'Weak batteries',
   4: 'Main unit in use (QL-560/650TD/1050)',
   5: 'Printer turned off',
   6: 'High-voltage adapter (not used)',
@@ -58,13 +58,16 @@ RESP_ERROR_INFORMATION_2_DEF = {
   2: 'Transmission / Communication error',
   3: 'Communication buffer full error (not used)',
   4: 'Cover opened while printing (Except QL-500)',
-  5: 'Cancel key (not used)',
+  5: 'Cancel key (not used) or Overheating error (PT-E550W/P750W/P710BT)',
   6: 'Media cannot be fed (also when the media end is detected)',
   7: 'System error',
 }
 
 RESP_MEDIA_TYPES = {
   0x00: 'No media',
+  0x01: 'Laminated tape',
+  0x03: 'Non-laminated type',
+  0x11: 'Heat-Shrink Tube',
   0x0A: 'Continuous length tape',
   0x0B: 'Die-cut labels',
 }
@@ -73,6 +76,8 @@ RESP_STATUS_TYPES = {
   0x00: 'Reply to status request',
   0x01: 'Printing completed',
   0x02: 'Error occurred',
+  0x03: 'Exit IF mode',
+  0x04: 'Turned off',
   0x05: 'Notification',
   0x06: 'Phase change',
 }
@@ -106,8 +111,10 @@ RESP_BYTE_NAMES = [
   'Phase number (high)',
   'Phase number (low)',
   'Notification number',
-  'Reserved',
-  'Reserved',
+  'Expansion area',
+  'Tape color information',
+  'Text color information',
+  'Hardware settings',
 ]
 
 def hex_format(data):

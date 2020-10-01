@@ -65,7 +65,7 @@ class BrotherQLRaster(object):
         self._compression = False
         self.exception_on_warning = False
         self.half_cut = True
-        self.chain_printing = False
+        self.no_chain_printing = True
 
 
     def _warn(self, problem, kind=BrotherQLRasterError):
@@ -187,7 +187,7 @@ class BrotherQLRaster(object):
         flags = 0x00
         if self.model.startswith('PT'):
             flags |= self.half_cut << 2
-            flags |= self.chain_printing << 3
+            flags |= self.no_chain_printing << 3
             flags |= self.dpi_600 << 5
         else:
             flags |= self.cut_at_end << 3

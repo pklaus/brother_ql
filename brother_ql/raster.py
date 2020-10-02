@@ -176,6 +176,8 @@ class BrotherQLRaster(object):
         if self.model not in cuttingsupport:
             self._unsupported("Trying to call add_cut_every with a printer that doesn't support it")
             return
+        if self.model.startswith('PT'):
+            return
         self.data += b'\x1B\x69\x41' # ESC i A
         self.data += bytes([n & 0xFF])
 

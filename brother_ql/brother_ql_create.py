@@ -51,7 +51,9 @@ def main():
     args.outfile.write(qlr.data)
 
 def create_label(qlr, image, label_size, threshold=70, cut=True, dither=False, compress=False, red=False, **kwargs):
-    convert(qlr, [image], label_size, threshold=threshold, cut=cut, dither=dither, compress=compress, red=red, **kwargs)
+    if not isinstance(image, list):
+        image = [image]
+    convert(qlr, image, label_size, threshold=threshold, cut=cut, dither=dither, compress=compress, red=red, **kwargs)
 
 if __name__ == "__main__":
     main()

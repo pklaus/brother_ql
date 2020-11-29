@@ -13,7 +13,7 @@ In more details, the following is possible with this package:
 
 The following printers are claimed to be supported (✓ means verified by the author or by contributors):
 
-* QL-500 (✓), QL-550 (✓), QL-560 (✓), QL-570 (✓), QL-580N, QL-650TD, QL-700 (✓), QL-710W (✓),
+* QL-500 (✓), QL-550 (✓), QL-560 (✓), QL-570 (✓), QL-580N, QL-600 (✓), QL-650TD, QL-700 (✓), QL-710W (✓),
   QL-720NW (✓), QL-800 (✓), QL-810W (✓), QL-820NWB (✓), QL-1050 (✓), and QL-1060N (✓).
 
 The new QL-800 series can print labels with two colors (black and red) on DK-22251 labels.
@@ -64,12 +64,12 @@ On those systems, extending the path variable via `export PATH="${PATH}:~/.local
 The main user interface of this package is the command line tool `brother_ql`.
 
     Usage: brother_ql [OPTIONS] COMMAND [ARGS]...
-    
+
       Command line interface for the brother_ql Python package.
-    
+
     Options:
       -b, --backend [pyusb|network|linux_kernel]
-      -m, --model [QL-500|QL-550|QL-560|QL-570|QL-580N|QL-650TD|QL-700|QL-710W|QL-720NW|QL-800|QL-810W|QL-820NWB|QL-1050|QL-1060N]
+      -m, --model [QL-500|QL-550|QL-560|QL-570|QL-580N|QL-600|QL-650TD|QL-700|QL-710W|QL-720NW|QL-800|QL-810W|QL-820NWB|QL-1050|QL-1060N]
       -p, --printer PRINTER_IDENTIFIER
                                       The identifier for the printer. This could
                                       be a string like tcp://192.168.1.21:9100 for
@@ -79,7 +79,7 @@ The main user interface of this package is the command line tool `brother_ql`.
       --debug
       --version                       Show the version and exit.
       --help                          Show this message and exit.
-    
+
     Commands:
       analyze   interpret a binary file containing raster...
       discover  find connected label printers
@@ -94,9 +94,9 @@ The global options are followed by a command such as `info` or `print`.
 The most important command is the `print` command and here is its CLI signature:
 
     Usage: brother_ql print [OPTIONS] IMAGE [IMAGE] ...
-    
+
       Print a label of the provided IMAGE.
-    
+
     Options:
       -l, --label [12|29|38|50|54|62|102|17x54|17x87|23x23|29x42|29x90|39x90|39x48|52x29|62x29|62x100|102x51|102x152|d12|d24|d58]
                                       The label (size, type - die-cut or endless).
@@ -170,11 +170,11 @@ it will be scaled to fit the width.
 
 There are multiple backends for connecting to the printer available (✔: supported, ✘: not supported):
 
-Backend | Kind | Linux | Mac OS | Windows
--------|-------|---------|---------|--------
-network (1) | TCP | ✔ | ✔ | ✔
-linux\_kernel | USB | ✔ (2) | ✘ | ✘
-pyusb (3) | USB | ✔ (3.1) | ✔ (3.2) | ✔ (3.3)
+| Backend       | Kind | Linux   | Mac OS  | Windows |
+| ------------- | ---- | ------- | ------- | ------- |
+| network (1)   | TCP  | ✔       | ✔       | ✔       |
+| linux\_kernel | USB  | ✔ (2)   | ✘       | ✘       |
+| pyusb (3)     | USB  | ✔ (3.1) | ✔ (3.2) | ✔ (3.3) |
 
 Notes:
 
@@ -203,7 +203,7 @@ removed in a future release.
 This software package was written by Philipp Klaus based on Brother's documentation
 of its raster language and based on additinal reverse engineering efforts.
 
-* Philipp Klaus  
+* Philipp Klaus
   <philipp.l.klaus@web.de>
 
 Many more have contributed by raising issues, helping to solve them,

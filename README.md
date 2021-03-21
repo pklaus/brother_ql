@@ -54,7 +54,7 @@ This package was mainly created for use with Python 3.
 The essential functionality, however, will also work with Python 2: the creation of label files.
 
 In order to run the `brother_ql` command line utility, the directory it resides in
-needs to be in the PATH envirnoment variable.
+needs to be in the PATH environment variable.
 On some systems, the `pip install` command defaults to the `--user` flag resulting in the utility
 being put in the `~/.local/bin` directory.
 On those systems, extending the path variable via `export PATH="${PATH}:~/.local/bin"` is needed.

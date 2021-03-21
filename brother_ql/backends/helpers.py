@@ -75,7 +75,7 @@ def send(instructions, printer_identifier=None, backend_identifier=None, blockin
         try:
             result = interpret_response(data)
         except ValueError:
-            logger.error("TIME %.3f - Couln't understand response: %s", time.time()-start, data)
+            logger.error("TIME %.3f - Couldn't understand response: %s", time.time()-start, data)
             continue
         status['printer_state'] = result
         logger.debug('TIME %.3f - result: %s', time.time()-start, result)

@@ -41,7 +41,7 @@ class Label(object):
     """
     #: A string identifier given to each label that can be selected. Eg. '29'.
     identifier = attrib(type=str)
-    #: The tape size of a single label (width, lenght) in mm. For endless labels, the length is 0 by definition.
+    #: The tape size of a single label (width, length) in mm. For endless labels, the length is 0 by definition.
     tape_size = attrib(type=Tuple[int, int])
     #: The type of label
     form_factor = attrib(type=FormFactor)

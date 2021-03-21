@@ -43,7 +43,7 @@ class BrotherQLRaster(object):
     using the methods of the class. Each method call is adding
     instructions to the member variable :py:attr:`data`.
 
-    Instatiate the class by providing the printer
+    Instantiate the class by providing the printer
     model as argument.
 
     :param str model: Choose from the list of available models.
@@ -230,7 +230,7 @@ class BrotherQLRaster(object):
         images = [image]
         if second_image:
             if image.size != second_image.size:
-                fmt = "First and second image don't have the same dimesions: {} vs {}."
+                fmt = "First and second image don't have the same dimensions: {} vs {}."
                 raise BrotherQLRasterError(fmt.format(image.size, second_image.size))
             images.append(second_image)
         frames = []

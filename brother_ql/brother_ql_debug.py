@@ -47,7 +47,7 @@ class BrotherQL_USBdebug(object):
             interp_result = interpret_response(data)
             logger.info("Interpretation of the response: '{status_type}' (phase: {phase_type}), '{media_type}' {media_width}x{media_length} mm^2, errors: {errors}".format(**interp_result))
         except:
-            logger.error("Couln't interpret response: %s", hex_format(data))
+            logger.error("Couldn't interpret response: %s", hex_format(data))
 
     def print_and_debug(self):
 

@@ -120,7 +120,7 @@ def env(ctx, *args, **kwargs):
     print("\n##################\n")
 
 @cli.command('print', short_help='Print a label')
-@click.argument('images', nargs=-1, type=click.File('rb'), metavar='IMAGE [IMAGE] ...')
+@click.argument('images', nargs=-1, required=True, type=click.File('rb'), metavar='IMAGE [IMAGE] ...')
 @click.option('-l', '--label', type=click.Choice(label_sizes), envvar='BROTHER_QL_LABEL', help='The label (size, type - die-cut or endless). Run `brother_ql info labels` for a full list including ideal pixel dimensions.')
 @click.option('-r', '--rotate', type=click.Choice(('auto', '0', '90', '180', '270')), default='auto', help='Rotate the image (counterclock-wise) by this amount of degrees.')
 @click.option('-t', '--threshold', type=float, default=70.0, help='The threshold value (in percent) to discriminate between black and white pixels.')

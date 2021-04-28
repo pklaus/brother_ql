@@ -146,6 +146,33 @@ def print_cmd(ctx, *args, **kwargs):
     instructions = convert(qlr=qlr, **kwargs)
     send(instructions=instructions, printer_identifier=printer, backend_identifier=backend, blocking=True)
 
+@cli.command('save', short_help='Generates a file and saves it')
+@click.argument('output', type=click.File('wb'), metavar='FILE [FILE]')
+@click.argument('images', nargs=-1, type=click.File('rb'), metavar='IMAGE [IMAGE] ...')
+@click.option('-l', '--label', type=click.Choice(label_sizes), envvar='BROTHER_QL_LABEL', help='The label (size, type - die-cut or endless). Run `brother_ql info labels` for a full list including ideal pixel dimensions.')
+@click.option('-r', '--rotate', type=click.Choice(('auto', '0', '90', '180', '270')), default='auto', help='Rotate the image (counterclock-wise) by this amount of degrees.')
+@click.option('-t', '--threshold', type=float, default=70.0, help='The threshold value (in percent) to discriminate between black and white pixels.')
+@click.option('-d', '--dither', is_flag=True, help='Enable dithering when converting the image to b/w. If set, --threshold is meaningless.')
+@click.option('-c', '--compress', is_flag=True, help='Enable compression (if available with the model). Label creation can take slightly longer but the resulting instruction size is normally considerably smaller.')
+@click.option('--red', is_flag=True, help='Create a label to be printed on black/red/white tape (only with QL-8xx series on DK-22251 labels). You must use this option when printing on black/red tape, even when not printing red.')
+@click.option('--600dpi', 'dpi_600', is_flag=True, help='Print with 600x300 dpi available on some models. Provide your image as 600x600 dpi; perpendicular to the feeding the image will be resized to 300dpi.')
+@click.option('--lq', is_flag=True, help='Print with low quality (faster). Default is high quality.')
+@click.option('--no-cut', is_flag=True, help="Don't cut the tape after printing the label.")
+@click.pass_context
+def save_cmd(ctx, *args, **kwargs):
+    """ Print a label of the provided IMAGE. """
+    model = ctx.meta.get('MODEL')
+    from brother_ql.conversion import convert
+    from brother_ql.backends.helpers import send
+    from brother_ql.raster import BrotherQLRaster
+    qlr = BrotherQLRaster(model)
+    qlr.exception_on_warning = True
+    kwargs['cut'] = not kwargs['no_cut']
+    del kwargs['no_cut']
+    instructions = convert(qlr=qlr, **kwargs)
+    with open('output.bin', mode='wb') as f:
+        f.write(instructions)
+
 @cli.command(name='analyze', help='interpret a binary file containing raster instructions for the Brother QL-Series printers')
 @click.argument('instructions', type=click.File('rb'))
 @click.option('-f', '--filename-format', help="Filename format string. Default is: label{counter:04d}.png.")

@@ -15,7 +15,7 @@ except (ImportError, IOError, RuntimeError) as e:
     LDESC = ''
 
 setup(name='brother_ql',
-      version = '0.9.dev0',
+      version = '0.9.dev1',
       description = 'Python package to talk to Brother QL label printers',
       long_description = LDESC,
       author = 'Philipp Klaus',
@@ -51,7 +51,7 @@ setup(name='brother_ql',
           #'brother_ql_analyse':  ["matplotlib",],
           #'brother_ql_create' :  ["matplotlib",],
       },
-      keywords = 'Brother QL-500 QL-550 QL-560 QL-570 QL-700 QL-710W QL-720NW QL-800 QL-810W QL-820NWB QL-1050 QL-1060N',
+      keywords = 'Brother QL-500 QL-550 QL-560 QL-570 QL-600 QL-700 QL-710W QL-720NW QL-800 QL-810W QL-820NWB QL-1050 QL-1060N',
       classifiers = [
           'Development Status :: 4 - Beta',
           'Operating System :: OS Independent',

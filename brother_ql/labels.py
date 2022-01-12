@@ -104,7 +104,16 @@ ALL_LABELS = (
   Label("d12",    ( 12,  12), FormFactor.ROUND_DIE_CUT, ( 142,  142), (  94,   94), 113 , feed_margin=35),
   Label("d24",    ( 24,  24), FormFactor.ROUND_DIE_CUT, ( 284,  284), ( 236,  236),  42 ),
   Label("d58",    ( 58,  58), FormFactor.ROUND_DIE_CUT, ( 688,  688), ( 618,  618),  51 ),
-  Label("pt24",   ( 24,   0), FormFactor.PTOUCH_ENDLESS,( 128,    0), ( 128,    0),   0, feed_margin=14),
+  # ptouch sizes come from https://download.brother.com/welcome/docp100407/cv_ptp900_eng_raster_101.pdf, page 20
+  # TZe tape
+  Label("pt3.5",  (  4,   0), FormFactor.PTOUCH_ENDLESS, (560, 0), ( 48, 0), 264, feed_margin=14),
+  Label("pt6",    (  6,   0), FormFactor.PTOUCH_ENDLESS, (560, 0), ( 64, 0), 256, feed_margin=14),
+  Label("pt9",    (  9,   0), FormFactor.PTOUCH_ENDLESS, (560, 0), (106, 0), 235, feed_margin=14),
+  Label("pt12",   ( 12,   0), FormFactor.PTOUCH_ENDLESS, (560, 0), (150, 0), 213, feed_margin=14),
+  Label("pt18",   ( 18,   0), FormFactor.PTOUCH_ENDLESS, (560, 0), (234, 0), 171, feed_margin=14),
+  Label("pt24",   ( 24,   0), FormFactor.PTOUCH_ENDLESS, (560, 0), (320, 0), 128, feed_margin=14),
+  Label("pt36",   ( 36,   0), FormFactor.PTOUCH_ENDLESS, (560, 0), (454, 0), 61,  feed_margin=14)
+
 )
 
 class LabelsManager(ElementsManager):

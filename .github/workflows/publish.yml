@@ -1,4 +1,4 @@
-name: Release to pylint
+name: Release to PyPi
 
 on:
   release:
@@ -19,7 +19,7 @@ jobs:
           python-version: ${{ env.python_version }}
       - name: Install Python build dependencies
         run: |
-          pip install --upgrade wheel setuptools twine build
+          pip install --upgrade wheel setuptools twine build pypandoc
       - name: Build binary
         run: |
           python3 -m build

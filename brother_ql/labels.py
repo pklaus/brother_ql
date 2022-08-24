@@ -101,6 +101,7 @@ ALL_LABELS = (
   Label("39x48",  ( 39,  48), FormFactor.DIE_CUT,       ( 461,  565), ( 425,  495),   6 ),
   Label("52x29",  ( 52,  29), FormFactor.DIE_CUT,       ( 614,  341), ( 578,  271),   0 ),
   Label("54x29",  ( 54,  29), FormFactor.DIE_CUT,       ( 630,  341), ( 598,  271),  60 ),
+  Label("60x86",  ( 60,  87), FormFactor.DIE_CUT,       ( 708, 1024), ( 672,  954),  18 ),
   Label("62x29",  ( 62,  29), FormFactor.DIE_CUT,       ( 732,  341), ( 696,  271),  12 ),
   Label("62x100", ( 62, 100), FormFactor.DIE_CUT,       ( 732, 1179), ( 696, 1109),  12 ),
   Label("102x51", (102,  51), FormFactor.DIE_CUT,       (1200,  596), (1164,  526),  12 , restricted_to_models=['QL-1050', 'QL-1060N', 'QL-1100', 'QL-1100NWB', 'QL-1115NWB']),

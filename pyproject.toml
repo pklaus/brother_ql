@@ -31,7 +31,10 @@ keywords = [
     "QL-810W",
     "QL-820NWB",
     "QL-1050",
-    "QL-1060N"
+    "QL-1060N",
+    "QL-1100",
+    "QL-1100NWB",
+    "QL-1115NWB",
 ]
 classifiers = [
     "Development Status :: 4 - Beta",

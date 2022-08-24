@@ -14,7 +14,7 @@ except (ImportError, IOError, RuntimeError) as e:
     print(str(e))
     LDESC = ''
 
-setup(name='brother_ql',
+setup(name='brother_ql-inventree',
       version = '1.0a0',
       description = 'Python package to talk to Brother QL label printers',
       long_description = LDESC,
@@ -62,6 +62,3 @@ setup(name='brother_ql',
           'Topic :: System :: Hardware :: Hardware Drivers',
       ]
 )
-
-
-

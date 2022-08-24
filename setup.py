@@ -15,12 +15,12 @@ except (ImportError, IOError, RuntimeError) as e:
     LDESC = ''
 
 setup(name='brother_ql',
-      version = '0.9.dev0',
+      version = '1.0a0',
       description = 'Python package to talk to Brother QL label printers',
       long_description = LDESC,
       author = 'Philipp Klaus',
       author_email = 'philipp.l.klaus@web.de',
-      url = 'https://github.com/pklaus/brother_ql',
+      url = 'https://github.com/pklaus/brother_ql-inventree',
       license = 'GPL',
       packages = ['brother_ql',
                   'brother_ql.backends'],

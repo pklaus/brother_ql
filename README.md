@@ -33,6 +33,7 @@ The available label names can be listed with `brother_ql info labels`:
      62         696           62mm endless
      102       1164           102mm endless
      103       1200           103mm endless
+     104       1200           104mm endless
      17x54      165 x  566    17mm x 54mm die-cut
      17x87      165 x  956    17mm x 87mm die-cut
      23x23      202 x  202    23mm x 23mm die-cut

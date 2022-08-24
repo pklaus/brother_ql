@@ -91,6 +91,7 @@ ALL_LABELS = (
   Label("62red",  ( 62,   0), FormFactor.ENDLESS,       ( 732,    0), ( 696,    0),  12 , feed_margin=35, color=Color.BLACK_RED_WHITE),
   Label("102",    (102,   0), FormFactor.ENDLESS,       (1200,    0), (1164,    0),  12 , feed_margin=35, restricted_to_models=['QL-1050', 'QL-1060N', 'QL-1100', 'QL-1100NWB', 'QL-1115NWB']),
   Label("103",    (104,   0), FormFactor.ENDLESS,       (1224,    0), (1200,    0),  12 , feed_margin=35, restricted_to_models=['QL-1100', 'QL-1100NWB']),
+  Label("104",    (104,   0), FormFactor.ENDLESS,       (1227,    0), (1200,    0),  -8 , feed_margin=35, restricted_to_models=['QL-1050', 'QL-1060N', 'QL-1100', 'QL-1100NWB', 'QL-1115NWB']),
   Label("17x54",  ( 17,  54), FormFactor.DIE_CUT,       ( 201,  636), ( 165,  566),   0 ),
   Label("17x87",  ( 17,  87), FormFactor.DIE_CUT,       ( 201, 1026), ( 165,  956),   0 ),
   Label("23x23",  ( 23,  23), FormFactor.DIE_CUT,       ( 272,  272), ( 202,  202),  42 ),

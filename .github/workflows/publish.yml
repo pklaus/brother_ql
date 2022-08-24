@@ -19,7 +19,7 @@ jobs:
           python-version: ${{ env.python_version }}
       - name: Install Python build dependencies
         run: |
-          pip install --upgrade wheel setuptools twine build pypandoc
+          pip install setuptools twine build
       - name: Build binary
         run: |
           python3 -m build

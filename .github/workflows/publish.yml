@@ -1,0 +1,31 @@
+name: Release to PyPi
+
+on:
+  release:
+    types: [published]
+
+env:
+  python_version: 3.8
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Setup Python ${{ env.python_version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ env.python_version }}
+      - name: Install Python build dependencies
+        run: |
+          pip install setuptools twine build
+      - name: Build binary
+        run: |
+          python3 -m build
+      - name: Publish tp PyPi
+        run: python3 -m twine upload dist/*
+        env:
+          TWINE_USERNAME: __token__
+          TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
+          TWINE_REPOSITORY: pypi

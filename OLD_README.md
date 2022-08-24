@@ -1,11 +1,4 @@
-## brother\_ql-inventree
-
-## FORK NOTICE
-
-This is a fork of https://github.com/pklaus/brother_ql to enable updates of the somewhat unmaintained upstream project.
-Check out https://github.com/inventree/inventree to see what it is used for.
-
-## README
+## brother\_ql
 
 A Python package to control Brother QL label printers.
 It implements the raster language of those printers and allows you to send instruction files to your printer.

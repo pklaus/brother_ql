@@ -1,0 +1,54 @@
+[project]
+name = "brother_ql-inventree"
+version = "1.0a0"
+description = "Python package to talk to Brother QL label printers"
+readme = "README.md"
+authors = [
+    { name = "Philipp Klaus", email = "philipp.l.klaus@web.de" }
+]
+license = {text = "GPL"}
+dependencies = [
+    "click",
+    "future",
+    "packbits",
+    "pillow>=3.3.0",
+    "pyusb",
+    "attrs",
+    "typing;python_version<'3.5'",
+    "enum34;python_version<'3.4'",
+]
+keywords = [
+    "Brother",
+    "QL-500",
+    "QL-550",
+    "QL-560",
+    "QL-570",
+    "QL-700",
+    "QL-710W",
+    "QL-720NW",
+    "QL-800",
+    "QL-810W",
+    "QL-820NWB",
+    "QL-1050",
+    "QL-1060N"
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Operating System :: OS Independent",
+    "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Topic :: Scientific/Engineering :: Visualization",
+    "Topic :: System :: Hardware :: Hardware Drivers",
+]
+
+[project.scripts]
+brother_ql = "brother_ql.cli:cli"
+brother_ql_analyse = "brother_ql.brother_ql_analyse:main"
+brother_ql_create = "brother_ql.brother_ql_create:main"
+brother_ql_print = "brother_ql.brother_ql_print:main"
+brother_ql_debug = "brother_ql.brother_ql_debug:main"
+brother_ql_info = "brother_ql.brother_ql_info:main"
+
+[project.urls]
+repository = "https://github.com/pklaus/brother_ql-inventree"

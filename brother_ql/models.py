@@ -46,6 +46,7 @@ ALL_MODELS = [
   Model('QL-560',   (295, 11811), compression=False, mode_setting=False),
   Model('QL-570',   (150, 11811), compression=False, mode_setting=False),
   Model('QL-580N',  (150, 11811)),
+  Model('QL-600',   (150, 11811)),
   Model('QL-650TD', (295, 11811)),
   Model('QL-700',   (150, 11811), compression=False, mode_setting=False),
   Model('QL-710W',  (150, 11811)),

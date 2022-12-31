@@ -16,6 +16,7 @@ import packbits
 from PIL import Image
 import io
 
+from brother_ql.models import ModelsManager
 from .devicedependent import models, \
                              min_max_feed, \
                              min_max_length_dots, \
@@ -64,6 +65,12 @@ class BrotherQLRaster(object):
         self.two_color_printing = False
         self._compression = False
         self.exception_on_warning = False
+
+        self.num_invalidate_bytes = 200
+        for m in ModelsManager().iter_elements():
+            if self.model == m.identifier:
+                self.num_invalidate_bytes = m.num_invalidate_bytes
+                break
 
     def _warn(self, problem, kind=BrotherQLRasterError):
         """
@@ -114,7 +121,7 @@ class BrotherQLRaster(object):
 
     def add_invalidate(self):
         """ clear command buffer """
-        self.data += b'\x00' * 200
+        self.data += b'\x00' * self.num_invalidate_bytes
 
     @property
     def mtype(self): return self._mtype

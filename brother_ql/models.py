@@ -35,6 +35,8 @@ class Model(object):
     #: Support for two color printing (black/red/white)
     #: available only on some newer models.
     two_color = attrib(type=bool, default=False)
+    #: Number of NULL bytes needed for the invalidate command.
+    num_invalidate_bytes = attrib(type=int, default=200)
 
     @property
     def name(self):
@@ -51,9 +53,9 @@ ALL_MODELS = [
   Model('QL-700',   (150, 11811), compression=False, mode_setting=False),
   Model('QL-710W',  (150, 11811)),
   Model('QL-720NW', (150, 11811)),
-  Model('QL-800',   (150, 11811), two_color=True, compression=False),
-  Model('QL-810W',  (150, 11811), two_color=True),
-  Model('QL-820NWB',(150, 11811), two_color=True),
+  Model('QL-800',   (150, 11811), two_color=True, compression=False, num_invalidate_bytes=400),
+  Model('QL-810W',  (150, 11811), two_color=True, num_invalidate_bytes=400),
+  Model('QL-820NWB',(150, 11811), two_color=True, num_invalidate_bytes=400),
   Model('QL-1050',  (295, 35433), number_bytes_per_row=162, additional_offset_r=44),
   Model('QL-1060N', (295, 35433), number_bytes_per_row=162, additional_offset_r=44),
   Model('QL-1100',  (301, 35434), number_bytes_per_row=162, additional_offset_r=44),

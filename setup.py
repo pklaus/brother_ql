@@ -44,6 +44,7 @@ setup(name='brother_ql',
           "pillow>=3.3.0",
           "pyusb",
           'attrs',
+          'pysnmp'
           'typing;python_version<"3.5"',
           'enum34;python_version<"3.4"',
       ],

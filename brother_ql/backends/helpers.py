@@ -7,7 +7,8 @@ Helpers for the subpackage brother_ql.backends
 * printing
 """
 
-import logging, time
+import logging
+import time
 
 from brother_ql.backends import backend_factory, guess_backend
 from brother_ql.reader import interpret_response
@@ -63,9 +64,6 @@ def send(instructions, printer_identifier=None, backend_identifier=None, blockin
 
     if not blocking:
         return status
-    if selected_backend == 'network':
-        """ No need to wait for completion. The network backend doesn't support readback. """
-        return status
 
     while time.time() - start < 10:
         data = printer.read()
@@ -83,10 +81,10 @@ def send(instructions, printer_identifier=None, backend_identifier=None, blockin
             logger.error('Errors occured: %s', result['errors'])
             status['outcome'] = 'error'
             break
-        if result['status_type'] == 'Printing completed':
+        if result['status_type'] in ('Printing completed', 'Reply to status request'):
             status['did_print'] = True
             status['outcome'] = 'printed'
-        if result['status_type'] == 'Phase change' and result['phase_type'] == 'Waiting to receive':
+        if result['status_type'] in ('Phase change', 'Reply to status request') and result['phase_type'] == 'Waiting to receive':
             status['ready_for_next_job'] = True
         if status['did_print'] and status['ready_for_next_job']:
             break

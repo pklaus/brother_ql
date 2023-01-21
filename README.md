@@ -5,7 +5,7 @@ Python package for the raster language protocol of the Brother QL series label p
 
 ## FORK NOTICE
 
-This is a fork of https://github.com/pklaus/brother_ql by [Philipp Klaus](https://github.com/pklaus) to enable updates to the sparsely unmaintained upstream project.
+This is a fork of https://github.com/pklaus/brother_ql by [Philipp Klaus](https://github.com/pklaus) to enable faster updates.
 Check out https://github.com/inventree/inventree to see what I forked it for.
 
 ## Verified models

@@ -67,7 +67,7 @@ def send(instructions, printer_identifier=None, backend_identifier=None, blockin
         """ No need to wait for completion. The network backend doesn't support readback. """
         return status
 
-    while time.time() - start < 10:
+    while time.time() - start < 60:
         data = printer.read()
         if not data:
             time.sleep(0.005)

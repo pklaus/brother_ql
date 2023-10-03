@@ -47,11 +47,21 @@ def list_available_devices():
 
     def identifier(dev):
         try:
-            serial = usb.util.get_string(dev, 256, dev.iSerialNumber)
-            return 'usb://0x{:04x}:0x{:04x}_{}'.format(dev.idVendor, dev.idProduct, serial)
+            # Based on this information (https://github.com/pyusb/pyusb/blob/master/docs/tutorial.rst#dealing-with-multiple-identical-devices), if there are two or more devices of the same vendor and the same model, you have to deal with "bus" and "address" attributes (you can see below how you can retrieve them), but it's not so clear how to use them to define a BrotherQLBackendPyUSB object.
+            # Anyway, you can find these attributes in the BrotherQLBackendPyUSB istance.
+
+            # PRINTER ATTRIBUTES (it's not so clear how to retrieve a list of all the possible attributes):
+            # print("device bus:", dev.bus)
+            # print("device address:", dev.address)
+            # print("device port:", dev.port_number)
+            # print("device speed:", dev.speed)
+
+            # to obtain the serial number, I changed the separator (from _ to /) and swapped two parameters.
+            serial = usb.util.get_string(dev, dev.iSerialNumber, 256)
+            return 'usb://0x{:04x}:0x{:04x}/{}'.format(dev.idVendor, dev.idProduct, serial)
         except:
             return 'usb://0x{:04x}:0x{:04x}'.format(dev.idVendor, dev.idProduct)
-
+        
     return [{'identifier': identifier(printer), 'instance': printer} for printer in printers]
 
 class BrotherQLBackendPyUSB(BrotherQLBackendGeneric):
@@ -78,7 +88,12 @@ class BrotherQLBackendPyUSB(BrotherQLBackendGeneric):
             vendor, product = int(vendor, 16), int(product, 16)
             for result in list_available_devices():
                 printer = result['instance']
-                if printer.idVendor == vendor and printer.idProduct == product or (serial and printer.iSerialNumber == serial):
+                # quick and dirty approach to always use serial number. If it's not present: device not found
+                try:
+                    iSerialNumber = usb.util.get_string(printer, printer.iSerialNumber, 256)
+                except Exception:
+                    raise ValueError('Device not found')
+                if printer.idVendor == vendor and printer.idProduct == product and iSerialNumber == serial:
                     self.dev = printer
                     break
             if self.dev is None:

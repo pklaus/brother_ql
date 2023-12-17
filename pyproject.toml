@@ -11,7 +11,7 @@ dependencies = [
     "click",
     "future",
     "packbits",
-    "pillow>=3.3.0",
+    "pillow>=10.0.0",
     "pyusb",
     "attrs",
     "typing;python_version<'3.5'",

@@ -70,7 +70,7 @@ def send(instructions, printer_identifier=None, backend_identifier=None, blockin
     while time.time() - start < 60:
         data = printer.read()
         if not data:
-            time.sleep(0.005)
+            time.sleep(0.05)
             continue
         try:
             result = interpret_response(data)

@@ -1,5 +1,6 @@
 
 from .generic import BrotherQLBackendGeneric
+import sys
 
 
 available_backends = [
@@ -7,6 +8,10 @@ available_backends = [
   'network',
   'linux_kernel',
 ]
+
+# Add Windows backend if on Windows
+if sys.platform == 'win32':
+    available_backends.append('windows_printer')
 
 def guess_backend(identifier):
     """ guess the backend from a given identifier string for the device """
@@ -16,6 +21,8 @@ def guess_backend(identifier):
         return 'linux_kernel'
     elif identifier.startswith('tcp://'):
         return 'network'
+    elif identifier.startswith('windows://'):
+        return 'windows_printer'
     else:
         raise ValueError('Cannot guess backend for given identifier: %s' % identifier)
     
@@ -34,6 +41,10 @@ def backend_factory(backend_name):
         from . import network      as network_backend
         list_available_devices = network_backend.list_available_devices
         backend_class          = network_backend.BrotherQLBackendNetwork
+    elif backend_name == 'windows_printer':
+        from . import windows_printer as windows_printer_backend
+        list_available_devices = windows_printer_backend.list_available_devices
+        backend_class          = windows_printer_backend.BrotherQLBackendWindows
     else:
         raise NotImplementedError('Backend %s not implemented.' % backend_name)
 

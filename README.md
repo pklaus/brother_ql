@@ -14,7 +14,8 @@ In more details, the following is possible with this package:
 The following printers are claimed to be supported (✓ means verified by the author or by contributors):
 
 * QL-500 (✓), QL-550 (✓), QL-560 (✓), QL-570 (✓), QL-580N, QL-650TD, QL-700 (✓), QL-710W (✓),
-  QL-720NW (✓), QL-800 (✓), QL-810W (✓), QL-820NWB (✓), QL-1050 (✓), and QL-1060N (✓).
+  QL-720NW (✓), QL-800 (✓), QL-810W (✓), QL-820NWB (✓), QL-1050 (✓), QL-1060N (✓), QL-1100 (✓),
+  QL-1110NWB, and QL-1115NWB.
 
 The new QL-800 series can print labels with two colors (black and red) on DK-22251 labels.
 
@@ -69,7 +70,7 @@ The main user interface of this package is the command line tool `brother_ql`.
     
     Options:
       -b, --backend [pyusb|network|linux_kernel]
-      -m, --model [QL-500|QL-550|QL-560|QL-570|QL-580N|QL-650TD|QL-700|QL-710W|QL-720NW|QL-800|QL-810W|QL-820NWB|QL-1050|QL-1060N]
+      -m, --model [QL-500|QL-550|QL-560|QL-570|QL-580N|QL-650TD|QL-700|QL-710W|QL-720NW|QL-800|QL-810W|QL-820NWB|QL-1050|QL-1060N|QL-1100|QL-1110NWB|QL-1115NWB]
       -p, --printer PRINTER_IDENTIFIER
                                       The identifier for the printer. This could
                                       be a string like tcp://192.168.1.21:9100 for
@@ -98,7 +99,7 @@ The most important command is the `print` command and here is its CLI signature:
       Print a label of the provided IMAGE.
     
     Options:
-      -l, --label [12|29|38|50|54|62|102|17x54|17x87|23x23|29x42|29x90|39x90|39x48|52x29|62x29|62x100|102x51|102x152|d12|d24|d58]
+      -l, --label [12|29|38|50|54|62|102|103|17x54|17x87|23x23|29x42|29x90|39x90|39x48|52x29|62x29|62x100|102x51|102x152|103x164|d12|d24|d58]
                                       The label (size, type - die-cut or endless).
                                       Run `brother_ql info labels` for a full
                                       list including ideal pixel dimensions.
@@ -143,6 +144,7 @@ The available label names can be listed with `brother_ql info labels`:
      54         590           54mm endless
      62         696           62mm endless
      102       1164           102mm endless
+     103       1200           103mm endless
      17x54      165 x  566    17mm x 54mm die-cut
      17x87      165 x  956    17mm x 87mm die-cut
      23x23      202 x  202    23mm x 23mm die-cut
@@ -155,6 +157,7 @@ The available label names can be listed with `brother_ql info labels`:
      62x100     696 x 1109    62mm x 100mm die-cut
      102x51    1164 x  526    102mm x 51mm die-cut
      102x152   1164 x 1660    102mm x 153mm die-cut
+     103x164   1200 x 1822    103mm x 164mm die-cut
      d12         94 x   94    12mm round die-cut
      d24        236 x  236    24mm round die-cut
      d58        618 x  618    58mm round die-cut

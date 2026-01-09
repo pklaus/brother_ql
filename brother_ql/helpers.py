@@ -39,3 +39,13 @@ class ElementsManager(object):
     def iter_elements(self):
         for element in self._elements:
             yield element
+
+    def get_element_by_identifier(self, identifier):
+        """
+        Get an element by its identifier.
+        Returns the element if found, raises ValueError otherwise.
+        """
+        for element in self._elements:
+            if element.identifier == identifier:
+                return element
+        raise ValueError("Unknown {}: {}".format(self.ELEMENT_NAME, identifier))

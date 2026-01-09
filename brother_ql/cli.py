@@ -8,7 +8,8 @@ import logging
 import click
 
 # imports from this very package
-from brother_ql.devicedependent import models, label_sizes, label_type_specs, DIE_CUT_LABEL, ENDLESS_LABEL, ROUND_DIE_CUT_LABEL
+from brother_ql.models import ModelsManager
+from brother_ql.labels import LabelsManager
 from brother_ql.backends import available_backends, backend_factory
 
 
@@ -18,7 +19,7 @@ logger = logging.getLogger('brother_ql')
 printer_help = "The identifier for the printer. This could be a string like tcp://192.168.1.21:9100 for a networked printer or usb://0x04f9:0x2015/000M6Z401370 for a printer connected via USB."
 @click.group()
 @click.option('-b', '--backend', type=click.Choice(available_backends), envvar='BROTHER_QL_BACKEND')
-@click.option('-m', '--model', type=click.Choice(models), envvar='BROTHER_QL_MODEL')
+@click.option('-m', '--model', type=click.Choice(list(ModelsManager().iter_identifiers())), envvar='BROTHER_QL_MODEL')
 @click.option('-p', '--printer', metavar='PRINTER_IDENTIFIER', envvar='BROTHER_QL_PRINTER', help=printer_help)
 @click.option('--debug', is_flag=True)
 @click.version_option()
@@ -65,7 +66,7 @@ def models_cmd(ctx, *args, **kwargs):
     List the choices for --model
     """
     print('Supported models:')
-    for model in models: print(" " + model)
+    for model in ModelsManager().iter_identifiers(): print(" " + model)
 
 @info.command()
 @click.pass_context
@@ -74,7 +75,7 @@ def labels(ctx, *args, **kwargs):
     List the choices for --label
     """
     from brother_ql.output_helpers import textual_label_description
-    print(textual_label_description(label_sizes))
+    print(textual_label_description(list(LabelsManager().iter_identifiers())))
 
 @info.command()
 @click.pass_context
@@ -121,7 +122,7 @@ def env(ctx, *args, **kwargs):
 
 @cli.command('print', short_help='Print a label')
 @click.argument('images', nargs=-1, required=True, type=click.File('rb'), metavar='IMAGE [IMAGE] ...')
-@click.option('-l', '--label', type=click.Choice(label_sizes), envvar='BROTHER_QL_LABEL', help='The label (size, type - die-cut or endless). Run `brother_ql info labels` for a full list including ideal pixel dimensions.')
+@click.option('-l', '--label', type=click.Choice(list(LabelsManager().iter_identifiers())), envvar='BROTHER_QL_LABEL', help='The label (size, type - die-cut or endless). Run `brother_ql info labels` for a full list including ideal pixel dimensions.')
 @click.option('-r', '--rotate', type=click.Choice(('auto', '0', '90', '180', '270')), default='auto', help='Rotate the image (counterclock-wise) by this amount of degrees.')
 @click.option('-t', '--threshold', type=float, default=70.0, help='The threshold value (in percent) to discriminate between black and white pixels.')
 @click.option('-d', '--dither', is_flag=True, help='Enable dithering when converting the image to b/w. If set, --threshold is meaningless.')

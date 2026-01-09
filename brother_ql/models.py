@@ -66,4 +66,8 @@ ALL_MODELS = [
 
 class ModelsManager(ElementsManager):
     DEFAULT_ELEMENTS = copy.copy(ALL_MODELS)
-    ELEMENTS_NAME = 'model'
+    ELEMENT_NAME = 'model'
+
+    def get_model_by_identifier(self, identifier):
+        """Get a model by its identifier."""
+        return self.get_element_by_identifier(identifier)

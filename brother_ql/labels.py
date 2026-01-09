@@ -113,3 +113,7 @@ ALL_LABELS = (
 class LabelsManager(ElementsManager):
     DEFAULT_ELEMENTS = copy.copy(ALL_LABELS)
     ELEMENT_NAME = "label"
+
+    def get_label_by_identifier(self, identifier):
+        """Get a label by its identifier."""
+        return self.get_element_by_identifier(identifier)

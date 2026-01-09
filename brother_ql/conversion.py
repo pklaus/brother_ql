@@ -9,8 +9,8 @@ from PIL import Image
 import PIL.ImageOps, PIL.ImageChops
 
 from brother_ql.raster import BrotherQLRaster
-from brother_ql.devicedependent import ENDLESS_LABEL, DIE_CUT_LABEL, ROUND_DIE_CUT_LABEL, PTOUCH_ENDLESS_LABEL
-from brother_ql.devicedependent import label_type_specs, right_margin_addition
+from brother_ql.labels import LabelsManager, FormFactor
+from brother_ql.models import ModelsManager
 from brother_ql import BrotherQLUnsupportedCmd
 from brother_ql.image_trafos import filtered_hsv
 
@@ -44,11 +44,12 @@ def convert(qlr, images, label,  **kwargs):
         * **hq**
         * **threshold**
     """
-    label_specs = label_type_specs[label]
+    label_specs = LabelsManager().get_label_by_identifier(label)
 
-    dots_printable = label_specs['dots_printable']
-    right_margin_dots = label_specs['right_margin_dots']
-    right_margin_dots += right_margin_addition.get(qlr.model, 0)
+    dots_printable = label_specs.dots_printable
+    right_margin_dots = label_specs.offset_r
+    model_obj = ModelsManager().get_model_by_identifier(qlr.model)
+    right_margin_dots += model_obj.additional_offset_r
     device_pixel_width = qlr.get_pixel_width()
 
     cut = kwargs.get('cut', True)
@@ -103,7 +104,7 @@ def convert(qlr, images, label,  **kwargs):
         else:
             dots_expected = dots_printable
 
-        if label_specs['kind'] in (ENDLESS_LABEL, PTOUCH_ENDLESS_LABEL):
+        if label_specs.form_factor in (FormFactor.ENDLESS, FormFactor.PTOUCH_ENDLESS):
             if rotate not in ('auto', 0):
                 im = im.rotate(rotate, expand=True)
             if dpi_600:
@@ -116,7 +117,7 @@ def convert(qlr, images, label,  **kwargs):
                 new_im = Image.new(im.mode, (device_pixel_width, im.size[1]), (255,)*len(im.mode))
                 new_im.paste(im, (device_pixel_width-im.size[0]-right_margin_dots, 0))
                 im = new_im
-        elif label_specs['kind'] in (DIE_CUT_LABEL, ROUND_DIE_CUT_LABEL):
+        elif label_specs.form_factor in (FormFactor.DIE_CUT, FormFactor.ROUND_DIE_CUT):
             if rotate == 'auto':
                 if im.size[0] == dots_expected[1] and im.size[1] == dots_expected[0]:
                     im = im.rotate(90, expand=True)
@@ -157,16 +158,16 @@ def convert(qlr, images, label,  **kwargs):
                 im = im.point(lambda x: 0 if x < threshold else 255, mode="1")
 
         qlr.add_status_information()
-        tape_size = label_specs['tape_size']
-        if label_specs['kind'] in (DIE_CUT_LABEL, ROUND_DIE_CUT_LABEL):
+        tape_size = label_specs.tape_size
+        if label_specs.form_factor in (FormFactor.DIE_CUT, FormFactor.ROUND_DIE_CUT):
             qlr.mtype = 0x0B
             qlr.mwidth = tape_size[0]
             qlr.mlength = tape_size[1]
-        elif label_specs['kind'] in (ENDLESS_LABEL, ):
+        elif label_specs.form_factor in (FormFactor.ENDLESS, ):
             qlr.mtype = 0x0A
             qlr.mwidth = tape_size[0]
             qlr.mlength = 0
-        elif label_specs['kind'] in (PTOUCH_ENDLESS_LABEL, ):
+        elif label_specs.form_factor in (FormFactor.PTOUCH_ENDLESS, ):
             qlr.mtype = 0x00
             qlr.mwidth = tape_size[0]
             qlr.mlength = 0
@@ -185,7 +186,7 @@ def convert(qlr, images, label,  **kwargs):
             qlr.add_expanded_mode()
         except BrotherQLUnsupportedCmd:
             pass
-        qlr.add_margins(label_specs['feed_margin'])
+        qlr.add_margins(label_specs.feed_margin)
         try:
             if compress: qlr.add_compression(True)
         except BrotherQLUnsupportedCmd:

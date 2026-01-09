@@ -4,7 +4,7 @@ import sys, argparse, logging
 
 from brother_ql.raster import BrotherQLRaster
 from brother_ql.conversion import convert
-from brother_ql.devicedependent import label_type_specs
+from brother_ql.labels import LabelsManager
 
 try:
     stdout = sys.stdout.buffer
@@ -40,7 +40,7 @@ def main():
         sys.exit("Unknown model. Use the command   brother_ql_info list-models   to show available models.")
 
     try:
-        label_type_specs[args.label_size]
+        LabelsManager().get_label_by_identifier(args.label_size)
     except ValueError:
         sys.exit("Unknown label_size. Check available sizes with the command   brother_ql_info list-label-sizes")
 

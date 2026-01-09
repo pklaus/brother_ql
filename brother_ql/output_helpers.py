@@ -15,7 +15,7 @@ def textual_label_description(labels_to_include):
         label = labels_manager.get_label_by_identifier(label_size)
         if label.form_factor in (FormFactor.DIE_CUT, FormFactor.ROUND_DIE_CUT):
             dp_fmt = "{0:4d} x {1:4d}"
-        elif label.form_factor == FormFactor.ENDLESS:
+        elif label.form_factor in (FormFactor.ENDLESS, FormFactor.PTOUCH_ENDLESS):
             dp_fmt = "{0:4d}"
         else:
             dp_fmt = " - unknown - "

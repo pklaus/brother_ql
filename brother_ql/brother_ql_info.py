@@ -29,12 +29,15 @@ def main():
             if label.form_factor == FormFactor.DIE_CUT:
                 label_descr = "(%d x %d mm^2)"  % label.tape_size
                 dots_printable = "{0:4d} x {1:4d}".format(*label.dots_printable)
-            if label.form_factor == FormFactor.ENDLESS:
+            elif label.form_factor == FormFactor.ENDLESS:
                 label_descr = "(%d mm endless)" % label.tape_size[0]
                 dots_printable = "{0:4d}".format(*label.dots_printable)
-            if label.form_factor == FormFactor.ROUND_DIE_CUT:
+            elif label.form_factor == FormFactor.ROUND_DIE_CUT:
                 label_descr = "(%d mm diameter, round)" % label.tape_size[0]
                 dots_printable = "{0:4d} x {1:4d}".format(*label.dots_printable)
+            elif label.form_factor == FormFactor.PTOUCH_ENDLESS:
+                label_descr = "(%d mm P-touch endless)" % label.tape_size[0]
+                dots_printable = "{0:4d}".format(*label.dots_printable)
             print(fmt.format(label_size=label_size, label_descr=label_descr, dots_printable=dots_printable))
 
 if __name__ == "__main__": main()

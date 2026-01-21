@@ -65,6 +65,7 @@ RESP_ERROR_INFORMATION_2_DEF = {
 
 RESP_MEDIA_TYPES = {
   0x00: 'No media',
+  0x01: 'Laminated Tape',
   0x0A: 'Continuous length tape',
   0x0B: 'Die-cut labels',
 }

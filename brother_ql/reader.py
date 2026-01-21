@@ -33,6 +33,7 @@ OPCODES = {
     b'\x1b\x69\x55\x77\x01': ('amedia',        127, "Additional media information command"),
     b'\x1b\x69\x55\x4A':     ('jobid',          14, "Job ID setting command"),
     b'\x1b\x69\x58\x47':     ("request_config",  0, "Request transmission of .ini config file of printer"),
+    b'\x1b\x69\x6B\x63':     ("number_of_copies",  2, "Internal specification commands"),
     b'\x1b\x69\x53':         ('status request',  0, "A status information request sent to the printer"),
     b'\x80\x20\x42':         ('status response',29, "A status response received from the printer"),
 }

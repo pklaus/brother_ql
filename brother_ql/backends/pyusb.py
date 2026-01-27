@@ -48,7 +48,7 @@ def list_available_devices():
     def identifier(dev):
         try:
             serial = usb.util.get_string(dev, 256, dev.iSerialNumber)
-            return 'usb://0x{:04x}:0x{:04x}_{}'.format(dev.idVendor, dev.idProduct, serial)
+            return 'usb://0x{:04x}:0x{:04x}/{}'.format(dev.idVendor, dev.idProduct, serial)
         except:
             return 'usb://0x{:04x}:0x{:04x}'.format(dev.idVendor, dev.idProduct)
 

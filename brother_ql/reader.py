@@ -14,7 +14,7 @@ logger = logging.getLogger(__name__)
 
 OPCODES = {
     # signature              name    following bytes   description
-    b'\x00':                 ("preamble",       -1, "Preamble, 200-300x 0x00 to clear comamnd buffer"),
+    b'\x00':                 ("preamble",       -1, "Preamble, 200-300x 0x00 to clear command buffer"),
     b'\x4D':                 ("compression",     1, ""),
     b'\x67':                 ("raster QL",         -1, ""),
     b'\x47':                 ("raster P-touch",    -1, ""),

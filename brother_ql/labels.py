@@ -41,7 +41,7 @@ class Label(object):
     """
     #: A string identifier given to each label that can be selected. Eg. '29'.
     identifier = attrib(type=str)
-    #: The tape size of a single label (width, lenght) in mm. For endless labels, the length is 0 by definition.
+    #: The tape size of a single label (width, length) in mm. For endless labels, the length is 0 by definition.
     tape_size = attrib(type=Tuple[int, int])
     #: The type of label
     form_factor = attrib(type=FormFactor)
@@ -64,7 +64,7 @@ class Label(object):
         """
         Method to determine if certain label can be printed by the specified printer model.
         """
-        if self.restricted_to_models and model not in models: return False
+        if self.restricted_to_models and model not in self.restricted_to_models: return False
         else: return True
 
     @property
@@ -88,7 +88,8 @@ ALL_LABELS = (
   Label("54",     ( 54,   0), FormFactor.ENDLESS,       ( 636,    0), ( 590,    0),   0 , feed_margin=35),
   Label("62",     ( 62,   0), FormFactor.ENDLESS,       ( 732,    0), ( 696,    0),  12 , feed_margin=35),
   Label("62red",  ( 62,   0), FormFactor.ENDLESS,       ( 732,    0), ( 696,    0),  12 , feed_margin=35, color=Color.BLACK_RED_WHITE),
-  Label("102",    (102,   0), FormFactor.ENDLESS,       (1200,    0), (1164,    0),  12 , feed_margin=35, restricted_to_models=['QL-1050', 'QL-1060N']),
+  Label("102",    (102,   0), FormFactor.ENDLESS,       (1200,    0), (1164,    0),  12 , feed_margin=35, restricted_to_models=['QL-1050', 'QL-1060N', 'QL-1100', 'QL-1110NWB', 'QL-1115NWB']),
+  Label("103",    (104,   0), FormFactor.ENDLESS,       (1224,    0), (1200,    0),  12 , feed_margin=35, restricted_to_models=['QL-1050', 'QL-1060N', 'QL-1100', 'QL-1110NWB', 'QL-1115NWB']),
   Label("17x54",  ( 17,  54), FormFactor.DIE_CUT,       ( 201,  636), ( 165,  566),   0 ),
   Label("17x87",  ( 17,  87), FormFactor.DIE_CUT,       ( 201, 1026), ( 165,  956),   0 ),
   Label("23x23",  ( 23,  23), FormFactor.DIE_CUT,       ( 272,  272), ( 202,  202),  42 ),
@@ -97,10 +98,12 @@ ALL_LABELS = (
   Label("39x90",  ( 38,  90), FormFactor.DIE_CUT,       ( 449, 1061), ( 413,  991),  12 ),
   Label("39x48",  ( 39,  48), FormFactor.DIE_CUT,       ( 461,  565), ( 425,  495),   6 ),
   Label("52x29",  ( 52,  29), FormFactor.DIE_CUT,       ( 614,  341), ( 578,  271),   0 ),
+  Label("60x86",  ( 60,  87), FormFactor.DIE_CUT,       ( 708, 1024), ( 672,  954),  18 ),
   Label("62x29",  ( 62,  29), FormFactor.DIE_CUT,       ( 732,  341), ( 696,  271),  12 ),
   Label("62x100", ( 62, 100), FormFactor.DIE_CUT,       ( 732, 1179), ( 696, 1109),  12 ),
-  Label("102x51", (102,  51), FormFactor.DIE_CUT,       (1200,  596), (1164,  526),  12 , restricted_to_models=['QL-1050', 'QL-1060N']),
-  Label("102x152",(102, 153), FormFactor.DIE_CUT,       (1200, 1804), (1164, 1660),  12 , restricted_to_models=['QL-1050', 'QL-1060N']),
+  Label("102x51", (102,  51), FormFactor.DIE_CUT,       (1200,  596), (1164,  526),  12 , restricted_to_models=['QL-1050', 'QL-1060N', 'QL-1100', 'QL-1110NWB', 'QL-1115NWB']),
+  Label("102x152",(102, 153), FormFactor.DIE_CUT,       (1200, 1804), (1164, 1660),  12 , restricted_to_models=['QL-1050', 'QL-1060N', 'QL-1100', 'QL-1110NWB', 'QL-1115NWB']),
+  Label("103x164",(104, 164), FormFactor.DIE_CUT,       (1224, 1941), (1200, 1822),  12 , restricted_to_models=['QL-1100', 'QL-1110NWB']),
   Label("d12",    ( 12,  12), FormFactor.ROUND_DIE_CUT, ( 142,  142), (  94,   94), 113 , feed_margin=35),
   Label("d24",    ( 24,  24), FormFactor.ROUND_DIE_CUT, ( 284,  284), ( 236,  236),  42 ),
   Label("d58",    ( 58,  58), FormFactor.ROUND_DIE_CUT, ( 688,  688), ( 618,  618),  51 ),
@@ -110,3 +113,7 @@ ALL_LABELS = (
 class LabelsManager(ElementsManager):
     DEFAULT_ELEMENTS = copy.copy(ALL_LABELS)
     ELEMENT_NAME = "label"
+
+    def get_label_by_identifier(self, identifier):
+        """Get a label by its identifier."""
+        return self.get_element_by_identifier(identifier)
